@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import AssetsLibrary
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -19,6 +20,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         //Check database is exist or not
         DatabaseFile().checkDataBaseExistence()
+        
+        //Set navigation bar properties.
+        navigationCustomization()
         return true
     }
 
@@ -44,6 +48,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
 
-
+    func navigationCustomization() {
+        
+//        [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithRed:0.0/255.0 green:213.0/255.0 blue:195.0/255.0 alpha:1.0]];
+//        [[UINavigationBar appearance] setTranslucent:NO];
+//        [[UINavigationBar appearance] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor whiteColor], NSForegroundColorAttributeName, [UIFont railwayRegularWithSize:18], NSFontAttributeName, nil]];
+//        [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
+        
+        UINavigationBar.appearance().barTintColor = UIColor(red: 5.0/255.0, green: 144.0/255.0, blue: 201.0/255.0, alpha: 1.0)
+        UINavigationBar.appearance().titleTextAttributes = [NSFontAttributeName : (UIFont.systemFont(ofSize: 18)), NSForegroundColorAttributeName: UIColor.white]
+    }
 }
 

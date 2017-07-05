@@ -16,6 +16,10 @@
 		B70F35961F0A4B2B00BA3575 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B70F35951F0A4B2B00BA3575 /* libsqlite3.tbd */; };
 		B70F35981F0A4B8200BA3575 /* DatabaseFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = B70F35971F0A4B8200BA3575 /* DatabaseFile.swift */; };
 		B70F359D1F0A4EC400BA3575 /* NameItDatabase.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = B70F359C1F0A4EC400BA3575 /* NameItDatabase.sqlite */; };
+		B784BADE1F0CAEB8009A5F89 /* SharePhotosViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B784BADD1F0CAEB8009A5F89 /* SharePhotosViewController.swift */; };
+		B784BAE01F0CBA7B009A5F89 /* PhotoGridCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B784BADF1F0CBA7B009A5F89 /* PhotoGridCollectionViewCell.swift */; };
+		B784BAE41F0CCE29009A5F89 /* GlobalBackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B784BAE31F0CCE29009A5F89 /* GlobalBackViewController.swift */; };
+		B784BAEE1F0CF99E009A5F89 /* SharePhotoGridCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B784BAED1F0CF99E009A5F89 /* SharePhotoGridCollectionViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,6 +35,10 @@
 		B70F35951F0A4B2B00BA3575 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		B70F35971F0A4B8200BA3575 /* DatabaseFile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatabaseFile.swift; sourceTree = "<group>"; };
 		B70F359C1F0A4EC400BA3575 /* NameItDatabase.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = NameItDatabase.sqlite; sourceTree = "<group>"; };
+		B784BADD1F0CAEB8009A5F89 /* SharePhotosViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SharePhotosViewController.swift; sourceTree = "<group>"; };
+		B784BADF1F0CBA7B009A5F89 /* PhotoGridCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoGridCollectionViewCell.swift; sourceTree = "<group>"; };
+		B784BAE31F0CCE29009A5F89 /* GlobalBackViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GlobalBackViewController.swift; sourceTree = "<group>"; };
+		B784BAED1F0CF99E009A5F89 /* SharePhotoGridCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SharePhotoGridCollectionViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +75,7 @@
 			children = (
 				B70F357B1F0A4A1200BA3575 /* AppDelegate.swift */,
 				B70F35A31F0A519900BA3575 /* Controllers */,
+				B784BAE11F0CCE08009A5F89 /* View */,
 				B70F35921F0A4AE400BA3575 /* DataModel */,
 				B70F35911F0A4ACC00BA3575 /* SupportingFiles */,
 				B70F357F1F0A4A1200BA3575 /* Main.storyboard */,
@@ -81,6 +90,7 @@
 			isa = PBXGroup;
 			children = (
 				B70F357D1F0A4A1200BA3575 /* ViewController.swift */,
+				B784BADF1F0CBA7B009A5F89 /* PhotoGridCollectionViewCell.swift */,
 			);
 			name = PhotosViewController;
 			sourceTree = "<group>";
@@ -131,8 +141,34 @@
 			children = (
 				B70F358D1F0A4A9200BA3575 /* PhotosViewController */,
 				B70F358E1F0A4A9F00BA3575 /* PhotoPreviewController */,
+				B784BADC1F0CAE96009A5F89 /* SharePhotosViewController */,
 			);
 			name = Controllers;
+			sourceTree = "<group>";
+		};
+		B784BADC1F0CAE96009A5F89 /* SharePhotosViewController */ = {
+			isa = PBXGroup;
+			children = (
+				B784BADD1F0CAEB8009A5F89 /* SharePhotosViewController.swift */,
+				B784BAED1F0CF99E009A5F89 /* SharePhotoGridCollectionViewCell.swift */,
+			);
+			name = SharePhotosViewController;
+			sourceTree = "<group>";
+		};
+		B784BAE11F0CCE08009A5F89 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				B784BAE21F0CCE12009A5F89 /* GlobalBackViewController */,
+			);
+			name = View;
+			sourceTree = "<group>";
+		};
+		B784BAE21F0CCE12009A5F89 /* GlobalBackViewController */ = {
+			isa = PBXGroup;
+			children = (
+				B784BAE31F0CCE29009A5F89 /* GlobalBackViewController.swift */,
+			);
+			name = GlobalBackViewController;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -210,9 +246,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				B70F357E1F0A4A1200BA3575 /* ViewController.swift in Sources */,
+				B784BAE01F0CBA7B009A5F89 /* PhotoGridCollectionViewCell.swift in Sources */,
 				B70F357C1F0A4A1200BA3575 /* AppDelegate.swift in Sources */,
+				B784BAEE1F0CF99E009A5F89 /* SharePhotoGridCollectionViewCell.swift in Sources */,
 				B70F35981F0A4B8200BA3575 /* DatabaseFile.swift in Sources */,
+				B784BAE41F0CCE29009A5F89 /* GlobalBackViewController.swift in Sources */,
 				B70F35901F0A4AC100BA3575 /* PtotoPreviewViewController.swift in Sources */,
+				B784BADE1F0CAEB8009A5F89 /* SharePhotosViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -386,6 +426,7 @@
 				B70F358C1F0A4A1200BA3575 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
