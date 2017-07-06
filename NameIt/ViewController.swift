@@ -51,7 +51,7 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
     // MARK: - View customization
     func viewInitialization() {
         
-        photoAccessDeniedLabel.text="You must allow photos access in Settings."
+        photoAccessDeniedLabel.text="Allow NameIt to access Gallery in Settings"
         photoAccessDeniedLabel.isHidden=true;
         isSelectable = true
         
@@ -223,18 +223,18 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
         }
         let groupFailureBlock : ALAssetsLibraryAccessFailureBlock = {
             (err:Error!) in
-            print(err.localizedDescription)
+//            print(err.localizedDescription)
             self.photoAccessDeniedLabel.isHidden=true;
             let code = (err as NSError).code
             switch code {
             case ALAssetsLibraryAccessUserDeniedError, ALAssetsLibraryAccessGloballyDeniedError:
                 
                 self.rightButton?.isEnabled=false;
-                self.photoAccessDeniedLabel.text="You must allow photos access in Settings."
+                self.photoAccessDeniedLabel.text="Allow NameIt to access Gallery in Settings"
                 self.photoAccessDeniedLabel.isHidden=false;
                 if (UserDefaultManager().getValue(key: "NameItPhotoAccessAlreadyCheck") != nil) {
                     
-                    self.showPhotoAccessAlertMessage(title: "\"NameIt\" Would Like ot Access Your Photos", message: "You must allow photos access in Settings.", cancel: "Cancel", ok: "Allow")
+                    self.showPhotoAccessAlertMessage(title: "\"NameIt\" Would Like ot Access Your Photos", message: "Allow NameIt to access Gallery in Settings", cancel: "Cancel", ok: "Allow")
                 }
                 else {
                     //Set true in userDefault to check first time access popUp
@@ -262,17 +262,17 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
         self.assetsGroup?.setAssetsFilter(onlyPhotosFilter)
         //        self.assetsGroup?.enumerateAssets(assetsEnumerationBlock) //Show in asscending order
         self.assetsGroup?.enumerateAssets(options: .reverse, using: assetsEnumerationBlock)
-        print(self.cameraRollAssets.count)
+//        print(self.cameraRollAssets.count)
         if self.cameraRollAssets.count>0 {
             
             rightButton?.isEnabled=true;
-            photoAccessDeniedLabel.text="You must allow photos access in Settings."
+            photoAccessDeniedLabel.text="Allow NameIt to access Gallery in Settings"
             cameraRollCollectionView.isHidden=false;
         }
         else {
         
             rightButton?.isEnabled=false;
-            photoAccessDeniedLabel.text="No captured photos are found."
+            photoAccessDeniedLabel.text="No captured photos are found"
             cameraRollCollectionView.isHidden=true;
         }
         self.cameraRollCollectionView.reloadData()

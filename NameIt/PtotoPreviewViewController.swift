@@ -9,7 +9,7 @@
 import UIKit
 import AssetsLibrary
 
-class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate {
+class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate, UITextFieldDelegate, UIGestureRecognizerDelegate {
     
     @IBOutlet var airbrushButton: UIButton!
     @IBOutlet var addTextButton: UIButton!
@@ -29,8 +29,8 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
     var isAddTextSelected:Bool = false
     var isImageEdited:Bool = false
     
-//    var beforeEditImage:UIImage?
-//    var afterEditImage:UIImage?
+    var caption:UITextField?
+    var drag:UIPanGestureRecognizer?
     
     // MARK: - UIView life cycle
     override func viewDidLoad() {
@@ -57,6 +57,7 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
         self.scrollViewObject.maximumZoomScale = 3.0
         self.scrollViewObject.minimumZoomScale = 1.0
 
+        drag=UIPanGestureRecognizer.init(target: self, action: #selector(captionDrag(gestureRecognizer:)))
         //Load full image and image name from selectedImageAsset
         let assetRepresent:ALAssetRepresentation=selectedPhotoAsset!.defaultRepresentation()
         let fullImageRef:CGImage=assetRepresent.fullScreenImage().takeUnretainedValue()
@@ -101,7 +102,6 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
             selectedImageX = CGFloat((UIScreen.main.bounds.size.width/2.0) - ((selectedImageSize?.width)!/2.0))
         }
         
-        print(selectedImageSize!)
         photoPreviewImageView.translatesAutoresizingMaskIntoConstraints=true;
         photoPreviewImageView.frame=CGRect(x: selectedImageX, y: selectedImageY, width: (selectedImageSize?.width)!, height: (selectedImageSize?.height)!)
         self.scrollViewObject.contentSize=CGSize(width: photoPreviewImageView.frame.size.width, height: photoPreviewImageView.frame.size.height)
@@ -143,25 +143,6 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
     // MARK: - end
     
     // MARK: - IBActions
-    @IBAction func rotateImage(_ sender: UIButton) {
-        
-        if !isRotateSelected {
-            
-            isRotateSelected=true
-            shareButton.isEnabled=false;
-            airbrushButton.isEnabled=false;
-            addTextButton.isEnabled=false;
-            addBarButtonWithDone()
-        }
-        else {
-            
-            photoPreviewImageView.image = rotateImage(image:  photoPreviewImageView.image!, rotationDegree: 90)
-            self.scrollViewObject.zoomScale=1.0
-            selectedImageSize=photoPreviewImageView.image?.size
-            changeImageRatio()
-        }
-    }
-    
     @IBAction func shareImage(_ sender: UIButton) {
         
 //        var selectedImageArrayToShare:Array<NSData> = [NSData]()
@@ -178,18 +159,36 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
         self.present(activityViewController, animated: true, completion: nil)
     }
     
+    @IBAction func rotateImage(_ sender: UIButton) {
+        
+        if !isRotateSelected {
+            
+            isRotateSelected=true
+            addTextButton.isEnabled=false;
+            commonMethodOfRotateAddTextAction()
+        }
+        else {
+            
+            photoPreviewImageView.image = rotateImage(image:  photoPreviewImageView.image!, rotationDegree: 90)
+            self.scrollViewObject.zoomScale=1.0
+            selectedImageSize=photoPreviewImageView.image?.size
+            changeImageRatio()
+        }
+    }
+    
     @IBAction func addTextlabel(_ sender: UIButton) {
         
         if !isAddTextSelected {
             
             isAddTextSelected=true
-            shareButton.isEnabled=false;
-            airbrushButton.isEnabled=false;
             rotateButton.isEnabled=false;
-            addBarButtonWithDone()
+            commonMethodOfRotateAddTextAction()
+            photoPreviewImageView.frame=CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height-114)  //height=navigationBar_Height(64)+bottom_space(50)
+            photoPreviewImageView.addGestureRecognizer(drag!)
         }
         else {
             
+            initCaption()
 //            photoPreviewImageView.image = rotateImage(image:  photoPreviewImageView.image!, rotationDegree: 90)
 //            self.scrollViewObject.zoomScale=1.0
 //            selectedImageSize=photoPreviewImageView.image?.size
@@ -217,6 +216,10 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
     
         selectedImageSize = selectedPhoto?.size
         photoPreviewImageView.image=selectedPhoto
+        
+        if isAddTextSelected {
+            caption?.removeFromSuperview()
+        }
         
         //Common Method for cancel and done action
         commonMethodOfCancelDoneAction()
@@ -288,9 +291,13 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
     }
     // MARK: - end
     
-    // MARK: - Common Method for cancel and done action
+    // MARK: - Common Methods
     func commonMethodOfCancelDoneAction() {
         
+        if isAddTextSelected {
+            photoPreviewImageView.removeGestureRecognizer(drag!)
+        }
+        scrollViewObject.delegate=self
         //Change photoPreviewImageView according to selected image size ratio
         changeImageRatio()
         
@@ -307,6 +314,16 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
             addSaveBarButton()
         }
     }
+    
+    func commonMethodOfRotateAddTextAction() {
+        
+        scrollViewObject.zoomScale=1.0
+        changeImageRatio()
+        scrollViewObject.delegate=nil
+        shareButton.isEnabled=false;
+        airbrushButton.isEnabled=false;
+        addBarButtonWithDone()
+    }
     // MARK: - end
     
     // MARK: - UIImagePickerController delegate
@@ -315,7 +332,7 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
         
         if error != nil {
             //We got back an error!
-            let alertViewController = UIAlertController(title: "Alert", message: "Your altered image has not been saved to your photos.", preferredStyle: .alert)
+            let alertViewController = UIAlertController(title: "Alert", message: "Edited Image is not saved.", preferredStyle: .alert)
             
             let okAction = UIAlertAction(title: "OK", style: .default) { (action) -> Void in
                 
@@ -325,7 +342,7 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
             present(alertViewController, animated: true, completion: nil)
         } else {
             
-            let alertViewController = UIAlertController(title: "Alert", message: "Your altered image has been saved to your photos.", preferredStyle: .alert)
+            let alertViewController = UIAlertController(title: "Alert", message: "Edited Image is saved.", preferredStyle: .alert)
             
             let okAction = UIAlertAction(title: "OK", style: .default) { (action) -> Void in
                 
@@ -335,6 +352,27 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
             
             present(alertViewController, animated: true, completion: nil)
         }
+    }
+    // MARK: - end
+    
+    // MARK: - Add caption at selected image
+    func initCaption() {
+        
+        caption = UITextField.init(frame: CGRect(x: 0, y: 170, width: UIScreen.main.bounds.size.width, height: 30))
+        caption?.backgroundColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.5)
+        caption?.textAlignment = NSTextAlignment.center
+        caption?.contentVerticalAlignment = UIControlContentVerticalAlignment.center
+        caption?.contentHorizontalAlignment = UIControlContentHorizontalAlignment.center
+        caption?.textColor = UIColor.white
+        caption?.keyboardAppearance = UIKeyboardAppearance.default
+        caption?.tintColor = UIColor.white
+        caption?.delegate = self
+        photoPreviewImageView.addSubview(caption!)
+    }
+    
+    func captionDrag(gestureRecognizer:UIGestureRecognizer) {
+        
+        
     }
 
     /*

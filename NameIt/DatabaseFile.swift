@@ -28,7 +28,6 @@ class DatabaseFile: NSObject {
         let success:Bool = FileManager.default.fileExists(atPath: getDBPath() as String)
         if !success {
             
-            print(Bundle.main.resourcePath!)
             let defaultDBPath = Bundle.main.resourcePath! + "/" + databaseName
             do {
                 try FileManager.default.copyItem(atPath: defaultDBPath, toPath: getDBPath() as String
@@ -51,12 +50,12 @@ class DatabaseFile: NSObject {
             if sqlite3_prepare_v2(photoAlbumDb, cSql, -1, &createTableStatement, nil) == SQLITE_OK {
                 // 3
                 if sqlite3_step(createTableStatement) == SQLITE_DONE {
-                    print("Contact table created.")
+//                    print("Contact table created.")
                 } else {
-                    print("Contact table could not be created.")
+//                    print("Contact table could not be created.")
                 }
             } else {
-                print("CREATE TABLE statement could not be prepared.")
+//                print("CREATE TABLE statement could not be prepared.")
             }
             // 4
             sqlite3_finalize(createTableStatement)
@@ -73,7 +72,7 @@ class DatabaseFile: NSObject {
             
             if sqlite3_prepare_v2(photoAlbumDb, cSql, -1, &dataRows, nil) != SQLITE_OK {
             
-                 print("error while preparing \(sqlite3_errmsg(photoAlbumDb))")
+//                 print("error while preparing \(sqlite3_errmsg(photoAlbumDb))")
             }
         
             for x in 0 ..< tempArray.count {
@@ -127,12 +126,12 @@ class DatabaseFile: NSObject {
         if sqlite3_open(getDBPath().utf8String, &photoAlbumDb) == SQLITE_OK {
             if sqlite3_prepare_v2(photoAlbumDb, cSql, -1, &updateStatement, nil) == SQLITE_OK {
                 if sqlite3_step(updateStatement) == SQLITE_DONE {
-                    print("Successfully updated row.")
+//                    print("Successfully updated row.")
                 } else {
-                    print("Could not update row.")
+//                    print("Could not update row.")
                 }
             } else {
-                print("UPDATE statement could not be prepared")
+//                print("UPDATE statement could not be prepared")
             }
             sqlite3_finalize(updateStatement)
             sqlite3_close(photoAlbumDb);
@@ -156,7 +155,7 @@ class DatabaseFile: NSObject {
                 }
                 
             } else {
-                print("SELECT statement could not be prepared")
+//                print("SELECT statement could not be prepared")
             }
             // 6
             sqlite3_finalize(queryStatement)
@@ -200,7 +199,7 @@ class DatabaseFile: NSObject {
                 }
                 
             } else {
-                print("SELECT statement could not be prepared")
+//                print("SELECT statement could not be prepared")
             }
             // 6
             sqlite3_finalize(queryStatement)
@@ -221,13 +220,13 @@ class DatabaseFile: NSObject {
         if sqlite3_open(getDBPath().utf8String, &photoAlbumDb) == SQLITE_OK {
             if sqlite3_prepare_v2(photoAlbumDb, cSql, -1, &deleteStatement, nil) == SQLITE_OK {
                 if sqlite3_step(deleteStatement) == SQLITE_DONE {
-                    print("Successfully deleted row.")
+//                    print("Successfully deleted row.")
                      flag=1
                 } else {
-                    print("Could not delete row.")
+//                    print("Could not delete row.")
                 }
             } else {
-                print("DELETE statement could not be prepared")
+//                print("DELETE statement could not be prepared")
             }
             sqlite3_finalize(deleteStatement)
             sqlite3_close(photoAlbumDb);
