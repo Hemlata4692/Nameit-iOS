@@ -16,6 +16,7 @@
 		B70F35961F0A4B2B00BA3575 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B70F35951F0A4B2B00BA3575 /* libsqlite3.tbd */; };
 		B70F35981F0A4B8200BA3575 /* DatabaseFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = B70F35971F0A4B8200BA3575 /* DatabaseFile.swift */; };
 		B70F359D1F0A4EC400BA3575 /* NameItDatabase.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = B70F359C1F0A4EC400BA3575 /* NameItDatabase.sqlite */; };
+		B77EF2211F0E521300ADDC22 /* UserDefaultManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B77EF2201F0E521300ADDC22 /* UserDefaultManager.swift */; };
 		B784BADE1F0CAEB8009A5F89 /* SharePhotosViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B784BADD1F0CAEB8009A5F89 /* SharePhotosViewController.swift */; };
 		B784BAE01F0CBA7B009A5F89 /* PhotoGridCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B784BADF1F0CBA7B009A5F89 /* PhotoGridCollectionViewCell.swift */; };
 		B784BAE41F0CCE29009A5F89 /* GlobalBackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B784BAE31F0CCE29009A5F89 /* GlobalBackViewController.swift */; };
@@ -35,6 +36,7 @@
 		B70F35951F0A4B2B00BA3575 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		B70F35971F0A4B8200BA3575 /* DatabaseFile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatabaseFile.swift; sourceTree = "<group>"; };
 		B70F359C1F0A4EC400BA3575 /* NameItDatabase.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = NameItDatabase.sqlite; sourceTree = "<group>"; };
+		B77EF2201F0E521300ADDC22 /* UserDefaultManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDefaultManager.swift; sourceTree = "<group>"; };
 		B784BADD1F0CAEB8009A5F89 /* SharePhotosViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SharePhotosViewController.swift; sourceTree = "<group>"; };
 		B784BADF1F0CBA7B009A5F89 /* PhotoGridCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoGridCollectionViewCell.swift; sourceTree = "<group>"; };
 		B784BAE31F0CCE29009A5F89 /* GlobalBackViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GlobalBackViewController.swift; sourceTree = "<group>"; };
@@ -146,6 +148,14 @@
 			name = Controllers;
 			sourceTree = "<group>";
 		};
+		B77EF21F1F0E520A00ADDC22 /* UserDefaultManager */ = {
+			isa = PBXGroup;
+			children = (
+				B77EF2201F0E521300ADDC22 /* UserDefaultManager.swift */,
+			);
+			name = UserDefaultManager;
+			sourceTree = "<group>";
+		};
 		B784BADC1F0CAE96009A5F89 /* SharePhotosViewController */ = {
 			isa = PBXGroup;
 			children = (
@@ -158,6 +168,7 @@
 		B784BAE11F0CCE08009A5F89 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				B77EF21F1F0E520A00ADDC22 /* UserDefaultManager */,
 				B784BAE21F0CCE12009A5F89 /* GlobalBackViewController */,
 			);
 			name = View;
@@ -203,7 +214,7 @@
 				TargetAttributes = {
 					B70F35771F0A4A1200BA3575 = {
 						CreatedOnToolsVersion = 8.3.2;
-						DevelopmentTeam = M8A7BYS443;
+						DevelopmentTeam = T7GN63HCDX;
 						ProvisioningStyle = Manual;
 					};
 				};
@@ -251,6 +262,7 @@
 				B784BAEE1F0CF99E009A5F89 /* SharePhotoGridCollectionViewCell.swift in Sources */,
 				B70F35981F0A4B8200BA3575 /* DatabaseFile.swift in Sources */,
 				B784BAE41F0CCE29009A5F89 /* GlobalBackViewController.swift in Sources */,
+				B77EF2211F0E521300ADDC22 /* UserDefaultManager.swift in Sources */,
 				B70F35901F0A4AC100BA3575 /* PtotoPreviewViewController.swift in Sources */,
 				B784BADE1F0CAEB8009A5F89 /* SharePhotosViewController.swift in Sources */,
 			);
@@ -300,9 +312,11 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: shiv vaishnav (GZ989JSYX6)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: shiv vaishnav (GZ989JSYX6)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = T7GN63HCDX;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -322,6 +336,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				PROVISIONING_PROFILE = "9b632c28-d446-4fef-ba3d-7c5982609414";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OBJC_BRIDGING_HEADER = NameIt/NameIt_Bridging_Header.h;
@@ -351,9 +366,11 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: shiv vaishnav (GZ989JSYX6)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: shiv vaishnav (GZ989JSYX6)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = T7GN63HCDX;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -366,6 +383,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				PROVISIONING_PROFILE = "9b632c28-d446-4fef-ba3d-7c5982609414";
 				SDKROOT = iphoneos;
 				SWIFT_OBJC_BRIDGING_HEADER = NameIt/NameIt_Bridging_Header.h;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
@@ -377,14 +395,15 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				DEVELOPMENT_TEAM = M8A7BYS443;
+				CODE_SIGN_IDENTITY = "iPhone Developer: shiv vaishnav (GZ989JSYX6)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: shiv vaishnav (GZ989JSYX6)";
+				DEVELOPMENT_TEAM = T7GN63HCDX;
 				INFOPLIST_FILE = NameIt/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ranosys.NameIt;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "5d36d161-4eab-49e9-b4bd-cc5088e93d30";
-				PROVISIONING_PROFILE_SPECIFIER = RanosysWildcard;
+				PROVISIONING_PROFILE = "9b632c28-d446-4fef-ba3d-7c5982609414";
+				PROVISIONING_PROFILE_SPECIFIER = "Common Ranosys Profile";
 				SWIFT_OBJC_BRIDGING_HEADER = NameIt/NameIt_Bridging_Header.h;
 				SWIFT_VERSION = 3.0;
 			};
@@ -394,14 +413,15 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				DEVELOPMENT_TEAM = M8A7BYS443;
+				CODE_SIGN_IDENTITY = "iPhone Developer: shiv vaishnav (GZ989JSYX6)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: shiv vaishnav (GZ989JSYX6)";
+				DEVELOPMENT_TEAM = T7GN63HCDX;
 				INFOPLIST_FILE = NameIt/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ranosys.NameIt;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "5d36d161-4eab-49e9-b4bd-cc5088e93d30";
-				PROVISIONING_PROFILE_SPECIFIER = RanosysWildcard;
+				PROVISIONING_PROFILE = "9b632c28-d446-4fef-ba3d-7c5982609414";
+				PROVISIONING_PROFILE_SPECIFIER = "Common Ranosys Profile";
 				SWIFT_OBJC_BRIDGING_HEADER = NameIt/NameIt_Bridging_Header.h;
 				SWIFT_VERSION = 3.0;
 			};

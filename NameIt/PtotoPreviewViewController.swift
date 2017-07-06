@@ -11,17 +11,26 @@ import AssetsLibrary
 
 class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate {
     
+    @IBOutlet var airbrushButton: UIButton!
+    @IBOutlet var addTextButton: UIButton!
+    @IBOutlet var rotateButton: UIButton!
+    @IBOutlet var shareButton: UIButton!
+    
     @IBOutlet var photoPreviewImageView: UIImageView!
     @IBOutlet var scrollViewObject: UIScrollView!
     
     var selectedPhotoAsset:ALAsset?
     var selectedPhoto:UIImage?
-    var cameraRollAssets: NSMutableArray = []
     
     var degree:Int=0
-    var selectedImageIndex:Int=0
     
     var selectedImageSize:CGSize?
+    var isRotateSelected:Bool = false
+    var isAddTextSelected:Bool = false
+    var isImageEdited:Bool = false
+    
+//    var beforeEditImage:UIImage?
+//    var afterEditImage:UIImage?
     
     // MARK: - UIView life cycle
     override func viewDidLoad() {
@@ -53,6 +62,9 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
         let fullImageRef:CGImage=assetRepresent.fullScreenImage().takeUnretainedValue()
         let fullImage:UIImage=UIImage.init(cgImage: fullImageRef)
         selectedPhoto=fullImage
+//        beforeEditImage=fullImage
+        
+        //Set navigation title
         self.navigationItem.title=assetRepresent.filename().components(separatedBy: ".").first?.capitalized
         selectedImageSize = selectedPhoto?.size
         photoPreviewImageView.image=selectedPhoto
@@ -61,7 +73,7 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
         changeImageRatio()
     }
     
-    //MARK: - Image scalling
+    // MARK: - Image scalling
     //Set UIImageView size according to image size ratio
     func changeImageRatio() {
         
@@ -130,35 +142,98 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
     }
     // MARK: - end
     
-    //MARK: - IBActions
+    // MARK: - IBActions
     @IBAction func rotateImage(_ sender: UIButton) {
         
-//        print(photoPreviewImageView.image?.size)
-        photoPreviewImageView.image = rotateImage(image:  photoPreviewImageView.image!, rotationDegree: 90)
-        self.scrollViewObject.zoomScale=1.0
-        selectedImageSize=photoPreviewImageView.image?.size
-        changeImageRatio()
+        if !isRotateSelected {
+            
+            isRotateSelected=true
+            shareButton.isEnabled=false;
+            airbrushButton.isEnabled=false;
+            addTextButton.isEnabled=false;
+            addBarButtonWithDone()
+        }
+        else {
+            
+            photoPreviewImageView.image = rotateImage(image:  photoPreviewImageView.image!, rotationDegree: 90)
+            self.scrollViewObject.zoomScale=1.0
+            selectedImageSize=photoPreviewImageView.image?.size
+            changeImageRatio()
+        }
     }
     
-    @IBAction func navigateShareView(_ sender: UIButton) {
+    @IBAction func shareImage(_ sender: UIButton) {
         
-        //Navigate to photoGrid screen
-        let photoPreviewViewObj = self.storyboard?.instantiateViewController(withIdentifier: "SharePhotosViewController") as? SharePhotosViewController
-        photoPreviewViewObj?.cameraRollAssets=cameraRollAssets.mutableCopy() as! NSMutableArray
-        photoPreviewViewObj?.selectedImageIndex=selectedImageIndex
+//        var selectedImageArrayToShare:Array<NSData> = [NSData]()
+        var selectedImageArrayToShare:Array<UIImage> = [UIImage]()
         
-        self.navigationController?.pushViewController(photoPreviewViewObj!, animated: true)
+        //NSData *compressedImage = UIImageJPEGRepresentation(self.resultImage, 0.8 );
+        //            let cI:NSData=UIImageJPEGRepresentation(tempFullImage, 0.8)! as NSData
+//        let cI:NSData=UIImagePNGRepresentation(tempFullImage)! as NSData
+//        selectedImageArrayToShare.append(cI)
+        selectedImageArrayToShare.append(photoPreviewImageView.image!)
+        
+        //Present UIActivityViewController to share images
+        let activityViewController:UIActivityViewController = UIActivityViewController(activityItems: selectedImageArrayToShare as [Any], applicationActivities: nil)
+        self.present(activityViewController, animated: true, completion: nil)
     }
     
-    @IBAction func colorPicker(_ sender: UIButton) {
+    @IBAction func addTextlabel(_ sender: UIButton) {
         
-//        //Navigate to photoGrid screen
-//        let colorPickerViewObj = self.storyboard?.instantiateViewController(withIdentifier: "ColorPickerViewController") as? ColorPickerViewController
-//        self.navigationController?.pushViewController(colorPickerViewObj!, animated: true)
+        if !isAddTextSelected {
+            
+            isAddTextSelected=true
+            shareButton.isEnabled=false;
+            airbrushButton.isEnabled=false;
+            rotateButton.isEnabled=false;
+            addBarButtonWithDone()
+        }
+        else {
+            
+//            photoPreviewImageView.image = rotateImage(image:  photoPreviewImageView.image!, rotationDegree: 90)
+//            self.scrollViewObject.zoomScale=1.0
+//            selectedImageSize=photoPreviewImageView.image?.size
+//            changeImageRatio()
+        }
     }
-    //MARK: - end
     
-    //MARK: - Image rotate at given degrees
+    @IBAction func addAirbrush(_ sender: UIButton) {
+        
+    }
+    
+    override func saveButtonAction() {
+    
+        if (isImageEdited) {
+        
+            //Adds the edited image to the user’s Camera Roll album
+            UIImageWriteToSavedPhotosAlbum(photoPreviewImageView.image!, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
+        }
+        else {
+            self.navigationController?.popViewController(animated: true)
+        }
+    }
+    
+    override func cancelButtonAction() {
+    
+        selectedImageSize = selectedPhoto?.size
+        photoPreviewImageView.image=selectedPhoto
+        
+        //Common Method for cancel and done action
+        commonMethodOfCancelDoneAction()
+    }
+    
+    override func doneButtonAction() {
+    
+        isImageEdited=true
+        selectedPhoto=photoPreviewImageView.image
+        selectedImageSize = selectedPhoto?.size
+        
+        //Common Method for cancel and done action
+        commonMethodOfCancelDoneAction()
+    }
+    // MARK: - end
+    
+    // MARK: - Image rotate at given degrees
     func rotateImage(image: UIImage!, rotationDegree: CGFloat) -> UIImage {
         
         // 180 degress = 540 degrees, that's why we calculate modulo
@@ -211,7 +286,56 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
         
         return returnImage!
     }
-    //MARK: - end
+    // MARK: - end
+    
+    // MARK: - Common Method for cancel and done action
+    func commonMethodOfCancelDoneAction() {
+        
+        //Change photoPreviewImageView according to selected image size ratio
+        changeImageRatio()
+        
+        isRotateSelected=false;
+        isAddTextSelected=false;
+        shareButton.isEnabled=true;
+        airbrushButton.isEnabled=true;
+        rotateButton.isEnabled=true;
+        addTextButton.isEnabled=true;
+        
+        //Show back bar button and show save button if image is edited
+        addBackBarButton()
+        if isImageEdited {
+            addSaveBarButton()
+        }
+    }
+    // MARK: - end
+    
+    // MARK: - UIImagePickerController delegate
+    //Selector should be called after the image has been written to the Camera Roll album
+    func image(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
+        
+        if error != nil {
+            //We got back an error!
+            let alertViewController = UIAlertController(title: "Alert", message: "Your altered image has not been saved to your photos.", preferredStyle: .alert)
+            
+            let okAction = UIAlertAction(title: "OK", style: .default) { (action) -> Void in
+                
+            }
+            alertViewController.addAction(okAction)
+            
+            present(alertViewController, animated: true, completion: nil)
+        } else {
+            
+            let alertViewController = UIAlertController(title: "Alert", message: "Your altered image has been saved to your photos.", preferredStyle: .alert)
+            
+            let okAction = UIAlertAction(title: "OK", style: .default) { (action) -> Void in
+                
+                self.navigationController?.popViewController(animated: true)
+            }
+            alertViewController.addAction(okAction)
+            
+            present(alertViewController, animated: true, completion: nil)
+        }
+    }
 
     /*
     // MARK: - Navigation

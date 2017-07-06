@@ -67,7 +67,7 @@ class SharePhotosViewController: UIViewController,UICollectionViewDataSource, UI
     }
     // MARK: - end
     
-    //MARK: - CollectionView Delegate, Datasource and DelegateFlowLayout
+    // MARK: - CollectionView Delegate, Datasource and DelegateFlowLayout
     // Tell the collection view how many cells to make
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return cameraRollAssets.count

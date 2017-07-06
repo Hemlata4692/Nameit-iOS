@@ -15,7 +15,7 @@ class DatabaseFile: NSObject {
     let databaseName:String="NameItDatabase.sqlite"
     var photoAlbumDb:OpaquePointer? = nil
   
-//MARK: - Check Database existence
+// MARK: - Check Database existence
      private func getDBPath() -> NSString {
         
         let paths:NSArray = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true) as NSArray
@@ -39,7 +39,7 @@ class DatabaseFile: NSObject {
         }
     }
     
-//MARK: - Create table in exist database
+// MARK: - Create table in exist database
     func createTable(query:NSString) {
 
         // 1
@@ -64,7 +64,7 @@ class DatabaseFile: NSObject {
         }
     }
     
-//MARK: - Insert data into database
+// MARK: - Insert data into database
     func insertIntoDatabase(query:NSString, tempArray:NSMutableArray) {
         
         var dataRows:OpaquePointer? = nil
@@ -119,7 +119,7 @@ class DatabaseFile: NSObject {
         }
     }
     
-//MARK: - Update data into database
+// MARK: - Update data into database
     func update(updateStatementString:NSString) {
         
         var updateStatement: OpaquePointer? = nil
@@ -139,7 +139,7 @@ class DatabaseFile: NSObject {
         }
     }
 
-//MARK: - Check via query data is already exist
+// MARK: - Check via query data is already exist
     func isExistDataQuery(query:NSString) -> Bool {
         
         let cSql = query.cString(using: String.Encoding.utf8.rawValue)
@@ -174,7 +174,7 @@ class DatabaseFile: NSObject {
         }
     }
 
-//MARK: - Fetch data with where clause
+// MARK: - Fetch data with where clause
     func selectQuery(query:NSString) -> NSMutableArray {
         
         var queryData: NSMutableArray = []
@@ -212,7 +212,7 @@ class DatabaseFile: NSObject {
         }
     }
     
-//MARK: - Delete data from selected table
+// MARK: - Delete data from selected table
     func delete(deleteStatementStirng:NSString) -> Bool {
         
         let cSql = deleteStatementStirng.cString(using: String.Encoding.utf8.rawValue)

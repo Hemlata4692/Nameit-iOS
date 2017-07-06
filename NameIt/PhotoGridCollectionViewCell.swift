@@ -10,5 +10,7 @@ import UIKit
 
 class PhotoGridCollectionViewCell: UICollectionViewCell {
     
+    @IBOutlet var selectUnselectImageView: UIImageView!
     @IBOutlet var cameraRollImageView: UIImageView!
+    @IBOutlet var photoName: UILabel!
 }
