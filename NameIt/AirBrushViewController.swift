@@ -30,9 +30,7 @@ class AirBrushViewController: GlobalBackViewController, UIScrollViewDelegate, UI
     
     
     @IBOutlet var colorPreviewView: UIView!
-    @IBOutlet weak var imageView: UIImageView!
-//    @IBOutlet weak var tempImageView: UIImageView!
-//    @IBOutlet weak var undoButton: UIButton!
+    @IBOutlet var resizeSlider: UISlider!
     
     var lastPoint = CGPoint.zero
     var brushWidth: CGFloat = 5.0
@@ -90,6 +88,11 @@ class AirBrushViewController: GlobalBackViewController, UIScrollViewDelegate, UI
         tempPhotoImageView.image=selectedPhoto
         photoPreviewImageView.image=selectedPhoto
         photoPreviewImageView.isUserInteractionEnabled=true
+        
+//        //Customize slider view
+//        resizeSlider.setMaximumTrackImage(UIImage(), for: UIControlState.normal)
+//        resizeSlider.setMinimumTrackImage(UIImage(), for: UIControlState.normal)
+//        resizeSlider.setThumbImage(UIImage.init(named: "sliderThumb"), for: UIControlState.normal)
     }
     
     // MARK: - IBActions

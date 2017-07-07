@@ -313,6 +313,21 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
+                            <view hidden="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7UY-5I-gcr">
+                                <rect key="frame" x="47" y="415" width="200" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="sliderImage" translatesAutoresizingMaskIntoConstraints="NO" id="Fdu-62-fbK">
+                                        <rect key="frame" x="14" y="2" width="171" height="21"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </imageView>
+                                    <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="fuu-0a-j0c">
+                                        <rect key="frame" x="-2" y="-1" width="204" height="31"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </slider>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -347,6 +362,7 @@
                         <outlet property="colorSliderImageView" destination="lFg-dI-DOZ" id="fQp-sW-HBj"/>
                         <outlet property="eraserButton" destination="7sB-Y9-Fzf" id="QH3-5O-6te"/>
                         <outlet property="photoPreviewImageView" destination="qJh-Rk-Xmi" id="mPL-3O-lQd"/>
+                        <outlet property="resizeSlider" destination="fuu-0a-j0c" id="i8F-sn-Dth"/>
                         <outlet property="rotateButton" destination="PQT-E2-Iq6" id="GUY-QS-0Jc"/>
                         <outlet property="shareButton" destination="Wb1-OY-spP" id="Cvn-x9-9bd"/>
                         <outlet property="tempPhotoImageView" destination="vBw-gl-k0i" id="mvg-UZ-7XP"/>
@@ -380,6 +396,7 @@
     <resources>
         <image name="colorPickerPlate1.png" width="162" height="1871"/>
         <image name="eraser" width="20" height="20"/>
+        <image name="sliderImage" width="200" height="20"/>
         <image name="uncheck" width="17" height="17"/>
     </resources>
 </document>

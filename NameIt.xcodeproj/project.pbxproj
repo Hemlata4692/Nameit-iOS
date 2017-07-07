@@ -86,6 +86,7 @@
 				B70F35821F0A4A1200BA3575 /* Assets.xcassets */,
 				B70F35841F0A4A1200BA3575 /* LaunchScreen.storyboard */,
 				B70F35871F0A4A1200BA3575 /* Info.plist */,
+				B7687AE21F0F6BA8001A6006 /* colorPickerPlate.png */,
 			);
 			path = NameIt;
 			sourceTree = "<group>";
@@ -111,7 +112,6 @@
 		B70F35911F0A4ACC00BA3575 /* SupportingFiles */ = {
 			isa = PBXGroup;
 			children = (
-				B7687AE21F0F6BA8001A6006 /* colorPickerPlate.png */,
 				B7687AE41F0F6CB4001A6006 /* colorPickerPlate1.png */,
 				B70F35931F0A4B1300BA3575 /* NameIt_Bridging_Header.h */,
 			);
@@ -225,7 +225,7 @@
 				TargetAttributes = {
 					B70F35771F0A4A1200BA3575 = {
 						CreatedOnToolsVersion = 8.3.2;
-						DevelopmentTeam = T7GN63HCDX;
+						DevelopmentTeam = M8A7BYS443;
 						ProvisioningStyle = Manual;
 					};
 				};
@@ -324,11 +324,12 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: shiv vaishnav (GZ989JSYX6)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: shiv vaishnav (GZ989JSYX6)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Ranosys Technologies Pte Ltd";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Ranosys Technologies Pte Ltd";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = T7GN63HCDX;
+				DEVELOPMENT_TEAM = M8A7BYS443;
+				ENABLE_BITCODE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -348,7 +349,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "9b632c28-d446-4fef-ba3d-7c5982609414";
+				PROVISIONING_PROFILE = "5d36d161-4eab-49e9-b4bd-cc5088e93d30";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OBJC_BRIDGING_HEADER = NameIt/NameIt_Bridging_Header.h;
@@ -378,11 +379,12 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: shiv vaishnav (GZ989JSYX6)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: shiv vaishnav (GZ989JSYX6)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Ranosys Technologies Pte Ltd";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Ranosys Technologies Pte Ltd";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = T7GN63HCDX;
+				DEVELOPMENT_TEAM = M8A7BYS443;
+				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -395,7 +397,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				PROVISIONING_PROFILE = "9b632c28-d446-4fef-ba3d-7c5982609414";
+				PROVISIONING_PROFILE = "5d36d161-4eab-49e9-b4bd-cc5088e93d30";
 				SDKROOT = iphoneos;
 				SWIFT_OBJC_BRIDGING_HEADER = NameIt/NameIt_Bridging_Header.h;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
@@ -407,15 +409,16 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer: shiv vaishnav (GZ989JSYX6)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: shiv vaishnav (GZ989JSYX6)";
-				DEVELOPMENT_TEAM = T7GN63HCDX;
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Ranosys Technologies Pte Ltd";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Ranosys Technologies Pte Ltd";
+				DEVELOPMENT_TEAM = M8A7BYS443;
+				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = NameIt/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ranosys.NameIt;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "9b632c28-d446-4fef-ba3d-7c5982609414";
-				PROVISIONING_PROFILE_SPECIFIER = "Common Ranosys Profile";
+				PROVISIONING_PROFILE = "5d36d161-4eab-49e9-b4bd-cc5088e93d30";
+				PROVISIONING_PROFILE_SPECIFIER = RanosysWildcard;
 				SWIFT_OBJC_BRIDGING_HEADER = NameIt/NameIt_Bridging_Header.h;
 				SWIFT_VERSION = 3.0;
 			};
@@ -425,15 +428,16 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer: shiv vaishnav (GZ989JSYX6)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: shiv vaishnav (GZ989JSYX6)";
-				DEVELOPMENT_TEAM = T7GN63HCDX;
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Ranosys Technologies Pte Ltd";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Ranosys Technologies Pte Ltd";
+				DEVELOPMENT_TEAM = M8A7BYS443;
+				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = NameIt/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ranosys.NameIt;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "9b632c28-d446-4fef-ba3d-7c5982609414";
-				PROVISIONING_PROFILE_SPECIFIER = "Common Ranosys Profile";
+				PROVISIONING_PROFILE = "5d36d161-4eab-49e9-b4bd-cc5088e93d30";
+				PROVISIONING_PROFILE_SPECIFIER = RanosysWildcard;
 				SWIFT_OBJC_BRIDGING_HEADER = NameIt/NameIt_Bridging_Header.h;
 				SWIFT_VERSION = 3.0;
 			};
