@@ -16,11 +16,12 @@
 		B70F35961F0A4B2B00BA3575 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B70F35951F0A4B2B00BA3575 /* libsqlite3.tbd */; };
 		B70F35981F0A4B8200BA3575 /* DatabaseFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = B70F35971F0A4B8200BA3575 /* DatabaseFile.swift */; };
 		B70F359D1F0A4EC400BA3575 /* NameItDatabase.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = B70F359C1F0A4EC400BA3575 /* NameItDatabase.sqlite */; };
+		B7687AE01F0F69DD001A6006 /* AirBrushViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7687ADF1F0F69DD001A6006 /* AirBrushViewController.swift */; };
+		B7687AE31F0F6BA8001A6006 /* colorPickerPlate.png in Resources */ = {isa = PBXBuildFile; fileRef = B7687AE21F0F6BA8001A6006 /* colorPickerPlate.png */; };
+		B7687AE51F0F6CB4001A6006 /* colorPickerPlate1.png in Resources */ = {isa = PBXBuildFile; fileRef = B7687AE41F0F6CB4001A6006 /* colorPickerPlate1.png */; };
 		B77EF2211F0E521300ADDC22 /* UserDefaultManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B77EF2201F0E521300ADDC22 /* UserDefaultManager.swift */; };
-		B784BADE1F0CAEB8009A5F89 /* SharePhotosViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B784BADD1F0CAEB8009A5F89 /* SharePhotosViewController.swift */; };
 		B784BAE01F0CBA7B009A5F89 /* PhotoGridCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B784BADF1F0CBA7B009A5F89 /* PhotoGridCollectionViewCell.swift */; };
 		B784BAE41F0CCE29009A5F89 /* GlobalBackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B784BAE31F0CCE29009A5F89 /* GlobalBackViewController.swift */; };
-		B784BAEE1F0CF99E009A5F89 /* SharePhotoGridCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B784BAED1F0CF99E009A5F89 /* SharePhotoGridCollectionViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,11 +37,12 @@
 		B70F35951F0A4B2B00BA3575 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		B70F35971F0A4B8200BA3575 /* DatabaseFile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatabaseFile.swift; sourceTree = "<group>"; };
 		B70F359C1F0A4EC400BA3575 /* NameItDatabase.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = NameItDatabase.sqlite; sourceTree = "<group>"; };
+		B7687ADF1F0F69DD001A6006 /* AirBrushViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AirBrushViewController.swift; sourceTree = "<group>"; };
+		B7687AE21F0F6BA8001A6006 /* colorPickerPlate.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = colorPickerPlate.png; sourceTree = "<group>"; };
+		B7687AE41F0F6CB4001A6006 /* colorPickerPlate1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = colorPickerPlate1.png; sourceTree = "<group>"; };
 		B77EF2201F0E521300ADDC22 /* UserDefaultManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDefaultManager.swift; sourceTree = "<group>"; };
-		B784BADD1F0CAEB8009A5F89 /* SharePhotosViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SharePhotosViewController.swift; sourceTree = "<group>"; };
 		B784BADF1F0CBA7B009A5F89 /* PhotoGridCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoGridCollectionViewCell.swift; sourceTree = "<group>"; };
 		B784BAE31F0CCE29009A5F89 /* GlobalBackViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GlobalBackViewController.swift; sourceTree = "<group>"; };
-		B784BAED1F0CF99E009A5F89 /* SharePhotoGridCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SharePhotoGridCollectionViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,17 +99,20 @@
 			name = PhotosViewController;
 			sourceTree = "<group>";
 		};
-		B70F358E1F0A4A9F00BA3575 /* PhotoPreviewController */ = {
+		B70F358E1F0A4A9F00BA3575 /* EditPhotoViewController */ = {
 			isa = PBXGroup;
 			children = (
-				B70F358F1F0A4AC100BA3575 /* PtotoPreviewViewController.swift */,
+				B7687AE11F0F6A05001A6006 /* PhotoPreviewViewController */,
+				B7687ADE1F0F69C0001A6006 /* AirBrushViewController */,
 			);
-			name = PhotoPreviewController;
+			name = EditPhotoViewController;
 			sourceTree = "<group>";
 		};
 		B70F35911F0A4ACC00BA3575 /* SupportingFiles */ = {
 			isa = PBXGroup;
 			children = (
+				B7687AE21F0F6BA8001A6006 /* colorPickerPlate.png */,
+				B7687AE41F0F6CB4001A6006 /* colorPickerPlate1.png */,
 				B70F35931F0A4B1300BA3575 /* NameIt_Bridging_Header.h */,
 			);
 			name = SupportingFiles;
@@ -142,10 +147,25 @@
 			isa = PBXGroup;
 			children = (
 				B70F358D1F0A4A9200BA3575 /* PhotosViewController */,
-				B70F358E1F0A4A9F00BA3575 /* PhotoPreviewController */,
-				B784BADC1F0CAE96009A5F89 /* SharePhotosViewController */,
+				B70F358E1F0A4A9F00BA3575 /* EditPhotoViewController */,
 			);
 			name = Controllers;
+			sourceTree = "<group>";
+		};
+		B7687ADE1F0F69C0001A6006 /* AirBrushViewController */ = {
+			isa = PBXGroup;
+			children = (
+				B7687ADF1F0F69DD001A6006 /* AirBrushViewController.swift */,
+			);
+			name = AirBrushViewController;
+			sourceTree = "<group>";
+		};
+		B7687AE11F0F6A05001A6006 /* PhotoPreviewViewController */ = {
+			isa = PBXGroup;
+			children = (
+				B70F358F1F0A4AC100BA3575 /* PtotoPreviewViewController.swift */,
+			);
+			name = PhotoPreviewViewController;
 			sourceTree = "<group>";
 		};
 		B77EF21F1F0E520A00ADDC22 /* UserDefaultManager */ = {
@@ -154,15 +174,6 @@
 				B77EF2201F0E521300ADDC22 /* UserDefaultManager.swift */,
 			);
 			name = UserDefaultManager;
-			sourceTree = "<group>";
-		};
-		B784BADC1F0CAE96009A5F89 /* SharePhotosViewController */ = {
-			isa = PBXGroup;
-			children = (
-				B784BADD1F0CAEB8009A5F89 /* SharePhotosViewController.swift */,
-				B784BAED1F0CF99E009A5F89 /* SharePhotoGridCollectionViewCell.swift */,
-			);
-			name = SharePhotosViewController;
 			sourceTree = "<group>";
 		};
 		B784BAE11F0CCE08009A5F89 /* View */ = {
@@ -243,6 +254,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				B70F359D1F0A4EC400BA3575 /* NameItDatabase.sqlite in Resources */,
+				B7687AE31F0F6BA8001A6006 /* colorPickerPlate.png in Resources */,
+				B7687AE51F0F6CB4001A6006 /* colorPickerPlate1.png in Resources */,
 				B70F35861F0A4A1200BA3575 /* LaunchScreen.storyboard in Resources */,
 				B70F35831F0A4A1200BA3575 /* Assets.xcassets in Resources */,
 				B70F35811F0A4A1200BA3575 /* Main.storyboard in Resources */,
@@ -257,14 +270,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				B70F357E1F0A4A1200BA3575 /* ViewController.swift in Sources */,
+				B7687AE01F0F69DD001A6006 /* AirBrushViewController.swift in Sources */,
 				B784BAE01F0CBA7B009A5F89 /* PhotoGridCollectionViewCell.swift in Sources */,
 				B70F357C1F0A4A1200BA3575 /* AppDelegate.swift in Sources */,
-				B784BAEE1F0CF99E009A5F89 /* SharePhotoGridCollectionViewCell.swift in Sources */,
 				B70F35981F0A4B8200BA3575 /* DatabaseFile.swift in Sources */,
 				B784BAE41F0CCE29009A5F89 /* GlobalBackViewController.swift in Sources */,
 				B77EF2211F0E521300ADDC22 /* UserDefaultManager.swift in Sources */,
 				B70F35901F0A4AC100BA3575 /* PtotoPreviewViewController.swift in Sources */,
-				B784BADE1F0CAEB8009A5F89 /* SharePhotosViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -32,17 +32,32 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
     var caption:UITextView?
     var drag:UIPanGestureRecognizer?
     
+    var isAirBrushDone:Bool=false
+    
     // MARK: - UIView life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        viewIntialization()
         // Do any additional setup after loading the view.
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        viewIntialization()
+        if isAirBrushDone {
+            
+            //Change after done action of airbrush
+            selectedImageSize = selectedPhoto?.size
+            photoPreviewImageView.image=selectedPhoto
+            photoPreviewImageView.isUserInteractionEnabled=true
+            
+            //Change photoPreviewImageView according to selected image size ratio
+            changeImageRatio()
+
+            isImageEdited=true
+            addSaveBarButton()
+        }
     }
     
     override func didReceiveMemoryWarning() {
@@ -81,6 +96,7 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
     //Set UIImageView size according to image size ratio
     func changeImageRatio() {
         
+        print(scrollViewObject.zoomScale)
         let ratio = (selectedImageSize?.width)!/(selectedImageSize?.height)!
         let selectedImageWidth:CGFloat=(selectedImageSize?.width)!
         let selectedImageHeight:CGFloat=(selectedImageSize?.height)!
@@ -140,7 +156,6 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
         else {
             contentsFrame.origin.y = 0.0
         }
-        
         self.photoPreviewImageView.frame = contentsFrame;
     }
     // MARK: - end
@@ -206,6 +221,13 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
     
     @IBAction func addAirbrush(_ sender: UIButton) {
         
+        isAirBrushDone=false
+        //Navigate to photoGrid screen in edit mode
+        let airBrushViewObj = self.storyboard?.instantiateViewController(withIdentifier: "AirBrushViewController") as? AirBrushViewController
+        airBrushViewObj?.selectedPhoto=selectedPhoto
+        airBrushViewObj?.screenTitle=self.navigationItem.title! as NSString
+        airBrushViewObj?.photoPreviewObj=self
+        self.navigationController?.pushViewController(airBrushViewObj!, animated: false)
     }
     
     override func saveButtonAction() {
@@ -378,7 +400,7 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
     }
     // MARK: - end
     
-    // MARK: - Add caption at selected image
+    // MARK: - Add caption(Text) at selected image
     func initCaption() {
         
         caption = UITextView.init(frame: CGRect(x: 0, y: (photoPreviewImageView.frame.size.height/2) - 15, width: UIScreen.main.bounds.size.width, height: 34))
@@ -450,6 +472,9 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
     }
     // MARK: - end
     
+    // MARK: - Add airbrush feature
+    
+    // MARK: - end
     
     /*
     // MARK: - Navigation
