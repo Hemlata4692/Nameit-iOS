@@ -9,7 +9,7 @@
 import UIKit
 import AssetsLibrary
 
-class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate, UITextFieldDelegate, UIGestureRecognizerDelegate {
+class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate, UITextViewDelegate, UIGestureRecognizerDelegate {
     
     @IBOutlet var airbrushButton: UIButton!
     @IBOutlet var addTextButton: UIButton!
@@ -29,7 +29,7 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
     var isAddTextSelected:Bool = false
     var isImageEdited:Bool = false
     
-    var caption:UITextField?
+    var caption:UITextView?
     var drag:UIPanGestureRecognizer?
     
     // MARK: - UIView life cycle
@@ -57,18 +57,21 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
         self.scrollViewObject.maximumZoomScale = 3.0
         self.scrollViewObject.minimumZoomScale = 1.0
 
+        //Set gesture variable
         drag=UIPanGestureRecognizer.init(target: self, action: #selector(captionDrag(gestureRecognizer:)))
+        drag?.delegate=self
+        
         //Load full image and image name from selectedImageAsset
         let assetRepresent:ALAssetRepresentation=selectedPhotoAsset!.defaultRepresentation()
         let fullImageRef:CGImage=assetRepresent.fullScreenImage().takeUnretainedValue()
         let fullImage:UIImage=UIImage.init(cgImage: fullImageRef)
         selectedPhoto=fullImage
-//        beforeEditImage=fullImage
         
         //Set navigation title
         self.navigationItem.title=assetRepresent.filename().components(separatedBy: ".").first?.capitalized
         selectedImageSize = selectedPhoto?.size
         photoPreviewImageView.image=selectedPhoto
+        photoPreviewImageView.isUserInteractionEnabled=true
         
         //Change photoPreviewImageView according to selected image size ratio
         changeImageRatio()
@@ -185,14 +188,19 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
             commonMethodOfRotateAddTextAction()
             photoPreviewImageView.frame=CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height-114)  //height=navigationBar_Height(64)+bottom_space(50)
             photoPreviewImageView.addGestureRecognizer(drag!)
+            initCaption()
         }
         else {
             
-            initCaption()
-//            photoPreviewImageView.image = rotateImage(image:  photoPreviewImageView.image!, rotationDegree: 90)
-//            self.scrollViewObject.zoomScale=1.0
-//            selectedImageSize=photoPreviewImageView.image?.size
-//            changeImageRatio()
+            if ((caption?.sizeThatFits((caption?.frame.size)!).height)! > CGFloat(36.0)) {
+                
+                caption?.frame = CGRect(x: 0, y: (photoPreviewImageView.frame.size.height/2) - ((caption?.sizeThatFits((caption?.frame.size)!).height)!/2), width: UIScreen.main.bounds.size.width, height: (caption?.sizeThatFits((caption?.frame.size)!).height)!)
+            }
+            else {
+                
+                caption?.frame = CGRect(x: 0, y: (photoPreviewImageView.frame.size.height/2) - 15, width: UIScreen.main.bounds.size.width, height: 34)
+            }
+            caption?.becomeFirstResponder()
         }
     }
     
@@ -204,6 +212,7 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
     
         if (isImageEdited) {
         
+            scrollViewObject.zoomScale=1.0
             //Adds the edited image to the user’s Camera Roll album
             UIImageWriteToSavedPhotosAlbum(photoPreviewImageView.image!, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
         }
@@ -218,10 +227,11 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
         photoPreviewImageView.image=selectedPhoto
         
         if isAddTextSelected {
+            caption?.resignFirstResponder()
             caption?.removeFromSuperview()
         }
         
-        //Common Method for cancel and done action
+        //Common method for cancel and done action
         commonMethodOfCancelDoneAction()
     }
     
@@ -231,7 +241,20 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
         selectedPhoto=photoPreviewImageView.image
         selectedImageSize = selectedPhoto?.size
         
-        //Common Method for cancel and done action
+        if isAddTextSelected {
+            
+            caption?.resignFirstResponder()
+            if caption?.text.characters.count != 0 {
+            
+                //Add text at selected image
+                setCustomTextAtSelectedImage()
+                selectedPhoto=photoPreviewImageView.image
+                selectedImageSize = selectedPhoto?.size
+            }
+            caption?.removeFromSuperview()
+        }
+        
+        //Common method for cancel and done action
         commonMethodOfCancelDoneAction()
     }
     // MARK: - end
@@ -358,23 +381,76 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
     // MARK: - Add caption at selected image
     func initCaption() {
         
-        caption = UITextField.init(frame: CGRect(x: 0, y: 170, width: UIScreen.main.bounds.size.width, height: 30))
+        caption = UITextView.init(frame: CGRect(x: 0, y: (photoPreviewImageView.frame.size.height/2) - 15, width: UIScreen.main.bounds.size.width, height: 34))
         caption?.backgroundColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.5)
         caption?.textAlignment = NSTextAlignment.center
-        caption?.contentVerticalAlignment = UIControlContentVerticalAlignment.center
-        caption?.contentHorizontalAlignment = UIControlContentHorizontalAlignment.center
         caption?.textColor = UIColor.white
         caption?.keyboardAppearance = UIKeyboardAppearance.default
         caption?.tintColor = UIColor.white
+        caption?.font=UIFont.systemFont(ofSize: 15)
+        caption?.autocorrectionType=UITextAutocorrectionType.no
         caption?.delegate = self
         photoPreviewImageView.addSubview(caption!)
+        caption?.becomeFirstResponder()
     }
     
     func captionDrag(gestureRecognizer:UIGestureRecognizer) {
         
+        let translation = gestureRecognizer.location(in: photoPreviewImageView)
+        print(translation)
         
+        caption?.center=CGPoint(x: UIScreen.main.bounds.size.width / 2.0, y: translation.y)
+        if(gestureRecognizer.state == UIGestureRecognizerState.ended) {
+        
+            //Set drag limit of caption at photoPreviewImageView
+            if translation.y < ((caption?.frame.size.height)!/2)  {
+                
+                caption?.center=CGPoint(x: UIScreen.main.bounds.size.width / 2.0, y: ((caption?.frame.size.height)!/2))
+            }
+            else if translation.y > (photoPreviewImageView.frame.size.height - ((caption?.frame.size.height)!/2))  {
+                
+                caption?.center=CGPoint(x: UIScreen.main.bounds.size.width / 2.0, y: (photoPreviewImageView.frame.size.height - ((caption?.frame.size.height)!/2)))
+            }
+        }
     }
-
+    
+    func setCustomTextAtSelectedImage() {
+        
+        UIGraphicsBeginImageContextWithOptions(photoPreviewImageView.frame.size, true, 0.0)
+        photoPreviewImageView.layer.render(in: UIGraphicsGetCurrentContext()!)
+        photoPreviewImageView.image=UIGraphicsGetImageFromCurrentImageContext()!
+    }
+    // MARK: - end
+    
+    // MARK: - UITextView delegate methods
+    func textViewDidChange(_ textView: UITextView) { //Handle the text changes here
+        
+        print(textView.text.characters.count); //the textView parameter is the textView where text was changed
+        if ((caption?.sizeThatFits((caption?.frame.size)!).height)! > CGFloat(36.0)) {
+            
+            caption?.frame = CGRect(x: 0, y: (photoPreviewImageView.frame.size.height/2) - ((caption?.sizeThatFits((caption?.frame.size)!).height)!/2), width: UIScreen.main.bounds.size.width, height: (caption?.sizeThatFits((caption?.frame.size)!).height)!)
+        }
+        else {
+        
+             caption?.frame = CGRect(x: 0, y: (photoPreviewImageView.frame.size.height/2) - 15, width: UIScreen.main.bounds.size.width, height: 34)
+        }
+    }
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+       
+        if(text == "\n") {
+            textView.resignFirstResponder()
+            return false
+        }
+        else {
+            let newText = (textView.text as NSString).replacingCharacters(in: range, with: text)
+            let numberOfChars = newText.characters.count // for Swift use count(newText)
+            return numberOfChars < 101;
+        }
+    }
+    // MARK: - end
+    
+    
     /*
     // MARK: - Navigation
 
