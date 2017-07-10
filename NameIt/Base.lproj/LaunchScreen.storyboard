@@ -21,21 +21,16 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="NameIt" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="a7j-yt-hiI">
-                                <rect key="frame" x="0.0" y="267" width="320" height="34"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="34" id="A60-Rt-c9P"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="splash1242-2208.png" translatesAutoresizingMaskIntoConstraints="NO" id="B9U-U5-y3h">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstAttribute="trailing" secondItem="a7j-yt-hiI" secondAttribute="trailing" id="DpB-uF-NoW"/>
-                            <constraint firstItem="a7j-yt-hiI" firstAttribute="top" secondItem="Llm-lL-Icb" secondAttribute="bottom" constant="247" id="Sbs-PD-7hN"/>
-                            <constraint firstItem="a7j-yt-hiI" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="a1a-wY-yPf"/>
+                            <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="B9U-U5-y3h" secondAttribute="bottom" id="1Od-y0-Np8"/>
+                            <constraint firstAttribute="trailing" secondItem="B9U-U5-y3h" secondAttribute="trailing" id="Wxr-0E-y56"/>
+                            <constraint firstItem="B9U-U5-y3h" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="YEv-wt-mZk"/>
+                            <constraint firstItem="B9U-U5-y3h" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="top" id="sCg-Fc-xmf"/>
                         </constraints>
                     </view>
                 </viewController>
@@ -44,4 +39,7 @@
             <point key="canvasLocation" x="52.5" y="375"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="splash1242-2208.png" width="1242" height="2208"/>
+    </resources>
 </document>

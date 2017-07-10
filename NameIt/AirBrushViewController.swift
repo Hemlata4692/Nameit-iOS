@@ -40,13 +40,48 @@ class AirBrushViewController: GlobalBackViewController, UIScrollViewDelegate, UI
     var eraserSelected=false
     var selectedColor:UIColor?
     
-    let size:CGSize=CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height-114)
+    var size:CGSize=CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height-114)
     
     // MARK: - UIView life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // Do any additional setup after loading the view.
+    }
+    
+    //Set UIImageView size according to image size ratio
+    func changeImageRatio() {
+        
+        let ratio = (selectedImageSize?.width)!/(selectedImageSize?.height)!
+        let selectedImageWidth:CGFloat=(selectedImageSize?.width)!
+        let selectedImageHeight:CGFloat=(selectedImageSize?.height)!
+        var selectedImageX:CGFloat = 0.0
+        var selectedImageY:CGFloat = 0.0
+        if ratio>1 {
+            
+            selectedImageSize?.width=self.view.bounds.size.width
+            selectedImageSize?.height = (selectedImageHeight/selectedImageWidth) * (selectedImageSize?.width)!
+            selectedImageY = CGFloat(((UIScreen.main.bounds.size.height-(64.0+44.0))/2.0) - ((selectedImageSize?.height)!/2.0))
+        }
+        else if ratio==1 {
+            
+            selectedImageSize?.width=self.view.bounds.size.width
+            selectedImageSize?.height=self.view.bounds.size.width
+            selectedImageY = CGFloat(((UIScreen.main.bounds.size.height-(64.0+44.0))/2.0) - ((selectedImageSize?.height)!/2.0))
+        }
+        else {
+            
+            selectedImageSize?.height=UIScreen.main.bounds.size.height-(64+44)
+            selectedImageSize?.width = (selectedImageWidth/selectedImageHeight) * (selectedImageSize?.height)!
+            selectedImageX = CGFloat((UIScreen.main.bounds.size.width/2.0) - ((selectedImageSize?.width)!/2.0))
+        }
+        
+        photoPreviewImageView.translatesAutoresizingMaskIntoConstraints=true;
+        photoPreviewImageView.frame=CGRect(x: selectedImageX, y: selectedImageY, width: (selectedImageSize?.width)!, height: (selectedImageSize?.height)!)
+        tempPhotoImageView.translatesAutoresizingMaskIntoConstraints=true;
+        tempPhotoImageView.frame=CGRect(x: selectedImageX, y: selectedImageY, width: (selectedImageSize?.width)!, height: (selectedImageSize?.height)!)
+        size=selectedImageSize!
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -84,12 +119,12 @@ class AirBrushViewController: GlobalBackViewController, UIScrollViewDelegate, UI
         
         eraserButton.layer.cornerRadius=13
         eraserButton.layer.masksToBounds=true
-//        eraserButton.isEnabled=false
         
         selectedImageSize = selectedPhoto?.size
-        tempPhotoImageView.image=selectedPhoto
+        tempPhotoImageView.image=UIImage()
         photoPreviewImageView.image=selectedPhoto
         photoPreviewImageView.isUserInteractionEnabled=true
+//        changeImageRatio()
         
         //Customize slider view
         resizeSlider.value=5.0
@@ -110,7 +145,7 @@ class AirBrushViewController: GlobalBackViewController, UIScrollViewDelegate, UI
         brushView.frame=CGRect(x: 50, y: Int(UIScreen.main.bounds.size.height - 214), width: Int(resizeSlider.value)+6, height: Int(resizeSlider.value)+6)
     }
     
-    @IBAction func addAirbrush(_ sender: UIButton) {    }
+    @IBAction func addAirbrush(_ sender: UIButton) {}
     
     override func cancelButtonAction() {
         
@@ -252,6 +287,7 @@ class AirBrushViewController: GlobalBackViewController, UIScrollViewDelegate, UI
                         UIGraphicsEndImageContext()
                     }
                     
+                    tempPhotoImageView.contentMode=UIViewContentMode.scaleAspectFit
                     eraserButton.isHidden=false
                     colorSliderImageView.isHidden=false
                     sliderBackView.isHidden=false
@@ -294,11 +330,18 @@ class AirBrushViewController: GlobalBackViewController, UIScrollViewDelegate, UI
     // MARK: - Merge airbrushed image
     func mergeAirbrushedImage() {
         
-        //Merge tempImageView into mainImageView
-        UIGraphicsBeginImageContext(size)
-        photoPreviewImageView.image?.draw(in: CGRect(x: 0, y: 0, width: size.width, height: size.height), blendMode:CGBlendMode.normal, alpha: 1.0)
-        tempPhotoImageView.image?.draw(in: CGRect(x: 0, y: 0, width: size.width, height:size.height), blendMode:CGBlendMode.normal, alpha: 1.0)
-        photoPreviewImageView.image = UIGraphicsGetImageFromCurrentImageContext()
+//        //Merge tempImageView into mainImageView
+//        UIGraphicsBeginImageContext(size)
+//        photoPreviewImageView.image?.draw(in: CGRect(x: 0, y: 0, width: size.width, height: size.height), blendMode:CGBlendMode.normal, alpha: 1.0)
+//        tempPhotoImageView.image?.draw(in: CGRect(x: 0, y: 0, width: size.width, height:size.height), blendMode:CGBlendMode.normal, alpha: 1.0)
+//        photoPreviewImageView.image = UIGraphicsGetImageFromCurrentImageContext()
+//        tempPhotoImageView.image = nil
+        
+        let tempImage:UIImageView=tempPhotoImageView
+        photoPreviewImageView.addSubview(tempImage)
+        UIGraphicsBeginImageContextWithOptions(photoPreviewImageView.frame.size, true, 0.0)
+        photoPreviewImageView.layer.render(in: UIGraphicsGetCurrentContext()!)
+        photoPreviewImageView.image=UIGraphicsGetImageFromCurrentImageContext()!
         tempPhotoImageView.image = nil
     }
     // MARK: - end

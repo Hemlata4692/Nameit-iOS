@@ -106,17 +106,17 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
             
             selectedImageSize?.width=self.view.bounds.size.width
             selectedImageSize?.height = (selectedImageHeight/selectedImageWidth) * (selectedImageSize?.width)!
-            selectedImageY = CGFloat(((UIScreen.main.bounds.size.height-(64.0+44.0))/2.0) - ((selectedImageSize?.height)!/2.0))
+            selectedImageY = CGFloat(((UIScreen.main.bounds.size.height-(64.0+64.0))/2.0) - ((selectedImageSize?.height)!/2.0))
         }
         else if ratio==1 {
             
             selectedImageSize?.width=self.view.bounds.size.width
             selectedImageSize?.height=self.view.bounds.size.width
-            selectedImageY = CGFloat(((UIScreen.main.bounds.size.height-(64.0+44.0))/2.0) - ((selectedImageSize?.height)!/2.0))
+            selectedImageY = CGFloat(((UIScreen.main.bounds.size.height-(64.0+64.0))/2.0) - ((selectedImageSize?.height)!/2.0))
         }
         else {
             
-            selectedImageSize?.height=UIScreen.main.bounds.size.height-(64+44)
+            selectedImageSize?.height=UIScreen.main.bounds.size.height-(64+64)
             selectedImageSize?.width = (selectedImageWidth/selectedImageHeight) * (selectedImageSize?.height)!
             selectedImageX = CGFloat((UIScreen.main.bounds.size.width/2.0) - ((selectedImageSize?.width)!/2.0))
         }
@@ -206,7 +206,7 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
             isAddTextSelected=true
             rotateButton.isEnabled=false;
             commonMethodOfRotateAddTextAction()
-            photoPreviewImageView.frame=CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height-114)  //height=navigationBar_Height(64)+bottom_space(50)
+//            photoPreviewImageView.frame=CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height-128)  //height=navigationBar_Height(64)+bottom_space(64)
             photoPreviewImageView.addGestureRecognizer(drag!)
             initCaption()
         }
@@ -240,8 +240,9 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
         if (isImageEdited) {
         
             scrollViewObject.zoomScale=1.0
-            //Adds the edited image to the user’s Camera Roll album
-            UIImageWriteToSavedPhotosAlbum(photoPreviewImageView.image!, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
+            //Show indicator
+            AppDelegate().showIndicator(uiView: self.view)
+            self.perform( #selector(saveEditedImage), with: nil, afterDelay: 0.1)
         }
         else {
             self.navigationController?.popViewController(animated: true)
@@ -387,9 +388,19 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
     }
     // MARK: - end
     
-    // MARK: - UIImagePickerController delegate
+    // MARK: - Save image
+    func saveEditedImage() {
+    
+        //Adds the edited image to the user’s Camera Roll album
+        UIImageWriteToSavedPhotosAlbum(photoPreviewImageView.image!, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
+    }
+    
+    //UIImagePickerController delegate
     //Selector should be called after the image has been written to the Camera Roll album
     func image(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
+        
+        //Show indicator
+        AppDelegate().stopIndicator(uiView: self.view)
         
         if error != nil {
             //We got back an error!

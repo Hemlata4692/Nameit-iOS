@@ -36,9 +36,10 @@ class GlobalBackViewController: UIViewController {
         self.navigationItem.rightBarButtonItem=nil
 
         //Navigation bar buttons
-        let framing:CGRect=CGRect(x: 0, y: 0, width: 30, height: 30)
+        let framing:CGRect=CGRect(x: 0, y: 0, width: 20, height: 20)
         let backButton=UIButton.init(frame: framing)
-        backButton.setImage(UIImage.init(named: "back_btn_"), for: UIControlState.normal)
+        backButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, -8.0, 0.0, 8.0)
+        backButton.setImage(UIImage.init(named: "back"), for: UIControlState.normal)
         let backBarButton:UIBarButtonItem=UIBarButtonItem.init(customView: backButton)
         backButton.addTarget(self, action: #selector(backButtonAction), for: UIControlEvents.touchUpInside)
         self.navigationItem.leftBarButtonItem=backBarButton

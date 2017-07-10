@@ -54,6 +54,7 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
     func viewInitialization() {
         
         //Initialized variables
+        searchBarObject.isHidden=true
         isSearch=false
         cameraRollAssets = []
         searchedCameraRollAssets = []
@@ -103,17 +104,17 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
         rightButton?.setTitleColor(UIColor.white, for: UIControlState.normal)
         rightButton?.setTitle("", for: UIControlState.normal)
         rightButton?.titleLabel!.font =  UIFont.systemFont(ofSize: 17)
-        rightButton?.titleEdgeInsets = UIEdgeInsetsMake(0.0, 12.0, 0.0, -12.0)
+        rightButton?.titleEdgeInsets = UIEdgeInsetsMake(0.0, 8.0, 0.0, -8.0)
         rightButton?.addTarget(self, action: #selector(rightBarButtonAction), for: UIControlEvents.touchUpInside)
         
         let rightBarButton:UIBarButtonItem=UIBarButtonItem.init(customView: rightButton!)
         self.navigationItem.rightBarButtonItem=rightBarButton
         
         //Navigation left bar buttons
-        framing=CGRect(x: 0, y: 0, width: 30, height: 30)
+        framing=CGRect(x: 0, y: 0, width: 20, height: 20)
         leftButton=UIButton.init(frame: framing)
-        leftButton?.setImage(UIImage.init(named: "shareIcon"), for: UIControlState.normal)
-        leftButton?.imageEdgeInsets = UIEdgeInsetsMake(0.0, -12.0, 0.0, 12.0)
+        leftButton?.setImage(UIImage.init(named: "share_White"), for: UIControlState.normal)
+        leftButton?.imageEdgeInsets = UIEdgeInsetsMake(0.0, -5.0, 0.0, 5.0)
         leftButton?.addTarget(self, action: #selector(leftBarButtonAction), for: UIControlEvents.touchUpInside)
         
         let leftBarButton:UIBarButtonItem=UIBarButtonItem.init(customView: leftButton!)
@@ -163,11 +164,11 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
             //Manage image selection
             if (selectUnselectImageArray.contains(indexPath.row)) {
                 
-                cell?.selectUnselectImageView.image=UIImage.init(named: "check")
+                cell?.selectUnselectImageView.image=UIImage.init(named: "select")
             }
             else {
                 
-                cell?.selectUnselectImageView.image=UIImage.init(named: "uncheck")
+                cell?.selectUnselectImageView.image=UIImage()
             }
         }
         else {
@@ -188,12 +189,12 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
             if (selectUnselectImageArray.contains(indexPath.row)) {
                 
                 selectUnselectImageArray.remove(indexPath.row)
-                cell.selectUnselectImageView.image=UIImage.init(named: "uncheck")
+                cell.selectUnselectImageView.image=UIImage()
             }
             else {
                 
                 selectUnselectImageArray.add(indexPath.row)
-                cell.selectUnselectImageView.image=UIImage.init(named: "check")
+                cell.selectUnselectImageView.image=UIImage.init(named: "select")
             }
             
             //Manage enable and disable share button(Left bar button)
@@ -266,12 +267,13 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
                 self.rightButton?.isEnabled=false;
                 self.photoAccessDeniedLabel.text="Allow NameIt to access Gallery in Settings"
                 self.photoAccessDeniedLabel.isHidden=false;
-                if (UserDefaultManager().getValue(key: "NameItPhotoAccessAlreadyCheck") != nil) {
-                    
+
+                if !(UserDefaultManager().getValue(key: "NameItPhotoAccessAlreadyCheck") is NSNull) {
+                    // exist
                     self.showPhotoAccessAlertMessage(title: "\"NameIt\" Would Like ot Access Your Photos", message: "Allow NameIt to access Gallery in Settings", cancel: "Cancel", ok: "Allow")
                 }
                 else {
-                    //Set true in userDefault to check first time access popUp
+                    // not exist
                     UserDefaultManager().setValue(value: true as AnyObject, keyText: "NameItPhotoAccessAlreadyCheck")
                 }
                 break
@@ -294,7 +296,6 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
                 self.cameraRollAssets.add(["FileName":assetRepresent.filename(),
                                            "Asset":result
                                            ])
-//                self.cameraRollAssets.add(result)
             }
         }
         
@@ -305,12 +306,14 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
 //        print(self.cameraRollAssets.count)
         if self.cameraRollAssets.count>0 {
             
+            searchBarObject.isHidden=false
             rightButton?.isEnabled=true;
             photoAccessDeniedLabel.text="Allow NameIt to access Gallery in Settings"
             cameraRollCollectionView.isHidden=false;
         }
         else {
         
+            searchBarObject.isHidden=true
             rightButton?.isEnabled=false;
             photoAccessDeniedLabel.text="No captured photos are found"
             cameraRollCollectionView.isHidden=true;
@@ -404,6 +407,8 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         
         isSearch=false
+        searchBarObject.text=""
+        photoAccessDeniedLabel.isHidden=true
         searchBarObject.resignFirstResponder()
         cameraRollCollectionView.reloadData()
     }
@@ -416,36 +421,31 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         
-//        if caption?.text.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).characters.count != 0 {
-        print(searchBar.text! + " " + searchText)
-        
         if searchText.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).characters.count == 0{
             
             isSearch=false
+            photoAccessDeniedLabel.isHidden=true
             cameraRollCollectionView.reloadData()
         }
         else {
         
             isSearch=true
+            photoAccessDeniedLabel.isHidden=true
             let photoNamePredicate = NSPredicate(format: "FileName contains[cd] %@", searchText)
-//            let subPredicates = NSArray.init(array: [photoNamePredicate])
             searchedCameraRollAssets=cameraRollAssets.filtered(using: photoNamePredicate) as! NSMutableArray
             print(searchedCameraRollAssets.count)
+            if searchedCameraRollAssets.count > 0 {
+                
+                photoAccessDeniedLabel.isHidden=true
+            }
+            else {
+            
+                photoAccessDeniedLabel.isHidden=false
+                photoAccessDeniedLabel.text="No search image found"
+            }
             cameraRollCollectionView.reloadData()
             
         }
-//        filtered = data.filter({ (text) -> Bool in
-//            let tmp: NSString = text
-//            let range = tmp.rangeOfString(searchText, options: NSStringCompareOptions.CaseInsensitiveSearch)
-//            return range.location != NSNotFound
-//        })
-//        if(filtered.count == 0){
-//            searchActive = false;
-//        } else {
-//            searchActive = true;
-//        }
-//        self.tableView.reloadData()
-        
     }
     // MARK: - end
 }

@@ -22,6 +22,8 @@
 		B77EF2211F0E521300ADDC22 /* UserDefaultManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B77EF2201F0E521300ADDC22 /* UserDefaultManager.swift */; };
 		B784BAE01F0CBA7B009A5F89 /* PhotoGridCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B784BADF1F0CBA7B009A5F89 /* PhotoGridCollectionViewCell.swift */; };
 		B784BAE41F0CCE29009A5F89 /* GlobalBackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B784BAE31F0CCE29009A5F89 /* GlobalBackViewController.swift */; };
+		B798FA8B1F137DA3008B5BF0 /* MMMaterialDesignSpinner.m in Sources */ = {isa = PBXBuildFile; fileRef = B798FA8A1F137DA3008B5BF0 /* MMMaterialDesignSpinner.m */; };
+		B798FA8E1F13ACCC008B5BF0 /* splash1242-2208.png in Resources */ = {isa = PBXBuildFile; fileRef = B798FA8D1F13ACCC008B5BF0 /* splash1242-2208.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -43,6 +45,9 @@
 		B77EF2201F0E521300ADDC22 /* UserDefaultManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDefaultManager.swift; sourceTree = "<group>"; };
 		B784BADF1F0CBA7B009A5F89 /* PhotoGridCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoGridCollectionViewCell.swift; sourceTree = "<group>"; };
 		B784BAE31F0CCE29009A5F89 /* GlobalBackViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GlobalBackViewController.swift; sourceTree = "<group>"; };
+		B798FA891F137DA3008B5BF0 /* MMMaterialDesignSpinner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMMaterialDesignSpinner.h; sourceTree = "<group>"; };
+		B798FA8A1F137DA3008B5BF0 /* MMMaterialDesignSpinner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMMaterialDesignSpinner.m; sourceTree = "<group>"; };
+		B798FA8D1F13ACCC008B5BF0 /* splash1242-2208.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "splash1242-2208.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,6 +86,7 @@
 				B70F35A31F0A519900BA3575 /* Controllers */,
 				B784BAE11F0CCE08009A5F89 /* View */,
 				B70F35921F0A4AE400BA3575 /* DataModel */,
+				B798FA871F137D80008B5BF0 /* HelperClasses */,
 				B70F35911F0A4ACC00BA3575 /* SupportingFiles */,
 				B70F357F1F0A4A1200BA3575 /* Main.storyboard */,
 				B70F35821F0A4A1200BA3575 /* Assets.xcassets */,
@@ -112,6 +118,7 @@
 		B70F35911F0A4ACC00BA3575 /* SupportingFiles */ = {
 			isa = PBXGroup;
 			children = (
+				B798FA8C1F13ACB8008B5BF0 /* SupportingImages */,
 				B7687AE41F0F6CB4001A6006 /* colorPickerPlate1.png */,
 				B70F35931F0A4B1300BA3575 /* NameIt_Bridging_Header.h */,
 			);
@@ -193,6 +200,31 @@
 			name = GlobalBackViewController;
 			sourceTree = "<group>";
 		};
+		B798FA871F137D80008B5BF0 /* HelperClasses */ = {
+			isa = PBXGroup;
+			children = (
+				B798FA881F137D8F008B5BF0 /* MMMaterialDesignSpinner */,
+			);
+			name = HelperClasses;
+			sourceTree = "<group>";
+		};
+		B798FA881F137D8F008B5BF0 /* MMMaterialDesignSpinner */ = {
+			isa = PBXGroup;
+			children = (
+				B798FA891F137DA3008B5BF0 /* MMMaterialDesignSpinner.h */,
+				B798FA8A1F137DA3008B5BF0 /* MMMaterialDesignSpinner.m */,
+			);
+			name = MMMaterialDesignSpinner;
+			sourceTree = "<group>";
+		};
+		B798FA8C1F13ACB8008B5BF0 /* SupportingImages */ = {
+			isa = PBXGroup;
+			children = (
+				B798FA8D1F13ACCC008B5BF0 /* splash1242-2208.png */,
+			);
+			name = SupportingImages;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -256,6 +288,7 @@
 				B70F359D1F0A4EC400BA3575 /* NameItDatabase.sqlite in Resources */,
 				B7687AE31F0F6BA8001A6006 /* colorPickerPlate.png in Resources */,
 				B7687AE51F0F6CB4001A6006 /* colorPickerPlate1.png in Resources */,
+				B798FA8E1F13ACCC008B5BF0 /* splash1242-2208.png in Resources */,
 				B70F35861F0A4A1200BA3575 /* LaunchScreen.storyboard in Resources */,
 				B70F35831F0A4A1200BA3575 /* Assets.xcassets in Resources */,
 				B70F35811F0A4A1200BA3575 /* Main.storyboard in Resources */,
@@ -270,6 +303,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B70F357E1F0A4A1200BA3575 /* ViewController.swift in Sources */,
+				B798FA8B1F137DA3008B5BF0 /* MMMaterialDesignSpinner.m in Sources */,
 				B7687AE01F0F69DD001A6006 /* AirBrushViewController.swift in Sources */,
 				B784BAE01F0CBA7B009A5F89 /* PhotoGridCollectionViewCell.swift in Sources */,
 				B70F357C1F0A4A1200BA3575 /* AppDelegate.swift in Sources */,
