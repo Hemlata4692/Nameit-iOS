@@ -28,7 +28,8 @@ class AirBrushViewController: GlobalBackViewController, UIScrollViewDelegate, UI
     var selectedImageSize:CGSize?
     var isImageEdited:Bool = false
     
-    
+    @IBOutlet var sliderBackView: UIView!
+    @IBOutlet var brushView: UIImageView!
     @IBOutlet var colorPreviewView: UIView!
     @IBOutlet var resizeSlider: UISlider!
     
@@ -83,28 +84,33 @@ class AirBrushViewController: GlobalBackViewController, UIScrollViewDelegate, UI
         
         eraserButton.layer.cornerRadius=13
         eraserButton.layer.masksToBounds=true
+//        eraserButton.isEnabled=false
         
         selectedImageSize = selectedPhoto?.size
         tempPhotoImageView.image=selectedPhoto
         photoPreviewImageView.image=selectedPhoto
         photoPreviewImageView.isUserInteractionEnabled=true
         
-//        //Customize slider view
-//        resizeSlider.setMaximumTrackImage(UIImage(), for: UIControlState.normal)
-//        resizeSlider.setMinimumTrackImage(UIImage(), for: UIControlState.normal)
-//        resizeSlider.setThumbImage(UIImage.init(named: "sliderThumb"), for: UIControlState.normal)
+        //Customize slider view
+        resizeSlider.value=5.0
+        resizeSlider.setMaximumTrackImage(UIImage(), for: UIControlState.normal)
+        resizeSlider.setMinimumTrackImage(UIImage(), for: UIControlState.normal)
+        resizeSlider.setThumbImage(UIImage.init(named: "sliderThumb"), for: UIControlState.normal)
+        
+        brushView.translatesAutoresizingMaskIntoConstraints=true
+        brushView.frame=CGRect(x: 50, y: 50, width: Int(resizeSlider.value)+6, height: Int(resizeSlider.value)+6)
+        brushView.isHidden=true
     }
     
     // MARK: - IBActions
     @IBAction func eraserButtonAction(_ sender: Any) {
         
         eraserSelected=true
+        brushView.isHidden=false
+        brushView.frame=CGRect(x: 50, y: Int(UIScreen.main.bounds.size.height - 214), width: Int(resizeSlider.value)+6, height: Int(resizeSlider.value)+6)
     }
     
-    @IBAction func addAirbrush(_ sender: UIButton) {
-        
-       
-    }
+    @IBAction func addAirbrush(_ sender: UIButton) {    }
     
     override func cancelButtonAction() {
         
@@ -118,6 +124,13 @@ class AirBrushViewController: GlobalBackViewController, UIScrollViewDelegate, UI
         photoPreviewObj?.selectedPhoto=selectedPhoto
         photoPreviewObj?.isAirBrushDone=true
         self.navigationController?.popViewController(animated: false)
+    }
+    
+    @IBAction func sliderAction(_ sender: UISlider) {
+        
+        print(sender.value)
+        brushWidth=CGFloat(sender.value)
+        brushView.frame=CGRect(x: Int(brushView.frame.origin.x), y: Int(brushView.frame.origin.y), width: Int(resizeSlider.value)+6, height: Int(resizeSlider.value)+6)
     }
     // MARK: - end
     
@@ -134,6 +147,8 @@ class AirBrushViewController: GlobalBackViewController, UIScrollViewDelegate, UI
                     lastPoint = touch.location(in: tempPhotoImageView)
                     eraserButton.isHidden=true
                     colorSliderImageView.isHidden=true
+                    sliderBackView.isHidden=true
+                    brushView.frame=CGRect(x: lastPoint.x-(brushView.frame.size.width/2), y: lastPoint.y-(brushView.frame.size.height/2), width: brushView.frame.size.width, height: brushView.frame.size.height)
                 }
             }
             else if (touch.view == colorSliderImageView) {
@@ -141,6 +156,7 @@ class AirBrushViewController: GlobalBackViewController, UIScrollViewDelegate, UI
                 if let touch = touches.first {
                     
                     eraserSelected=false
+                    brushView.isHidden=true
                     let location = touch.location(in: colorSliderImageView)
                     let locationAtMainView = touch.location(in: tempPhotoImageView)
                     colorPreviewView.isHidden=false;
@@ -183,6 +199,7 @@ class AirBrushViewController: GlobalBackViewController, UIScrollViewDelegate, UI
                 if let touch = touches.first {
                     
                     let currentPoint = touch.location(in: tempPhotoImageView)
+                    brushView.frame=CGRect(x: currentPoint.x-(brushView.frame.size.width/2), y: currentPoint.y-(brushView.frame.size.height/2), width: brushView.frame.size.width, height: brushView.frame.size.height)
                     drawLineFrom(lastPoint, toPoint: currentPoint)
                     lastPoint = currentPoint
                 }
@@ -214,6 +231,7 @@ class AirBrushViewController: GlobalBackViewController, UIScrollViewDelegate, UI
                 if touches.first != nil {
                     
                     if !swiped {
+//                        eraserButton.isEnabled=true
                         UIGraphicsBeginImageContext(size)
                         let context = UIGraphicsGetCurrentContext()
                         tempPhotoImageView.image?.draw(in: CGRect(x: 0, y: 0, width: size.width, height: size.height))
@@ -236,6 +254,7 @@ class AirBrushViewController: GlobalBackViewController, UIScrollViewDelegate, UI
                     
                     eraserButton.isHidden=false
                     colorSliderImageView.isHidden=false
+                    sliderBackView.isHidden=false
                 }
             }
             else if (touch.view == colorSliderImageView) {

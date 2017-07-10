@@ -123,11 +123,12 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
         
         photoPreviewImageView.translatesAutoresizingMaskIntoConstraints=true;
         photoPreviewImageView.frame=CGRect(x: selectedImageX, y: selectedImageY, width: (selectedImageSize?.width)!, height: (selectedImageSize?.height)!)
-        self.scrollViewObject.contentSize=CGSize(width: photoPreviewImageView.frame.size.width, height: photoPreviewImageView.frame.size.height)
+        self.scrollViewObject.contentSize=CGSize(width: 0, height: 0)
     }
     
     //ScrollView delegates
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+        
         return photoPreviewImageView
     }
     
@@ -157,6 +158,10 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
             contentsFrame.origin.y = 0.0
         }
         self.photoPreviewImageView.frame = contentsFrame;
+        
+        if scrollViewObject.zoomScale==1.0 {
+             self.scrollViewObject.contentSize=CGSize(width: 0, height: 0)
+        }
     }
     // MARK: - end
     
@@ -251,6 +256,7 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
         if isAddTextSelected {
             caption?.resignFirstResponder()
             caption?.removeFromSuperview()
+            caption=nil
         }
         
         //Common method for cancel and done action
@@ -266,7 +272,7 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
         if isAddTextSelected {
             
             caption?.resignFirstResponder()
-            if caption?.text.characters.count != 0 {
+            if caption?.text.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).characters.count != 0 {
             
                 //Add text at selected image
                 setCustomTextAtSelectedImage()
@@ -274,10 +280,20 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
                 selectedImageSize = selectedPhoto?.size
             }
             caption?.removeFromSuperview()
+            caption=nil
         }
         
         //Common method for cancel and done action
         commonMethodOfCancelDoneAction()
+    }
+    
+    
+    @IBAction func resignKeyboardWithTapGesture(_ sender: UITapGestureRecognizer) {
+        
+        if caption != nil {
+            
+            caption?.resignFirstResponder()
+        }
     }
     // MARK: - end
     
@@ -404,9 +420,10 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
     func initCaption() {
         
         caption = UITextView.init(frame: CGRect(x: 0, y: (photoPreviewImageView.frame.size.height/2) - 15, width: UIScreen.main.bounds.size.width, height: 34))
-        caption?.backgroundColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.5)
+//        caption?.backgroundColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.5)
+        caption?.backgroundColor = UIColor.clear
         caption?.textAlignment = NSTextAlignment.center
-        caption?.textColor = UIColor.white
+        caption?.textColor = UIColor.black
         caption?.keyboardAppearance = UIKeyboardAppearance.default
         caption?.tintColor = UIColor.white
         caption?.font=UIFont.systemFont(ofSize: 15)
@@ -421,17 +438,19 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
         let translation = gestureRecognizer.location(in: photoPreviewImageView)
         print(translation)
         
-        caption?.center=CGPoint(x: UIScreen.main.bounds.size.width / 2.0, y: translation.y)
+        caption?.center=CGPoint(x: translation.x, y: translation.y)
         if(gestureRecognizer.state == UIGestureRecognizerState.ended) {
         
             //Set drag limit of caption at photoPreviewImageView
             if translation.y < ((caption?.frame.size.height)!/2)  {
                 
-                caption?.center=CGPoint(x: UIScreen.main.bounds.size.width / 2.0, y: ((caption?.frame.size.height)!/2))
+                caption?.center=CGPoint(x: translation.x, y: ((caption?.frame.size.height)!/2))
+//                caption?.center=CGPoint(x: UIScreen.main.bounds.size.width / 2.0, y: ((caption?.frame.size.height)!/2))
             }
             else if translation.y > (photoPreviewImageView.frame.size.height - ((caption?.frame.size.height)!/2))  {
                 
-                caption?.center=CGPoint(x: UIScreen.main.bounds.size.width / 2.0, y: (photoPreviewImageView.frame.size.height - ((caption?.frame.size.height)!/2)))
+                caption?.center=CGPoint(x: translation.x, y: (photoPreviewImageView.frame.size.height - ((caption?.frame.size.height)!/2)))
+//                caption?.center=CGPoint(x: UIScreen.main.bounds.size.width / 2.0, y: (photoPreviewImageView.frame.size.height - ((caption?.frame.size.height)!/2)))
             }
         }
     }
@@ -461,8 +480,11 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
        
         if(text == "\n") {
-            textView.resignFirstResponder()
-            return false
+            print(caption?.sizeThatFits((caption?.frame.size)!).height as Any)
+            if (caption?.sizeThatFits((caption?.frame.size)!).height)! > CGFloat(85.0) {
+                return false
+            }
+            return true
         }
         else {
             let newText = (textView.text as NSString).replacingCharacters(in: range, with: text)
@@ -470,10 +492,6 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
             return numberOfChars < 101;
         }
     }
-    // MARK: - end
-    
-    // MARK: - Add airbrush feature
-    
     // MARK: - end
     
     /*

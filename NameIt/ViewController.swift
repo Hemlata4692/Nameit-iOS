@@ -9,8 +9,9 @@
 import UIKit
 import AssetsLibrary
 
-class ViewController: UIViewController,UICollectionViewDataSource, UICollectionViewDelegate,UICollectionViewDelegateFlowLayout {
+class ViewController: UIViewController,UICollectionViewDataSource, UICollectionViewDelegate,UICollectionViewDelegateFlowLayout, UISearchBarDelegate {
 
+    @IBOutlet var searchBarObject: UISearchBar!
     @IBOutlet var photoAccessDeniedLabel: UILabel!
     @IBOutlet var cameraRollCollectionView: UICollectionView!
     
@@ -25,6 +26,10 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
     
     var assetsGroup:ALAssetsGroup?
     
+    var isSearch:Bool=false
+    var searchedCameraRollAssets: NSMutableArray = []
+    
+    
     // MARK: - UIView life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,10 +40,7 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        self.navigationItem.title="Photos"
-        cameraRollAssets.removeAllObjects()
-        groupArray.removeAllObjects()
-        cameraRollCollectionView.reloadData()
+        self.navigationItem.title="Gallery"
         viewInitialization()
     }
     
@@ -50,6 +52,14 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
     
     // MARK: - View customization
     func viewInitialization() {
+        
+        //Initialized variables
+        isSearch=false
+        cameraRollAssets = []
+        searchedCameraRollAssets = []
+        groupArray = []
+        cameraRollCollectionView.reloadData()
+        searchBarObject.text=""
         
         photoAccessDeniedLabel.text="Allow NameIt to access Gallery in Settings"
         photoAccessDeniedLabel.isHidden=true;
@@ -93,7 +103,7 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
         rightButton?.setTitleColor(UIColor.white, for: UIControlState.normal)
         rightButton?.setTitle("", for: UIControlState.normal)
         rightButton?.titleLabel!.font =  UIFont.systemFont(ofSize: 17)
-        rightButton?.titleEdgeInsets = UIEdgeInsetsMake(0.0, 4.0, 0.0, -4.0)
+        rightButton?.titleEdgeInsets = UIEdgeInsetsMake(0.0, 12.0, 0.0, -12.0)
         rightButton?.addTarget(self, action: #selector(rightBarButtonAction), for: UIControlEvents.touchUpInside)
         
         let rightBarButton:UIBarButtonItem=UIBarButtonItem.init(customView: rightButton!)
@@ -103,7 +113,7 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
         framing=CGRect(x: 0, y: 0, width: 30, height: 30)
         leftButton=UIButton.init(frame: framing)
         leftButton?.setImage(UIImage.init(named: "shareIcon"), for: UIControlState.normal)
-        leftButton?.imageEdgeInsets = UIEdgeInsetsMake(0.0, -4.0, 0.0, 4.0)
+        leftButton?.imageEdgeInsets = UIEdgeInsetsMake(0.0, -12.0, 0.0, 12.0)
         leftButton?.addTarget(self, action: #selector(leftBarButtonAction), for: UIControlEvents.touchUpInside)
         
         let leftBarButton:UIBarButtonItem=UIBarButtonItem.init(customView: leftButton!)
@@ -114,6 +124,10 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
     // MARK: - CollectionView Delegate, Datasource and DelegateFlowLayout
     // Tell the collection view how many cells to make
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        
+        if isSearch {
+            return searchedCameraRollAssets.count
+        }
         return cameraRollAssets.count
     }
     
@@ -124,9 +138,19 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
         let cell:PhotoGridCollectionViewCell? = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath as IndexPath) as? PhotoGridCollectionViewCell
         
         // Load the asset for this cell
-        let asset:ALAsset=cameraRollAssets[indexPath.row] as! ALAsset
-        let assetRepresent:ALAssetRepresentation=asset.defaultRepresentation()
-        let thumbnailImageRef:CGImage=asset.aspectRatioThumbnail().takeUnretainedValue()
+        
+        var tempDictData:NSDictionary?
+        if isSearch {
+            
+            tempDictData=searchedCameraRollAssets[indexPath.row] as? NSDictionary
+        }
+        else {
+            tempDictData=cameraRollAssets[indexPath.row] as? NSDictionary
+        }
+        
+        let asset:ALAsset?=tempDictData?.object(forKey: "Asset") as? ALAsset
+        let assetRepresent:ALAssetRepresentation=asset!.defaultRepresentation()
+        let thumbnailImageRef:CGImage=asset!.aspectRatioThumbnail().takeUnretainedValue()
         let thumbnail:UIImage=UIImage.init(cgImage: thumbnailImageRef)
         cell?.cameraRollImageView.image=thumbnail
         cell?.photoName.text=assetRepresent.filename().components(separatedBy: ".").first?.capitalized
@@ -156,6 +180,7 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
+        searchBarObject.resignFirstResponder()
         if isSelectable {
             
             //Manage image selectiong
@@ -184,8 +209,17 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
             
             //Navigate to photoGrid screen in edit mode
             let photoPreviewViewObj = self.storyboard?.instantiateViewController(withIdentifier: "PtotoPreviewViewController") as? PtotoPreviewViewController
-            photoPreviewViewObj?.selectedPhotoAsset=cameraRollAssets[indexPath.row] as? ALAsset
             
+            var tempDictData:NSDictionary?
+            if isSearch {
+                
+                tempDictData=searchedCameraRollAssets[indexPath.row] as? NSDictionary
+            }
+            else {
+                tempDictData=cameraRollAssets[indexPath.row] as? NSDictionary
+            }
+            
+            photoPreviewViewObj?.selectedPhotoAsset=tempDictData?.object(forKey: "Asset") as? ALAsset
             self.navigationController?.pushViewController(photoPreviewViewObj!, animated: true)
         }
     }
@@ -254,7 +288,13 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
         let assetsEnumerationBlock : ALAssetsGroupEnumerationResultsBlock = {
             (result: ALAsset!, index: Int, stop: UnsafeMutablePointer<ObjCBool>!) in
             if (result) != nil {
-                self.cameraRollAssets.add(result)
+                
+                let assetRepresent:ALAssetRepresentation=result!.defaultRepresentation()
+                
+                self.cameraRollAssets.add(["FileName":assetRepresent.filename(),
+                                           "Asset":result
+                                           ])
+//                self.cameraRollAssets.add(result)
             }
         }
         
@@ -282,18 +322,39 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
     // MARK: - BarButton actions
     func rightBarButtonAction() {
         
+        searchBarObject.resignFirstResponder()
         viewCustomization()
     }
     
     func leftBarButtonAction() {
         
+        searchBarObject.resignFirstResponder()
 //        var selectedImageArrayToShare:Array<NSData> = [NSData]()
         var selectedImageArrayToShare:Array<UIImage> = [UIImage]()
         //Add selected image
         for index in selectUnselectImageArray {
 
-            let tempAsset:ALAsset=(cameraRollAssets[index as! Int] as? ALAsset)!
-            let tempAssetRepresent:ALAssetRepresentation=tempAsset.defaultRepresentation()
+//            var tempAsset:ALAsset?
+//            if isSearch {
+//                tempAsset=(searchedCameraRollAssets[index as! Int] as? ALAsset)!
+//            }
+//            else {
+//                tempAsset=(cameraRollAssets[index as! Int] as? ALAsset)!
+//            }
+            
+            var tempDictData:NSDictionary?
+            if isSearch {
+                
+                tempDictData=searchedCameraRollAssets[index as! Int] as? NSDictionary
+            }
+            else {
+                tempDictData=cameraRollAssets[index as! Int] as? NSDictionary
+            }
+            
+            let tempAsset:ALAsset?=tempDictData?.object(forKey: "Asset") as? ALAsset
+            
+            
+            let tempAssetRepresent:ALAssetRepresentation=tempAsset!.defaultRepresentation()
             let tempFullImageRef:CGImage=tempAssetRepresent.fullScreenImage().takeUnretainedValue()
             let tempFullImage:UIImage=UIImage.init(cgImage: tempFullImageRef)
             //NSData *compressedImage = UIImageJPEGRepresentation(self.resultImage, 0.8 );
@@ -332,6 +393,59 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
         alertViewController.addAction(okAction)
         
         present(alertViewController, animated: true, completion: nil)
+    }
+    // MARK: - end
+    
+    // MARK: - UISearchBar delegates
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {}
+    
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {}
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        
+        isSearch=false
+        searchBarObject.resignFirstResponder()
+        cameraRollCollectionView.reloadData()
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        
+        searchBarObject.resignFirstResponder()
+        cameraRollCollectionView.reloadData()
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        
+//        if caption?.text.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).characters.count != 0 {
+        print(searchBar.text! + " " + searchText)
+        
+        if searchText.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).characters.count == 0{
+            
+            isSearch=false
+            cameraRollCollectionView.reloadData()
+        }
+        else {
+        
+            isSearch=true
+            let photoNamePredicate = NSPredicate(format: "FileName contains[cd] %@", searchText)
+//            let subPredicates = NSArray.init(array: [photoNamePredicate])
+            searchedCameraRollAssets=cameraRollAssets.filtered(using: photoNamePredicate) as! NSMutableArray
+            print(searchedCameraRollAssets.count)
+            cameraRollCollectionView.reloadData()
+            
+        }
+//        filtered = data.filter({ (text) -> Bool in
+//            let tmp: NSString = text
+//            let range = tmp.rangeOfString(searchText, options: NSStringCompareOptions.CaseInsensitiveSearch)
+//            return range.location != NSNotFound
+//        })
+//        if(filtered.count == 0){
+//            searchActive = false;
+//        } else {
+//            searchActive = true;
+//        }
+//        self.tableView.reloadData()
+        
     }
     // MARK: - end
 }
