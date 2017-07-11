@@ -13,4 +13,7 @@ class PhotoGridCollectionViewCell: UICollectionViewCell {
     @IBOutlet var selectUnselectImageView: UIImageView!
     @IBOutlet var cameraRollImageView: UIImageView!
     @IBOutlet var photoName: UILabel!
+    @IBOutlet var renameTextField: UITextField!
+    @IBOutlet var editButton: UIButton!
+    @IBOutlet var editIcon: UIImageView!
 }

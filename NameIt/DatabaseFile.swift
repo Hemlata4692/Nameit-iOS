@@ -59,7 +59,7 @@ class DatabaseFile: NSObject {
             }
             // 4
             sqlite3_finalize(createTableStatement)
-            sqlite3_close(photoAlbumDb);
+//            sqlite3_close(photoAlbumDb);
         }
     }
     
@@ -109,11 +109,11 @@ class DatabaseFile: NSObject {
 //                }
                  sqlite3_finalize(dataRows)
             }
-            sqlite3_close(photoAlbumDb);
+//            sqlite3_close(photoAlbumDb);
         }
         else {
         
-            sqlite3_close(photoAlbumDb);
+//            sqlite3_close(photoAlbumDb);
             photoAlbumDb=nil;
         }
     }
@@ -134,7 +134,7 @@ class DatabaseFile: NSObject {
 //                print("UPDATE statement could not be prepared")
             }
             sqlite3_finalize(updateStatement)
-            sqlite3_close(photoAlbumDb);
+//            sqlite3_close(photoAlbumDb);
         }
     }
 
@@ -159,7 +159,7 @@ class DatabaseFile: NSObject {
             }
             // 6
             sqlite3_finalize(queryStatement)
-            sqlite3_close(photoAlbumDb);
+//            sqlite3_close(photoAlbumDb);
             if flag==0 {
                 return false
             }
@@ -174,9 +174,9 @@ class DatabaseFile: NSObject {
     }
 
 // MARK: - Fetch data with where clause
-    func selectQuery(query:NSString) -> NSMutableArray {
+    func selectQuery(query:NSString) -> NSMutableDictionary {
         
-        var queryData: NSMutableArray = []
+        var queryData: NSMutableDictionary = [:]
         let cSql = query.cString(using: String.Encoding.utf8.rawValue)
         var queryStatement: OpaquePointer? = nil
 
@@ -192,10 +192,11 @@ class DatabaseFile: NSObject {
 //                    let name = String(cString: queryResultCol1!)
 //                    print("Query Result:")
 //                    print("\(id) | \(name)")
-                    let myDictOfDict:NSDictionary = [
-                        "PhotoActualName" : String(cString: sqlite3_column_text(queryStatement, 0)!)
-                        , "PhotoRename" : String(cString: sqlite3_column_text(queryStatement, 1)!)]
-                    queryData.add(myDictOfDict)
+//                    let myDictOfDict:NSDictionary = [
+//                        "PhotoActualName" : String(cString: sqlite3_column_text(queryStatement, 0)!)
+//                        , "PhotoRename" : String(cString: sqlite3_column_text(queryStatement, 1)!)]
+//                    queryData.add(myDictOfDict)
+                    queryData.setValue(String(cString: sqlite3_column_text(queryStatement, 1)!), forKey: String(cString: sqlite3_column_text(queryStatement, 0)!))
                 }
                 
             } else {
@@ -203,10 +204,11 @@ class DatabaseFile: NSObject {
             }
             // 6
             sqlite3_finalize(queryStatement)
-            sqlite3_close(photoAlbumDb);
+//            sqlite3_close(photoAlbumDb);
             return queryData
         }
         else {
+            queryData=[:]
             return queryData
         }
     }
@@ -229,7 +231,7 @@ class DatabaseFile: NSObject {
 //                print("DELETE statement could not be prepared")
             }
             sqlite3_finalize(deleteStatement)
-            sqlite3_close(photoAlbumDb);
+//            sqlite3_close(photoAlbumDb);
         }
         if flag==0 {
             return false

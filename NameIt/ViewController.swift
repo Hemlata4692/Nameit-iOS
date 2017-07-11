@@ -9,7 +9,7 @@
 import UIKit
 import AssetsLibrary
 
-class ViewController: UIViewController,UICollectionViewDataSource, UICollectionViewDelegate,UICollectionViewDelegateFlowLayout, UISearchBarDelegate {
+class ViewController: UIViewController,UICollectionViewDataSource, UICollectionViewDelegate,UICollectionViewDelegateFlowLayout, UISearchBarDelegate, UITextFieldDelegate {
 
     @IBOutlet var searchBarObject: UISearchBar!
     @IBOutlet var photoAccessDeniedLabel: UILabel!
@@ -29,13 +29,25 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
     var isSearch:Bool=false
     var searchedCameraRollAssets: NSMutableArray = []
     
+    //Rename function
+    var currentSelectedRenameTextfield:UITextField?
+    var lastSelectedRenameTextfield:UITextField?
+    var currentSelectedRenameButton:UIButton?
+    var lastSelectedRenameButton:UIButton?
+    var renameDatabaseDicData:NSMutableDictionary=[:]
     
     // MARK: - UIView life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        //Fetch all entries from local dataBase
+        renameDatabaseDicData=AppDelegate().fetchRenameEntries().mutableCopy() as! NSMutableDictionary
+        
+        //Reload gallery image when come in foreground state from background state
+        NotificationCenter.default.addObserver(self, selector:#selector(applicationWillEnterForeground(_:)), name:NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
         // Do any additional setup after loading the view.
     }
+    
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -154,12 +166,23 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
         let thumbnailImageRef:CGImage=asset!.aspectRatioThumbnail().takeUnretainedValue()
         let thumbnail:UIImage=UIImage.init(cgImage: thumbnailImageRef)
         cell?.cameraRollImageView.image=thumbnail
-        cell?.photoName.text=assetRepresent.filename().components(separatedBy: ".").first?.capitalized
-//        cell?.photoName.text=assetRepresent.filename()
+        
+        if ((renameDatabaseDicData.object(forKey: assetRepresent.filename().components(separatedBy: ".").first as Any)) != nil) {
+            
+            let imageName:String=renameDatabaseDicData.object(forKey: assetRepresent.filename().components(separatedBy: ".").first as Any) as! String
+             cell?.photoName.text=imageName.capitalized
+        }
+        else {
+             cell?.photoName.text=assetRepresent.filename().components(separatedBy: ".").first?.capitalized
+        }
+        
+        cell?.editButton.tag=indexPath.row
+        cell?.editButton.addTarget(self, action: #selector(editSelectedPhotoName(_:)), for: UIControlEvents.touchUpInside)
         
         //Show and hide image selection according to right bar button(select and cencel)
         if isSelectable {
             
+            cell?.editButton.isHidden=true
             cell?.selectUnselectImageView.isHidden=false
             //Manage image selection
             if (selectUnselectImageArray.contains(indexPath.row)) {
@@ -173,6 +196,7 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
         }
         else {
             
+            cell?.editButton.isHidden=false
             cell?.selectUnselectImageView.isHidden=true
         }
         
@@ -269,11 +293,11 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
                 self.photoAccessDeniedLabel.isHidden=false;
 
                 if !(UserDefaultManager().getValue(key: "NameItPhotoAccessAlreadyCheck") is NSNull) {
-                    // exist
+                    //Exist
                     self.showPhotoAccessAlertMessage(title: "\"NameIt\" Would Like ot Access Your Photos", message: "Allow NameIt to access Gallery in Settings", cancel: "Cancel", ok: "Allow")
                 }
                 else {
-                    // not exist
+                    //Not exist
                     UserDefaultManager().setValue(value: true as AnyObject, keyText: "NameItPhotoAccessAlreadyCheck")
                 }
                 break
@@ -303,7 +327,7 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
         self.assetsGroup?.setAssetsFilter(onlyPhotosFilter)
         //        self.assetsGroup?.enumerateAssets(assetsEnumerationBlock) //Show in asscending order
         self.assetsGroup?.enumerateAssets(options: .reverse, using: assetsEnumerationBlock)
-//        print(self.cameraRollAssets.count)
+        
         if self.cameraRollAssets.count>0 {
             
             searchBarObject.isHidden=false
@@ -322,6 +346,68 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
     }
     // MARK: - end
     
+    // MARK: - IBAction
+    @IBAction func editSelectedPhotoName(_ sender: UIButton) {
+    
+        var tempDictData:NSDictionary?
+        if isSearch {
+            
+            tempDictData=searchedCameraRollAssets[sender.tag] as? NSDictionary
+        }
+        else {
+            tempDictData=cameraRollAssets[sender.tag] as? NSDictionary
+        }
+        let fileName:NSString = tempDictData?.object(forKey: "FileName") as! NSString
+        
+        let alert = UIAlertController(title: "", message: "Please enter new image name", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        let saveAction = UIAlertAction(title:"Save", style: .default, handler: { (action) -> Void in
+            
+            if let alertTextField = alert.textFields?.first, alertTextField.text != nil {
+                
+                if alertTextField.text?.lowercased().trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) != fileName
+                    .components(separatedBy: ".").first!.lowercased().trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) {
+                    
+                    AppDelegate().insertUpdateRenamedText(imageName: fileName
+                        .components(separatedBy: ".").first!, rename: alertTextField.text!)
+                    self.renameDatabaseDicData.setValue(alertTextField.text, forKey: fileName
+                        .components(separatedBy: ".").first!)
+                    
+                    self.cameraRollCollectionView.reloadData()
+                }
+            }
+        })
+        alert.addAction(saveAction)
+        alert.addTextField(configurationHandler: { (textField) in
+            textField.placeholder = "Enter image name"
+            textField.text=fileName
+                .components(separatedBy: ".").first?.capitalized
+            textField.delegate=self
+            
+            NotificationCenter.default.addObserver(forName: NSNotification.Name.UITextFieldTextDidChange, object: textField, queue: OperationQueue.main) { (notification) in
+                saveAction.isEnabled = (textField.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).characters.count)! > 0
+            }
+        })
+        present(alert, animated: true, completion: nil)
+    }
+    // MARK: - end
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        
+        let characterset = CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
+        if string.rangeOfCharacter(from: characterset.inverted) != nil {
+            return false
+        }
+        
+        let textLimit=30
+        let str = (textField.text! + string)
+        if str.characters.count <= textLimit {
+            return true
+        }
+        textField.text = str.substring(to: str.index(str.startIndex, offsetBy: textLimit))
+        return false
+    }
+
     // MARK: - BarButton actions
     func rightBarButtonAction() {
         
@@ -336,14 +422,6 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
         var selectedImageArrayToShare:Array<UIImage> = [UIImage]()
         //Add selected image
         for index in selectUnselectImageArray {
-
-//            var tempAsset:ALAsset?
-//            if isSearch {
-//                tempAsset=(searchedCameraRollAssets[index as! Int] as? ALAsset)!
-//            }
-//            else {
-//                tempAsset=(cameraRollAssets[index as! Int] as? ALAsset)!
-//            }
             
             var tempDictData:NSDictionary?
             if isSearch {
@@ -355,7 +433,6 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
             }
             
             let tempAsset:ALAsset?=tempDictData?.object(forKey: "Asset") as? ALAsset
-            
             
             let tempAssetRepresent:ALAssetRepresentation=tempAsset!.defaultRepresentation()
             let tempFullImageRef:CGImage=tempAssetRepresent.fullScreenImage().takeUnretainedValue()
@@ -444,9 +521,16 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
                 photoAccessDeniedLabel.text="No search image found"
             }
             cameraRollCollectionView.reloadData()
-            
         }
     }
     // MARK: - end
+    
+    // MARK: - Notification observer method
+    func applicationWillEnterForeground(_ notification: NSNotification) {
+        
+        viewInitialization()
+    }
+    // MARK: - end
+    
 }
 

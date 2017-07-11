@@ -51,25 +51,58 @@
                                                         <constraint firstAttribute="height" constant="20" id="vha-YT-o2G"/>
                                                     </constraints>
                                                 </imageView>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label Label  Label Label  Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="FA4-ai-Omv">
-                                                    <rect key="frame" x="3" y="85" width="89" height="36"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label Label  " textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="FA4-ai-Omv">
+                                                    <rect key="frame" x="3" y="85" width="82" height="36"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="36" id="mln-2T-Bwn"/>
                                                     </constraints>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <textField hidden="YES" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Qqg-FL-gay">
+                                                    <rect key="frame" x="4" y="85" width="104" height="34"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="34" id="LlC-0o-mKq"/>
+                                                    </constraints>
+                                                    <nil key="textColor"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <textInputTraits key="textInputTraits"/>
+                                                    <connections>
+                                                        <outlet property="delegate" destination="BYZ-38-t0r" id="es2-s0-E8Y"/>
+                                                    </connections>
+                                                </textField>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PvZ-6N-igs">
+                                                    <rect key="frame" x="0.0" y="85" width="112" height="34"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="34" id="dRB-g3-PHc"/>
+                                                    </constraints>
+                                                </button>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="edit" translatesAutoresizingMaskIntoConstraints="NO" id="xfY-uT-lF9">
+                                                    <rect key="frame" x="89" y="93" width="20" height="20"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="20" id="8eK-3O-6AX"/>
+                                                        <constraint firstAttribute="width" constant="20" id="tDV-ed-cn4"/>
+                                                    </constraints>
+                                                </imageView>
                                             </subviews>
                                         </view>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
+                                            <constraint firstAttribute="trailing" secondItem="xfY-uT-lF9" secondAttribute="trailing" constant="3" id="0Ny-qc-SJG"/>
                                             <constraint firstItem="nhp-Eh-PcY" firstAttribute="top" secondItem="vAX-SK-9Gf" secondAttribute="top" constant="3" id="0S1-TN-9GB"/>
                                             <constraint firstItem="DBt-Vu-SEI" firstAttribute="leading" secondItem="vAX-SK-9Gf" secondAttribute="leading" constant="3" id="1Oa-FT-YKO"/>
+                                            <constraint firstAttribute="bottom" secondItem="Qqg-FL-gay" secondAttribute="bottom" constant="2" id="3p7-8f-oZg"/>
                                             <constraint firstAttribute="trailing" secondItem="DBt-Vu-SEI" secondAttribute="trailing" constant="3" id="9Hv-KS-kLv"/>
                                             <constraint firstItem="FA4-ai-Omv" firstAttribute="leading" secondItem="vAX-SK-9Gf" secondAttribute="leading" constant="3" id="D27-oc-hMj"/>
+                                            <constraint firstItem="PvZ-6N-igs" firstAttribute="leading" secondItem="vAX-SK-9Gf" secondAttribute="leading" id="Gea-wA-38Y"/>
+                                            <constraint firstAttribute="trailing" secondItem="PvZ-6N-igs" secondAttribute="trailing" id="MA2-n6-xUD"/>
                                             <constraint firstAttribute="bottom" secondItem="FA4-ai-Omv" secondAttribute="bottom" id="RPo-Ho-oTt"/>
-                                            <constraint firstAttribute="trailing" secondItem="FA4-ai-Omv" secondAttribute="trailing" constant="20" id="T1n-ko-mcb"/>
+                                            <constraint firstAttribute="trailing" secondItem="FA4-ai-Omv" secondAttribute="trailing" constant="27" id="T1n-ko-mcb"/>
+                                            <constraint firstItem="Qqg-FL-gay" firstAttribute="leading" secondItem="vAX-SK-9Gf" secondAttribute="leading" constant="4" id="Xls-TH-jFa"/>
+                                            <constraint firstAttribute="trailing" secondItem="Qqg-FL-gay" secondAttribute="trailing" constant="4" id="XzH-JH-QkQ"/>
+                                            <constraint firstAttribute="bottom" secondItem="xfY-uT-lF9" secondAttribute="bottom" constant="8" id="a53-rp-ltW"/>
+                                            <constraint firstAttribute="bottom" secondItem="PvZ-6N-igs" secondAttribute="bottom" constant="2" id="hGp-oq-0Be"/>
                                             <constraint firstItem="FA4-ai-Omv" firstAttribute="top" secondItem="DBt-Vu-SEI" secondAttribute="bottom" constant="2" id="lJD-Cf-LZM"/>
                                             <constraint firstItem="DBt-Vu-SEI" firstAttribute="top" secondItem="vAX-SK-9Gf" secondAttribute="top" constant="3" id="pGN-Rj-A3S"/>
                                             <constraint firstAttribute="trailing" secondItem="nhp-Eh-PcY" secondAttribute="trailing" constant="3" id="qLQ-4k-oGQ"/>
@@ -77,7 +110,10 @@
                                         </constraints>
                                         <connections>
                                             <outlet property="cameraRollImageView" destination="DBt-Vu-SEI" id="uSe-mY-F7v"/>
+                                            <outlet property="editButton" destination="PvZ-6N-igs" id="lRd-27-SjF"/>
+                                            <outlet property="editIcon" destination="xfY-uT-lF9" id="kOd-dx-nvY"/>
                                             <outlet property="photoName" destination="FA4-ai-Omv" id="Sea-DO-IkQ"/>
+                                            <outlet property="renameTextField" destination="Qqg-FL-gay" id="eiV-fQ-ah1"/>
                                             <outlet property="selectUnselectImageView" destination="nhp-Eh-PcY" id="IuX-Q5-FsW"/>
                                         </connections>
                                     </collectionViewCell>
@@ -185,7 +221,7 @@
                                     <constraint firstAttribute="width" constant="30" id="FOv-Ml-YDz"/>
                                     <constraint firstAttribute="height" constant="30" id="Fh0-p0-E4A"/>
                                 </constraints>
-                                <state key="normal" image="share_Blue"/>
+                                <state key="normal" image="share"/>
                                 <state key="highlighted" image="share_Blue"/>
                                 <connections>
                                     <action selector="shareImage:" destination="D9M-c7-J6L" eventType="touchUpInside" id="pKC-L7-hz5"/>
@@ -433,7 +469,8 @@
     <resources>
         <image name="airbrush" width="30" height="30"/>
         <image name="colorPickerPlate1.png" width="162" height="1871"/>
-        <image name="eraser" width="20" height="20"/>
+        <image name="edit" width="35" height="35"/>
+        <image name="eraser" width="25" height="25"/>
         <image name="eraserTransparent" width="50" height="50"/>
         <image name="rotate" width="30" height="30"/>
         <image name="select" width="30" height="30"/>

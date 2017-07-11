@@ -119,7 +119,6 @@
 			isa = PBXGroup;
 			children = (
 				B798FA8C1F13ACB8008B5BF0 /* SupportingImages */,
-				B7687AE41F0F6CB4001A6006 /* colorPickerPlate1.png */,
 				B70F35931F0A4B1300BA3575 /* NameIt_Bridging_Header.h */,
 			);
 			name = SupportingFiles;
@@ -221,6 +220,7 @@
 			isa = PBXGroup;
 			children = (
 				B798FA8D1F13ACCC008B5BF0 /* splash1242-2208.png */,
+				B7687AE41F0F6CB4001A6006 /* colorPickerPlate1.png */,
 			);
 			name = SupportingImages;
 			sourceTree = "<group>";

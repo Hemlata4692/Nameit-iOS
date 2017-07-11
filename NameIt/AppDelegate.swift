@@ -106,5 +106,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
     }
+    
+    // MARK: - Database handling
+    func insertUpdateRenamedText(imageName:String, rename renameText:String) {
+        
+        let check = DatabaseFile().isExistDataQuery(query: "SELECT * from PhotosData WHERE PhotoActualName = '\(imageName)';" as String as NSString)
+        if check {
+            DatabaseFile().update(updateStatementString: "UPDATE PhotosData SET PhotoRename = '\(renameText)' WHERE PhotoActualName = '\(imageName)';" as NSString)
+        }
+        else {
+            let arr : NSMutableArray = [imageName,renameText]
+            DatabaseFile().insertIntoDatabase(query: "insert into PhotosData values(?,?)", tempArray: arr)
+        }
+    }
+    
+    func fetchRenameEntries()->NSMutableDictionary {
+        
+         return DatabaseFile().selectQuery(query: "SELECT * from PhotosData;")
+    }
+    // MARK: - end
 }
 
