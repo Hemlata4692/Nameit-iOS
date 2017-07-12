@@ -124,6 +124,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
          return DatabaseFile().selectQuery(query: "SELECT * from PhotosData;")
     }
+    
+    func deleteEntries(imageName:String) -> Bool {
+        
+//        for imageName in imageNames {
+            let check = DatabaseFile().delete(deleteStatementStirng: "DELETE FROM PhotosData WHERE PhotoActualName = '\(imageName)';" as NSString)
+            if check {
+                return true
+            }
+            else {
+            
+                return false
+            }
+//        }
+//        return true
+//        let check = DatabaseFile().isExistDataQuery(query: "SELECT * from PhotosData WHERE PhotoActualName = '\(imageName)';" as String as NSString)
+//        if check {
+//            DatabaseFile().update(updateStatementString: "UPDATE PhotosData SET PhotoRename = '\(renameText)' WHERE PhotoActualName = '\(imageName)';" as NSString)
+//        }
+//        else {
+//            let arr : NSMutableArray = [imageName,renameText]
+//            DatabaseFile().insertIntoDatabase(query: "insert into PhotosData values(?,?)", tempArray: arr)
+//        }
+    }
+
     // MARK: - end
 }
 

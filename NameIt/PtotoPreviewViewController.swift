@@ -20,6 +20,7 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
     @IBOutlet var scrollViewObject: UIScrollView!
     
     var selectedPhotoAsset:ALAsset?
+    var selectedPhotoName:String?
     var selectedPhoto:UIImage?
     
     var degree:Int=0
@@ -83,7 +84,7 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
         selectedPhoto=fullImage
         
         //Set navigation title
-        self.navigationItem.title=assetRepresent.filename().components(separatedBy: ".").first?.capitalized
+        self.navigationItem.title=selectedPhotoName
         selectedImageSize = selectedPhoto?.size
         photoPreviewImageView.image=selectedPhoto
         photoPreviewImageView.isUserInteractionEnabled=true

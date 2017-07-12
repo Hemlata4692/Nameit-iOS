@@ -35,6 +35,8 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
     var currentSelectedRenameButton:UIButton?
     var lastSelectedRenameButton:UIButton?
     var renameDatabaseDicData:NSMutableDictionary=[:]
+    var lastEnteredUpdatedImageName:String=""
+    var deletingDBEntries: NSMutableArray = []
     
     // MARK: - UIView life cycle
     override func viewDidLoad() {
@@ -42,12 +44,13 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
         
         //Fetch all entries from local dataBase
         renameDatabaseDicData=AppDelegate().fetchRenameEntries().mutableCopy() as! NSMutableDictionary
+        let tempDeleteEntryArray:NSArray = renameDatabaseDicData.allKeys as NSArray
+        deletingDBEntries = tempDeleteEntryArray.mutableCopy() as! NSMutableArray
         
-        //Reload gallery image when come in foreground state from background state
+        //Reload gallery image when come in foreground from background state
         NotificationCenter.default.addObserver(self, selector:#selector(applicationWillEnterForeground(_:)), name:NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
         // Do any additional setup after loading the view.
     }
-    
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -162,19 +165,13 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
         }
         
         let asset:ALAsset?=tempDictData?.object(forKey: "Asset") as? ALAsset
-        let assetRepresent:ALAssetRepresentation=asset!.defaultRepresentation()
+//        let assetRepresent:ALAssetRepresentation=asset!.defaultRepresentation()
         let thumbnailImageRef:CGImage=asset!.aspectRatioThumbnail().takeUnretainedValue()
         let thumbnail:UIImage=UIImage.init(cgImage: thumbnailImageRef)
         cell?.cameraRollImageView.image=thumbnail
         
-        if ((renameDatabaseDicData.object(forKey: assetRepresent.filename().components(separatedBy: ".").first as Any)) != nil) {
-            
-            let imageName:String=renameDatabaseDicData.object(forKey: assetRepresent.filename().components(separatedBy: ".").first as Any) as! String
-             cell?.photoName.text=imageName.capitalized
-        }
-        else {
-             cell?.photoName.text=assetRepresent.filename().components(separatedBy: ".").first?.capitalized
-        }
+        let imageName:String=tempDictData?.object(forKey: "FileName") as! String
+        cell?.photoName.text=imageName.components(separatedBy: ".").first?.capitalized
         
         cell?.editButton.tag=indexPath.row
         cell?.editButton.addTarget(self, action: #selector(editSelectedPhotoName(_:)), for: UIControlEvents.touchUpInside)
@@ -245,6 +242,9 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
             }
             
             photoPreviewViewObj?.selectedPhotoAsset=tempDictData?.object(forKey: "Asset") as? ALAsset
+            
+            let imageName:String=tempDictData?.object(forKey: "FileName") as! String
+            photoPreviewViewObj?.selectedPhotoName=imageName.components(separatedBy: ".").first?.capitalized
             self.navigationController?.pushViewController(photoPreviewViewObj!, animated: true)
         }
     }
@@ -317,9 +317,22 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
                 
                 let assetRepresent:ALAssetRepresentation=result!.defaultRepresentation()
                 
-                self.cameraRollAssets.add(["FileName":assetRepresent.filename(),
-                                           "Asset":result
-                                           ])
+                if ((self.renameDatabaseDicData.object(forKey: assetRepresent.filename().components(separatedBy: ".").first as Any)) != nil) {
+                    
+                    var tempString:String=self.renameDatabaseDicData.object(forKey: assetRepresent.filename().components(separatedBy: ".").first as Any) as! String
+                    tempString.append(".\(assetRepresent.filename().components(separatedBy: ".").last!)")
+                    self.cameraRollAssets.add(["FileName":tempString,
+                                               "Asset":result])
+                }
+                else {
+                    
+                    self.cameraRollAssets.add(["FileName":assetRepresent.filename(),
+                                               "Asset":result])
+                }
+                
+                if self.deletingDBEntries.contains(assetRepresent.filename().components(separatedBy: ".").first!) {
+                    self.deletingDBEntries.remove(assetRepresent.filename().components(separatedBy: ".").first!)
+                }
             }
         }
         
@@ -329,6 +342,17 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
         self.assetsGroup?.enumerateAssets(options: .reverse, using: assetsEnumerationBlock)
         
         if self.cameraRollAssets.count>0 {
+            
+            DispatchQueue.global(qos: .background).async {
+                // Background Thread
+                for imageName in self.deletingDBEntries {
+                
+                    
+                }
+                DispatchQueue.main.async {
+                    // Run UI Updates
+                }
+            }
             
             searchBarObject.isHidden=false
             rightButton?.isEnabled=true;
@@ -342,6 +366,7 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
             photoAccessDeniedLabel.text="No captured photos are found"
             cameraRollCollectionView.isHidden=true;
         }
+        
         self.cameraRollCollectionView.reloadData()
     }
     // MARK: - end
@@ -349,64 +374,9 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
     // MARK: - IBAction
     @IBAction func editSelectedPhotoName(_ sender: UIButton) {
     
-        var tempDictData:NSDictionary?
-        if isSearch {
-            
-            tempDictData=searchedCameraRollAssets[sender.tag] as? NSDictionary
-        }
-        else {
-            tempDictData=cameraRollAssets[sender.tag] as? NSDictionary
-        }
-        let fileName:NSString = tempDictData?.object(forKey: "FileName") as! NSString
-        
-        let alert = UIAlertController(title: "", message: "Please enter new image name", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        let saveAction = UIAlertAction(title:"Save", style: .default, handler: { (action) -> Void in
-            
-            if let alertTextField = alert.textFields?.first, alertTextField.text != nil {
-                
-                if alertTextField.text?.lowercased().trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) != fileName
-                    .components(separatedBy: ".").first!.lowercased().trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) {
-                    
-                    AppDelegate().insertUpdateRenamedText(imageName: fileName
-                        .components(separatedBy: ".").first!, rename: alertTextField.text!)
-                    self.renameDatabaseDicData.setValue(alertTextField.text, forKey: fileName
-                        .components(separatedBy: ".").first!)
-                    
-                    self.cameraRollCollectionView.reloadData()
-                }
-            }
-        })
-        alert.addAction(saveAction)
-        alert.addTextField(configurationHandler: { (textField) in
-            textField.placeholder = "Enter image name"
-            textField.text=fileName
-                .components(separatedBy: ".").first?.capitalized
-            textField.delegate=self
-            
-            NotificationCenter.default.addObserver(forName: NSNotification.Name.UITextFieldTextDidChange, object: textField, queue: OperationQueue.main) { (notification) in
-                saveAction.isEnabled = (textField.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).characters.count)! > 0
-            }
-        })
-        present(alert, animated: true, completion: nil)
+        editImageNameRecursiveMethod(seletedImageTag: sender.tag)
     }
     // MARK: - end
-    
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        
-        let characterset = CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
-        if string.rangeOfCharacter(from: characterset.inverted) != nil {
-            return false
-        }
-        
-        let textLimit=30
-        let str = (textField.text! + string)
-        if str.characters.count <= textLimit {
-            return true
-        }
-        textField.text = str.substring(to: str.index(str.startIndex, offsetBy: textLimit))
-        return false
-    }
 
     // MARK: - BarButton actions
     func rightBarButtonAction() {
@@ -455,27 +425,6 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
     }
     // MARK: - end
     
-    // MARK: - Show photo access popUp
-    func showPhotoAccessAlertMessage(title:String, message messageText:String, cancel cancelText:String, ok okText:String) {
-        
-        let alertViewController = UIAlertController(title: title, message: messageText, preferredStyle: .alert)
-        
-        let okAction = UIAlertAction(title: okText, style: .default) { (action) -> Void in
-            
-            if let settingsURL = URL(string: UIApplicationOpenSettingsURLString + Bundle.main.bundleIdentifier!) {
-                UIApplication.shared.openURL(settingsURL as URL)
-            }
-        }
-        let cancelAction = UIAlertAction(title: cancelText, style: .cancel) { (action) -> Void in
-        }
-        
-        alertViewController.addAction(cancelAction)
-        alertViewController.addAction(okAction)
-        
-        present(alertViewController, animated: true, completion: nil)
-    }
-    // MARK: - end
-    
     // MARK: - UISearchBar delegates
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {}
     
@@ -509,7 +458,8 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
             isSearch=true
             photoAccessDeniedLabel.isHidden=true
             let photoNamePredicate = NSPredicate(format: "FileName contains[cd] %@", searchText)
-            searchedCameraRollAssets=cameraRollAssets.filtered(using: photoNamePredicate) as! NSMutableArray
+            let tempArray:NSArray=cameraRollAssets.filtered(using: photoNamePredicate) as NSArray
+            searchedCameraRollAssets = tempArray.mutableCopy() as! NSMutableArray
             print(searchedCameraRollAssets.count)
             if searchedCameraRollAssets.count > 0 {
                 
@@ -525,6 +475,167 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
     }
     // MARK: - end
     
+    // MARK: - Image rename handling
+    func editImageNameRecursiveMethod(seletedImageTag:Int) {
+        
+        var tempDictData:NSDictionary?
+        if isSearch {
+            
+            tempDictData=searchedCameraRollAssets[seletedImageTag] as? NSDictionary
+        }
+        else {
+            tempDictData=cameraRollAssets[seletedImageTag] as? NSDictionary
+        }
+        
+        let fileName:NSString = tempDictData?.object(forKey: "FileName") as! NSString
+        
+        let alert = UIAlertController(title: "", message: "Please enter new image name", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        let saveAction = UIAlertAction(title:"Save", style: .default, handler: { (action) -> Void in
+            
+            if let alertTextField = alert.textFields?.first, alertTextField.text != nil {
+                
+                if alertTextField.text?.lowercased().trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) != fileName
+                    .components(separatedBy: ".").first!.lowercased().trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) {
+                    
+                    var tempString:String=(alertTextField.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines))!
+                    tempString = tempString + "." + fileName.components(separatedBy: ".").last!
+                    
+                    //First check entered name is already exist or not
+                    if !self.isImageNameAlreadyExist(searchText: tempString) {
+                        
+                        self.editFilenameHandlingLocalAndDB(seletedImageTag: seletedImageTag, updtedText: alertTextField.text!, updtedTextWithExtension: tempString, selectedDictData: tempDictData!)
+                        self.cameraRollCollectionView.reloadData()
+                    }
+                    else {
+                        
+                        alert.dismiss(animated: false, completion: nil)
+                        self.showImageNameAlreadyExistAlert(title: "Alert", message: "This updated image name is already exist.", tempString: tempString, seletedImageTag: seletedImageTag)
+                    }
+                }
+            }
+        })
+        alert.addAction(saveAction)
+        alert.addTextField(configurationHandler: { (textField) in
+            textField.placeholder = "Enter image name"
+            
+            if self.lastEnteredUpdatedImageName == "" {
+                textField.text=fileName
+                    .components(separatedBy: ".").first?.capitalized
+            }
+            else {
+                textField.text=self.lastEnteredUpdatedImageName
+                    .components(separatedBy: ".").first?.capitalized
+            }
+            self.lastEnteredUpdatedImageName=""
+            textField.delegate=self
+            
+            NotificationCenter.default.addObserver(forName: NSNotification.Name.UITextFieldTextDidChange, object: textField, queue: OperationQueue.main) { (notification) in
+                saveAction.isEnabled = (textField.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).characters.count)! > 0
+            }
+        })
+        present(alert, animated: true, completion: nil)
+    }
+    
+    func editFilenameHandlingLocalAndDB(seletedImageTag:Int, updtedText:String, updtedTextWithExtension:String, selectedDictData:NSDictionary) {
+        
+        var tempDictData1:NSDictionary?
+        if self.isSearch {
+            
+            tempDictData1=self.searchedCameraRollAssets[seletedImageTag] as? NSDictionary
+        }
+        else {
+            tempDictData1=self.cameraRollAssets[seletedImageTag] as? NSDictionary
+        }
+        
+        let asset:ALAsset?=tempDictData1?.object(forKey: "Asset") as? ALAsset
+        let assetRepresent:ALAssetRepresentation=asset!.defaultRepresentation()
+        
+        AppDelegate().insertUpdateRenamedText(imageName: assetRepresent.filename()
+            .components(separatedBy: ".").first!.lowercased(), rename: (updtedText.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).lowercased()))
+        self.renameDatabaseDicData.setValue((updtedText.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)), forKey: assetRepresent.filename().components(separatedBy: ".").first!)
+        let tempDeleteEntryArray:NSArray = renameDatabaseDicData.allKeys as NSArray
+        deletingDBEntries = tempDeleteEntryArray.mutableCopy() as! NSMutableArray
+        
+        let index:Int=self.cameraRollAssets.index(of: selectedDictData as Any)
+        let tempDictData:NSDictionary=self.cameraRollAssets.object(at: index) as! NSDictionary
+        let tempMutableData:NSMutableDictionary=tempDictData.mutableCopy() as! NSMutableDictionary
+        
+        tempMutableData.setValue(updtedTextWithExtension, forKey: "FileName")
+        self.cameraRollAssets.replaceObject(at: index, with: tempMutableData)
+        if self.isSearch {
+            
+            self.searchedCameraRollAssets.replaceObject(at: seletedImageTag, with: tempMutableData)
+        }
+    }
+    
+    func isImageNameAlreadyExist(searchText:String) -> Bool {
+        
+        let tempString=searchText.components(separatedBy: ".").first! + "."
+        let photoNamePredicate = NSPredicate(format: "FileName BEGINSWITH %@", tempString)
+        let tempFilteredArray:NSMutableArray=cameraRollAssets.filtered(using: photoNamePredicate) as! NSMutableArray
+        print(tempFilteredArray.count)
+        
+        if tempFilteredArray.count > 0 {
+            
+            return true
+        }
+        return false
+    }
+    
+    //Textfield delegate
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        
+        let characterset = CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
+        if string.rangeOfCharacter(from: characterset.inverted) != nil {
+            return false
+        }
+        
+        let textLimit=30
+        let str = (textField.text! + string)
+        if str.characters.count <= textLimit {
+            return true
+        }
+        textField.text = str.substring(to: str.index(str.startIndex, offsetBy: textLimit))
+        return false
+    }
+    // MARK: - end
+    
+    // MARK: - Show photo access popUp
+    func showPhotoAccessAlertMessage(title:String, message messageText:String, cancel cancelText:String, ok okText:String) {
+        
+        let alertViewController = UIAlertController(title: title, message: messageText, preferredStyle: .alert)
+        
+        let okAction = UIAlertAction(title: okText, style: .default) { (action) -> Void in
+            
+            if let settingsURL = URL(string: UIApplicationOpenSettingsURLString + Bundle.main.bundleIdentifier!) {
+                UIApplication.shared.openURL(settingsURL as URL)
+            }
+        }
+        let cancelAction = UIAlertAction(title: cancelText, style: .cancel) { (action) -> Void in
+        }
+        
+        alertViewController.addAction(cancelAction)
+        alertViewController.addAction(okAction)
+        
+        present(alertViewController, animated: true, completion: nil)
+    }
+    
+    func showImageNameAlreadyExistAlert(title:String, message messageText:String, tempString:String, seletedImageTag:Int) {
+        
+        let alertViewController = UIAlertController(title: title, message: messageText, preferredStyle: .alert)
+        
+        let okAction = UIAlertAction(title: "OK", style: .default) { (action) -> Void in
+            
+            self.lastEnteredUpdatedImageName=tempString
+            alertViewController.dismiss(animated: false, completion: nil)
+            self.editImageNameRecursiveMethod(seletedImageTag: seletedImageTag)
+        }
+        alertViewController.addAction(okAction)
+        self.navigationController?.present(alertViewController, animated: false, completion: nil)
+    }
+    // MARK: - end
+
     // MARK: - Notification observer method
     func applicationWillEnterForeground(_ notification: NSNotification) {
         
