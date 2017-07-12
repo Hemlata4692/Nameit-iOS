@@ -52,7 +52,7 @@ class GlobalBackViewController: UIViewController {
         //Navigation bar buttons
         let framing:CGRect=CGRect(x: 0, y: 0, width: 50, height: 30)
         let saveButton=UIButton.init(frame: framing)
-        saveButton.titleLabel!.font =  UIFont.systemFont(ofSize: 17)
+        saveButton.titleLabel!.font =  UIFont().montserratLightWithSize(size: 17)
         saveButton.setTitle("Save", for: UIControlState.normal)
         saveButton.titleEdgeInsets = UIEdgeInsetsMake(0.0, 10.0, 0.0, -10.0)
         let saveBarButton:UIBarButtonItem=UIBarButtonItem.init(customView: saveButton)
@@ -70,7 +70,7 @@ class GlobalBackViewController: UIViewController {
         let cancelButton=UIButton.init(frame: framing)
         cancelButton.setTitle("Cancel", for: UIControlState.normal)
         cancelButton.titleEdgeInsets = UIEdgeInsetsMake(0.0, -10.0, 0.0, +10.0)
-        cancelButton.titleLabel!.font =  UIFont.systemFont(ofSize: 17)
+        cancelButton.titleLabel!.font =  UIFont().montserratLightWithSize(size: 17)
         let cancelBarButton:UIBarButtonItem=UIBarButtonItem.init(customView: cancelButton)
         cancelButton.addTarget(self, action: #selector(cancelButtonAction), for: UIControlEvents.touchUpInside)
         self.navigationItem.leftBarButtonItem=cancelBarButton
@@ -78,7 +78,7 @@ class GlobalBackViewController: UIViewController {
         //Navigation bar buttons
         framing=CGRect(x: 0, y: 0, width: 50, height: 30)
         let doneButton=UIButton.init(frame: framing)
-        doneButton.titleLabel!.font =  UIFont.systemFont(ofSize: 17)
+        doneButton.titleLabel!.font =  UIFont().montserratLightWithSize(size: 17)
 //        doneButton.backgroundColor=UIColor.red
         doneButton.setTitle("Done", for: UIControlState.normal)
         doneButton.titleEdgeInsets = UIEdgeInsetsMake(0.0, 10.0, 0.0, -10.0)

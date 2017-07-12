@@ -52,14 +52,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func navigationCustomization() {
         
-//        [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithRed:0.0/255.0 green:213.0/255.0 blue:195.0/255.0 alpha:1.0]];
-//        [[UINavigationBar appearance] setTranslucent:NO];
-//        [[UINavigationBar appearance] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor whiteColor], NSForegroundColorAttributeName, [UIFont railwayRegularWithSize:18], NSFontAttributeName, nil]];
-//        [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
-        
-//        window = UIWindow(frame: UIScreen.main.bounds)
         UINavigationBar.appearance().barTintColor = UIColor(red: 5.0/255.0, green: 144.0/255.0, blue: 201.0/255.0, alpha: 1.0)
-        UINavigationBar.appearance().titleTextAttributes = [NSFontAttributeName : (UIFont.systemFont(ofSize: 18)), NSForegroundColorAttributeName: UIColor.white]
+        UINavigationBar.appearance().titleTextAttributes = [NSFontAttributeName : (UIFont().montserratRegularWithSize(size: 18)), NSForegroundColorAttributeName: UIColor.white]
     }
     
     // MARK: - Show indicator
@@ -71,7 +65,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         spinnerBackground?.clipsToBounds=true
         spinnerBackground?.center=CGPoint(x: UIScreen.main.bounds.midX,y:UIScreen.main.bounds.midY)
         spinnerBackground?.tag=1000
-        loaderView=UIView.init(frame: CGRect(x: 0.0, y: 0.0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height-64))
+        loaderView=UIView.init(frame: CGRect(x: 0.0, y: 0.0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height))
         loaderView?.tag=1001
         loaderView?.backgroundColor=UIColor.init(colorLiteralRed: (63.0/255.0), green: (63.0/255.0), blue: (63.0/255.0), alpha: 0.3)
         loaderView?.addSubview(spinnerBackground!)

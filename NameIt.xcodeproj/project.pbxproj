@@ -19,6 +19,10 @@
 		B7687AE01F0F69DD001A6006 /* AirBrushViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7687ADF1F0F69DD001A6006 /* AirBrushViewController.swift */; };
 		B7687AE31F0F6BA8001A6006 /* colorPickerPlate.png in Resources */ = {isa = PBXBuildFile; fileRef = B7687AE21F0F6BA8001A6006 /* colorPickerPlate.png */; };
 		B7687AE51F0F6CB4001A6006 /* colorPickerPlate1.png in Resources */ = {isa = PBXBuildFile; fileRef = B7687AE41F0F6CB4001A6006 /* colorPickerPlate1.png */; };
+		B76A54591F16278200EBB045 /* Montserrat-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B76A54561F16278200EBB045 /* Montserrat-Bold.ttf */; };
+		B76A545A1F16278200EBB045 /* Montserrat-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B76A54571F16278200EBB045 /* Montserrat-Light.ttf */; };
+		B76A545B1F16278200EBB045 /* Montserrat-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B76A54581F16278200EBB045 /* Montserrat-Regular.ttf */; };
+		B76A545D1F16294900EBB045 /* CustomFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = B76A545C1F16294900EBB045 /* CustomFont.swift */; };
 		B77EF2211F0E521300ADDC22 /* UserDefaultManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B77EF2201F0E521300ADDC22 /* UserDefaultManager.swift */; };
 		B784BAE01F0CBA7B009A5F89 /* PhotoGridCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B784BADF1F0CBA7B009A5F89 /* PhotoGridCollectionViewCell.swift */; };
 		B784BAE41F0CCE29009A5F89 /* GlobalBackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B784BAE31F0CCE29009A5F89 /* GlobalBackViewController.swift */; };
@@ -42,6 +46,10 @@
 		B7687ADF1F0F69DD001A6006 /* AirBrushViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AirBrushViewController.swift; sourceTree = "<group>"; };
 		B7687AE21F0F6BA8001A6006 /* colorPickerPlate.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = colorPickerPlate.png; sourceTree = "<group>"; };
 		B7687AE41F0F6CB4001A6006 /* colorPickerPlate1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = colorPickerPlate1.png; sourceTree = "<group>"; };
+		B76A54561F16278200EBB045 /* Montserrat-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Bold.ttf"; sourceTree = "<group>"; };
+		B76A54571F16278200EBB045 /* Montserrat-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Light.ttf"; sourceTree = "<group>"; };
+		B76A54581F16278200EBB045 /* Montserrat-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Regular.ttf"; sourceTree = "<group>"; };
+		B76A545C1F16294900EBB045 /* CustomFont.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomFont.swift; sourceTree = "<group>"; };
 		B77EF2201F0E521300ADDC22 /* UserDefaultManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDefaultManager.swift; sourceTree = "<group>"; };
 		B784BADF1F0CBA7B009A5F89 /* PhotoGridCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoGridCollectionViewCell.swift; sourceTree = "<group>"; };
 		B784BAE31F0CCE29009A5F89 /* GlobalBackViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GlobalBackViewController.swift; sourceTree = "<group>"; };
@@ -118,6 +126,7 @@
 		B70F35911F0A4ACC00BA3575 /* SupportingFiles */ = {
 			isa = PBXGroup;
 			children = (
+				B76A54551F16270900EBB045 /* Fonts */,
 				B798FA8C1F13ACB8008B5BF0 /* SupportingImages */,
 				B70F35931F0A4B1300BA3575 /* NameIt_Bridging_Header.h */,
 			);
@@ -174,6 +183,16 @@
 			name = PhotoPreviewViewController;
 			sourceTree = "<group>";
 		};
+		B76A54551F16270900EBB045 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				B76A54561F16278200EBB045 /* Montserrat-Bold.ttf */,
+				B76A54571F16278200EBB045 /* Montserrat-Light.ttf */,
+				B76A54581F16278200EBB045 /* Montserrat-Regular.ttf */,
+			);
+			name = Fonts;
+			sourceTree = "<group>";
+		};
 		B77EF21F1F0E520A00ADDC22 /* UserDefaultManager */ = {
 			isa = PBXGroup;
 			children = (
@@ -203,6 +222,7 @@
 			isa = PBXGroup;
 			children = (
 				B798FA881F137D8F008B5BF0 /* MMMaterialDesignSpinner */,
+				B76A545C1F16294900EBB045 /* CustomFont.swift */,
 			);
 			name = HelperClasses;
 			sourceTree = "<group>";
@@ -288,9 +308,12 @@
 				B70F359D1F0A4EC400BA3575 /* NameItDatabase.sqlite in Resources */,
 				B7687AE31F0F6BA8001A6006 /* colorPickerPlate.png in Resources */,
 				B7687AE51F0F6CB4001A6006 /* colorPickerPlate1.png in Resources */,
+				B76A545A1F16278200EBB045 /* Montserrat-Light.ttf in Resources */,
 				B798FA8E1F13ACCC008B5BF0 /* splash1242-2208.png in Resources */,
+				B76A54591F16278200EBB045 /* Montserrat-Bold.ttf in Resources */,
 				B70F35861F0A4A1200BA3575 /* LaunchScreen.storyboard in Resources */,
 				B70F35831F0A4A1200BA3575 /* Assets.xcassets in Resources */,
+				B76A545B1F16278200EBB045 /* Montserrat-Regular.ttf in Resources */,
 				B70F35811F0A4A1200BA3575 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -307,6 +330,7 @@
 				B7687AE01F0F69DD001A6006 /* AirBrushViewController.swift in Sources */,
 				B784BAE01F0CBA7B009A5F89 /* PhotoGridCollectionViewCell.swift in Sources */,
 				B70F357C1F0A4A1200BA3575 /* AppDelegate.swift in Sources */,
+				B76A545D1F16294900EBB045 /* CustomFont.swift in Sources */,
 				B70F35981F0A4B8200BA3575 /* DatabaseFile.swift in Sources */,
 				B784BAE41F0CCE29009A5F89 /* GlobalBackViewController.swift in Sources */,
 				B77EF2211F0E521300ADDC22 /* UserDefaultManager.swift in Sources */,

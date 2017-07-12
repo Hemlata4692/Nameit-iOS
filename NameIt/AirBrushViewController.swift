@@ -130,7 +130,7 @@ class AirBrushViewController: GlobalBackViewController, UIScrollViewDelegate, UI
         resizeSlider.value=5.0
         resizeSlider.setMaximumTrackImage(UIImage(), for: UIControlState.normal)
         resizeSlider.setMinimumTrackImage(UIImage(), for: UIControlState.normal)
-        resizeSlider.setThumbImage(UIImage.init(named: "sliderThumb"), for: UIControlState.normal)
+        resizeSlider.setThumbImage(UIImage.init(named: "thumb"), for: UIControlState.normal)
         
         brushView.translatesAutoresizingMaskIntoConstraints=true
         brushView.frame=CGRect(x: 50, y: 50, width: Int(resizeSlider.value)+6, height: Int(resizeSlider.value)+6)

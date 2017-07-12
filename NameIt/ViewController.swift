@@ -11,6 +11,7 @@ import AssetsLibrary
 
 class ViewController: UIViewController,UICollectionViewDataSource, UICollectionViewDelegate,UICollectionViewDelegateFlowLayout, UISearchBarDelegate, UITextFieldDelegate {
 
+    @IBOutlet var activityControllerObject: UIActivityIndicatorView!
     @IBOutlet var searchBarObject: UISearchBar!
     @IBOutlet var photoAccessDeniedLabel: UILabel!
     @IBOutlet var cameraRollCollectionView: UICollectionView!
@@ -44,18 +45,21 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
         
         //Fetch all entries from local dataBase
         renameDatabaseDicData=AppDelegate().fetchRenameEntries().mutableCopy() as! NSMutableDictionary
-        
-        //Reload gallery image when come in foreground from background state
-        NotificationCenter.default.addObserver(self, selector:#selector(applicationWillEnterForeground(_:)), name:NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
         // Do any additional setup after loading the view.
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        //Reload gallery image when come in foreground from background state
+        NotificationCenter.default.addObserver(self, selector:#selector(applicationWillEnterForeground(_:)), name:NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
+        
         self.navigationItem.title="Gallery"
+//        activityControllerObject.isHidden=false;
+        
         let tempDeleteEntryArray:NSArray = renameDatabaseDicData.allKeys as NSArray
         deletingDBEntries = tempDeleteEntryArray.mutableCopy() as! NSMutableArray
+        
         viewInitialization()
     }
     
@@ -88,7 +92,10 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
         viewCustomization()
         
         //Fetch group and then fetch image assets
-        getAssest()
+        //Show indicator
+        AppDelegate().showIndicator(uiView: self.view)
+        self.perform( #selector(getAssest), with: nil, afterDelay: 0.01)
+//        getAssest()
     }
     
     func viewCustomization() {
@@ -118,7 +125,7 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
         rightButton?.isEnabled=false
         rightButton?.setTitleColor(UIColor.white, for: UIControlState.normal)
         rightButton?.setTitle("", for: UIControlState.normal)
-        rightButton?.titleLabel!.font =  UIFont.systemFont(ofSize: 17)
+        rightButton?.titleLabel!.font =  UIFont().montserratLightWithSize(size: 17)
         rightButton?.titleEdgeInsets = UIEdgeInsetsMake(0.0, 8.0, 0.0, -8.0)
         rightButton?.addTarget(self, action: #selector(rightBarButtonAction), for: UIControlEvents.touchUpInside)
         
@@ -229,6 +236,9 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
         }
         else {
             
+            //Remove observer when view is not present
+            NotificationCenter.default.removeObserver(self)
+            
             //Navigate to photoGrid screen in edit mode
             let photoPreviewViewObj = self.storyboard?.instantiateViewController(withIdentifier: "PtotoPreviewViewController") as? PtotoPreviewViewController
             
@@ -284,6 +294,10 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
             (err:Error!) in
 //            print(err.localizedDescription)
             self.photoAccessDeniedLabel.isHidden=true;
+//            self.activityControllerObject.isHidden=true;
+            //Stop indicator
+            AppDelegate().stopIndicator(uiView: self.view)
+            
             let code = (err as NSError).code
             switch code {
             case ALAssetsLibraryAccessUserDeniedError, ALAssetsLibraryAccessGloballyDeniedError:
@@ -341,6 +355,9 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
         //        self.assetsGroup?.enumerateAssets(assetsEnumerationBlock) //Show in asscending order
         self.assetsGroup?.enumerateAssets(options: .reverse, using: assetsEnumerationBlock)
         
+//        activityControllerObject.isHidden=true;
+        //Stop indicator
+        AppDelegate().stopIndicator(uiView: self.view)
         if self.cameraRollAssets.count>0 {
             
             if self.deletingDBEntries.count > 0 {
@@ -656,6 +673,10 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
         
         let tempDeleteEntryArray:NSArray = renameDatabaseDicData.allKeys as NSArray
         deletingDBEntries = tempDeleteEntryArray.mutableCopy() as! NSMutableArray
+        
+        //Show indicator
+//        AppDelegate().showIndicator(uiView: self.view)
+//        self.perform( #selector(viewInitialization), with: nil, afterDelay: 0.01)
         viewInitialization()
     }
     // MARK: - end

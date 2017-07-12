@@ -15,6 +15,7 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
     @IBOutlet var addTextButton: UIButton!
     @IBOutlet var rotateButton: UIButton!
     @IBOutlet var shareButton: UIButton!
+    @IBOutlet var activityControllerObject: UIActivityIndicatorView!
     
     @IBOutlet var photoPreviewImageView: UIImageView!
     @IBOutlet var scrollViewObject: UIScrollView!
@@ -45,6 +46,8 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+//        activityControllerObject.isHidden=true;
         
         if isAirBrushDone {
             
@@ -242,6 +245,7 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
         
             scrollViewObject.zoomScale=1.0
             //Show indicator
+//            activityControllerObject.isHidden=false;
             AppDelegate().showIndicator(uiView: self.view)
             self.perform( #selector(saveEditedImage), with: nil, afterDelay: 0.1)
         }
@@ -400,8 +404,9 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
     //Selector should be called after the image has been written to the Camera Roll album
     func image(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
         
-        //Show indicator
+        //Stop indicator
         AppDelegate().stopIndicator(uiView: self.view)
+//        activityControllerObject.isHidden=true;
         
         if error != nil {
             //We got back an error!
@@ -438,7 +443,7 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
         caption?.textColor = UIColor.black
         caption?.keyboardAppearance = UIKeyboardAppearance.default
         caption?.tintColor = UIColor.white
-        caption?.font=UIFont.systemFont(ofSize: 15)
+        caption?.font=UIFont().montserratLightWithSize(size: 15)
         caption?.autocorrectionType=UITextAutocorrectionType.no
         caption?.delegate = self
         photoPreviewImageView.addSubview(caption!)
