@@ -40,7 +40,7 @@ class AirBrushViewController: GlobalBackViewController, UIScrollViewDelegate, UI
     var eraserSelected=false
     var selectedColor:UIColor?
     
-    var size:CGSize=CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height-114)
+    var size:CGSize=CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height-128)
     
     // MARK: - UIView life cycle
     override func viewDidLoad() {
@@ -61,17 +61,17 @@ class AirBrushViewController: GlobalBackViewController, UIScrollViewDelegate, UI
             
             selectedImageSize?.width=self.view.bounds.size.width
             selectedImageSize?.height = (selectedImageHeight/selectedImageWidth) * (selectedImageSize?.width)!
-            selectedImageY = CGFloat(((UIScreen.main.bounds.size.height-(64.0+44.0))/2.0) - ((selectedImageSize?.height)!/2.0))
+            selectedImageY = CGFloat(((UIScreen.main.bounds.size.height-128.0)/2.0) - ((selectedImageSize?.height)!/2.0))
         }
         else if ratio==1 {
             
             selectedImageSize?.width=self.view.bounds.size.width
             selectedImageSize?.height=self.view.bounds.size.width
-            selectedImageY = CGFloat(((UIScreen.main.bounds.size.height-(64.0+44.0))/2.0) - ((selectedImageSize?.height)!/2.0))
+            selectedImageY = CGFloat(((UIScreen.main.bounds.size.height-128.0)/2.0) - ((selectedImageSize?.height)!/2.0))
         }
         else {
             
-            selectedImageSize?.height=UIScreen.main.bounds.size.height-(64+44)
+            selectedImageSize?.height=UIScreen.main.bounds.size.height-(64+64)
             selectedImageSize?.width = (selectedImageWidth/selectedImageHeight) * (selectedImageSize?.height)!
             selectedImageX = CGFloat((UIScreen.main.bounds.size.width/2.0) - ((selectedImageSize?.width)!/2.0))
         }
@@ -130,7 +130,7 @@ class AirBrushViewController: GlobalBackViewController, UIScrollViewDelegate, UI
         resizeSlider.value=5.0
         resizeSlider.setMaximumTrackImage(UIImage(), for: UIControlState.normal)
         resizeSlider.setMinimumTrackImage(UIImage(), for: UIControlState.normal)
-        resizeSlider.setThumbImage(UIImage.init(named: "thumb"), for: UIControlState.normal)
+        resizeSlider.setThumbImage(UIImage.init(named: "thumb2"), for: UIControlState.normal)
         
         brushView.translatesAutoresizingMaskIntoConstraints=true
         brushView.frame=CGRect(x: 50, y: 50, width: Int(resizeSlider.value)+6, height: Int(resizeSlider.value)+6)
@@ -163,7 +163,7 @@ class AirBrushViewController: GlobalBackViewController, UIScrollViewDelegate, UI
     
     @IBAction func sliderAction(_ sender: UISlider) {
         
-        print(sender.value)
+//        print(sender.value)
         brushWidth=CGFloat(sender.value)
         brushView.frame=CGRect(x: Int(brushView.frame.origin.x), y: Int(brushView.frame.origin.y), width: Int(resizeSlider.value)+6, height: Int(resizeSlider.value)+6)
     }
@@ -173,7 +173,7 @@ class AirBrushViewController: GlobalBackViewController, UIScrollViewDelegate, UI
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         swiped = false
         for touch: AnyObject in touches {
-            print(touch.view.tag)
+//            print(touch.view.tag)
             if (touch.view == tempPhotoImageView) {
                 
                 if let touch = touches.first {
@@ -244,7 +244,7 @@ class AirBrushViewController: GlobalBackViewController, UIScrollViewDelegate, UI
                 if let touch = touches.first {
                     
                     let location = touch.location(in: colorSliderImageView)
-                    print(location.x)
+//                    print(location.x)
                     if location.y > 1 && location.y < 245 && location.x > 1 && location.x < 15 {
                         let locationAtMainView = touch.location(in: tempPhotoImageView)
                         colorPreviewView.isHidden=false;

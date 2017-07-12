@@ -359,18 +359,18 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7UY-5I-gcr">
-                                <rect key="frame" x="0.0" y="400" width="320" height="34"/>
+                                <rect key="frame" x="0.0" y="402" width="320" height="38"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="range" translatesAutoresizingMaskIntoConstraints="NO" id="Fdu-62-fbK">
-                                        <rect key="frame" x="80" y="8" width="160" height="18"/>
+                                        <rect key="frame" x="70" y="9" width="180" height="18"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="160" id="mp4-Uc-Tp7"/>
+                                            <constraint firstAttribute="width" constant="180" id="mp4-Uc-Tp7"/>
                                             <constraint firstAttribute="height" constant="18" id="tld-wd-v6v"/>
                                         </constraints>
                                     </imageView>
                                     <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="40" minValue="3" maxValue="40" translatesAutoresizingMaskIntoConstraints="NO" id="fuu-0a-j0c">
-                                        <rect key="frame" x="58" y="2" width="204" height="31"/>
+                                        <rect key="frame" x="58" y="3" width="204" height="31"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="30" id="8s1-Xy-akN"/>
@@ -383,10 +383,10 @@
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.37695909785932724" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="34" id="1Kh-jZ-hUl"/>
-                                    <constraint firstItem="fuu-0a-j0c" firstAttribute="centerY" secondItem="7UY-5I-gcr" secondAttribute="centerY" id="3UA-Ag-SDi"/>
+                                    <constraint firstAttribute="height" constant="38" id="1Kh-jZ-hUl"/>
+                                    <constraint firstItem="fuu-0a-j0c" firstAttribute="centerY" secondItem="7UY-5I-gcr" secondAttribute="centerY" constant="-1" id="3UA-Ag-SDi"/>
                                     <constraint firstItem="Fdu-62-fbK" firstAttribute="centerX" secondItem="7UY-5I-gcr" secondAttribute="centerX" id="4E9-sT-HM3"/>
-                                    <constraint firstItem="Fdu-62-fbK" firstAttribute="centerY" secondItem="7UY-5I-gcr" secondAttribute="centerY" id="4q9-dj-fMD"/>
+                                    <constraint firstItem="Fdu-62-fbK" firstAttribute="centerY" secondItem="7UY-5I-gcr" secondAttribute="centerY" constant="-1" id="4q9-dj-fMD"/>
                                     <constraint firstItem="fuu-0a-j0c" firstAttribute="centerX" secondItem="7UY-5I-gcr" secondAttribute="centerX" id="bDn-UO-0O1"/>
                                 </constraints>
                             </view>
@@ -447,7 +447,7 @@
                             <constraint firstItem="1KR-zf-oXy" firstAttribute="centerX" secondItem="WxL-ih-QOF" secondAttribute="centerX" constant="-30" id="KgR-pu-QY6"/>
                             <constraint firstItem="riO-sd-Ewb" firstAttribute="top" secondItem="vBw-gl-k0i" secondAttribute="bottom" constant="64" id="Ovp-rb-Oxz"/>
                             <constraint firstAttribute="trailing" secondItem="7UY-5I-gcr" secondAttribute="trailing" id="QQf-yM-lg3"/>
-                            <constraint firstItem="riO-sd-Ewb" firstAttribute="top" secondItem="7UY-5I-gcr" secondAttribute="bottom" constant="70" id="SxL-DH-zKV"/>
+                            <constraint firstItem="riO-sd-Ewb" firstAttribute="top" secondItem="7UY-5I-gcr" secondAttribute="bottom" constant="64" id="SxL-DH-zKV"/>
                             <constraint firstItem="riO-sd-Ewb" firstAttribute="top" secondItem="qJh-Rk-Xmi" secondAttribute="bottom" constant="64" id="TYQ-yB-hnQ"/>
                             <constraint firstItem="riO-sd-Ewb" firstAttribute="top" secondItem="Wb1-OY-spP" secondAttribute="bottom" constant="12" id="YtS-tl-QSV"/>
                             <constraint firstAttribute="trailing" secondItem="7sB-Y9-Fzf" secondAttribute="trailing" constant="8" id="ZTC-yx-l7c"/>

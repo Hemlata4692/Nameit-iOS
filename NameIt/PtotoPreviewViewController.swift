@@ -100,7 +100,7 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
     //Set UIImageView size according to image size ratio
     func changeImageRatio() {
         
-        print(scrollViewObject.zoomScale)
+//        print(scrollViewObject.zoomScale)
         let ratio = (selectedImageSize?.width)!/(selectedImageSize?.height)!
         let selectedImageWidth:CGFloat=(selectedImageSize?.width)!
         let selectedImageHeight:CGFloat=(selectedImageSize?.height)!
@@ -110,13 +110,13 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
             
             selectedImageSize?.width=self.view.bounds.size.width
             selectedImageSize?.height = (selectedImageHeight/selectedImageWidth) * (selectedImageSize?.width)!
-            selectedImageY = CGFloat(((UIScreen.main.bounds.size.height-(64.0+64.0))/2.0) - ((selectedImageSize?.height)!/2.0))
+            selectedImageY = CGFloat(((UIScreen.main.bounds.size.height-128.0)/2.0) - ((selectedImageSize?.height)!/2.0))
         }
         else if ratio==1 {
             
             selectedImageSize?.width=self.view.bounds.size.width
             selectedImageSize?.height=self.view.bounds.size.width
-            selectedImageY = CGFloat(((UIScreen.main.bounds.size.height-(64.0+64.0))/2.0) - ((selectedImageSize?.height)!/2.0))
+            selectedImageY = CGFloat(((UIScreen.main.bounds.size.height-128.0)/2.0) - ((selectedImageSize?.height)!/2.0))
         }
         else {
             
@@ -453,7 +453,7 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
     func captionDrag(gestureRecognizer:UIGestureRecognizer) {
         
         let translation = gestureRecognizer.location(in: photoPreviewImageView)
-        print(translation)
+//        print(translation)
         
         caption?.center=CGPoint(x: translation.x, y: translation.y)
         if(gestureRecognizer.state == UIGestureRecognizerState.ended) {
@@ -483,7 +483,7 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
     // MARK: - UITextView delegate methods
     func textViewDidChange(_ textView: UITextView) { //Handle the text changes here
         
-        print(textView.text.characters.count); //the textView parameter is the textView where text was changed
+//        print(textView.text.characters.count); //the textView parameter is the textView where text was changed
         if ((caption?.sizeThatFits((caption?.frame.size)!).height)! > CGFloat(36.0)) {
             
             caption?.frame = CGRect(x: 0, y: (photoPreviewImageView.frame.size.height/2) - ((caption?.sizeThatFits((caption?.frame.size)!).height)!/2), width: UIScreen.main.bounds.size.width, height: (caption?.sizeThatFits((caption?.frame.size)!).height)!)
@@ -497,7 +497,7 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
        
         if(text == "\n") {
-            print(caption?.sizeThatFits((caption?.frame.size)!).height as Any)
+//            print(caption?.sizeThatFits((caption?.frame.size)!).height as Any)
             if (caption?.sizeThatFits((caption?.frame.size)!).height)! > CGFloat(85.0) {
                 return false
             }

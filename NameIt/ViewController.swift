@@ -492,7 +492,7 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
             let photoNamePredicate = NSPredicate(format: "FileName contains[cd] %@", searchText)
             let tempArray:NSArray=cameraRollAssets.filtered(using: photoNamePredicate) as NSArray
             searchedCameraRollAssets = tempArray.mutableCopy() as! NSMutableArray
-            print(searchedCameraRollAssets.count)
+//            print(searchedCameraRollAssets.count)
             if searchedCameraRollAssets.count > 0 {
                 
                 photoAccessDeniedLabel.isHidden=true
@@ -606,7 +606,7 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
         let tempString=searchText.components(separatedBy: ".").first! + "."
         let photoNamePredicate = NSPredicate(format: "FileName BEGINSWITH %@", tempString)
         let tempFilteredArray:NSMutableArray=cameraRollAssets.filtered(using: photoNamePredicate) as! NSMutableArray
-        print(tempFilteredArray.count)
+//        print(tempFilteredArray.count)
         
         if tempFilteredArray.count > 0 {
             
