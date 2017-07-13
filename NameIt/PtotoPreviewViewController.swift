@@ -17,6 +17,7 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
     @IBOutlet var shareButton: UIButton!
     @IBOutlet var activityControllerObject: UIActivityIndicatorView!
     
+    @IBOutlet var photoBackView: UIView!
     @IBOutlet var photoPreviewImageView: UIImageView!
     @IBOutlet var scrollViewObject: UIScrollView!
     
@@ -32,6 +33,7 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
     var isImageEdited:Bool = false
     
     var caption:UITextView?
+    var textViewToolbar:UIToolbar?
     var drag:UIPanGestureRecognizer?
     
     var isAirBrushDone:Bool=false
@@ -268,6 +270,8 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
             caption?.removeGestureRecognizer(drag!)
             caption?.resignFirstResponder()
             caption?.removeFromSuperview()
+            textViewToolbar?.removeFromSuperview()
+            textViewToolbar=nil
             caption=nil
         }
         
@@ -283,6 +287,7 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
         
         if isAddTextSelected {
             
+            caption?.layer.borderWidth=0.0
             caption?.removeGestureRecognizer(drag!)
             caption?.resignFirstResponder()
             if caption?.text.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).characters.count != 0 {
@@ -293,6 +298,8 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
                 selectedImageSize = selectedPhoto?.size
             }
             caption?.removeFromSuperview()
+            textViewToolbar?.removeFromSuperview()
+            textViewToolbar=nil
             caption=nil
         }
         
@@ -442,7 +449,7 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
     // MARK: - Add caption(Text) at selected image
     func initCaption() {
         
-        caption = UITextView.init(frame: CGRect(x: (UIScreen.main.bounds.size.width/2)-15, y: (photoPreviewImageView.frame.size.height/2) - 15, width: 30, height: 34))
+        caption = UITextView.init(frame: CGRect(x: (UIScreen.main.bounds.size.width/2)-15, y: (photoPreviewImageView.frame.size.height/2) - 15 - 44, width: 30, height: 34))
         //        caption?.backgroundColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.5)
         caption?.backgroundColor = UIColor.clear
         caption?.textAlignment = NSTextAlignment.center
@@ -455,9 +462,27 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
         caption?.layer.borderWidth=1.0
         caption?.layer.borderColor=UIColor.black.cgColor
         photoPreviewImageView.addSubview(caption!)
-        caption?.becomeFirstResponder()
+//        caption?.becomeFirstResponder()
         caption?.isScrollEnabled=false
         caption?.addGestureRecognizer(drag!)
+        
+        textViewToolbar = UIToolbar.init(frame: CGRect(x: 0, y: UIScreen.main.bounds.size.height-64-258, width: UIScreen.main.bounds.size.width, height: 44))
+        textViewToolbar?.barStyle = UIBarStyle.default
+        textViewToolbar?.items = [
+            UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace, target: nil, action: nil),
+            UIBarButtonItem(title: "Done", style: UIBarButtonItemStyle.plain, target: self, action: #selector(self.doneWithNumberPad))]
+        photoBackView.addSubview(textViewToolbar!)
+        caption?.becomeFirstResponder()
+    }
+    
+    func doneWithNumberPad() {
+        
+        if caption != nil {
+            
+            textViewToolbar?.isHidden=true
+            caption?.layer.borderWidth=0.0
+            caption?.resignFirstResponder()
+        }
     }
     
     func captionDrag(gestureRecognizer:UIGestureRecognizer) {
@@ -493,6 +518,7 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
     // MARK: - UITextView delegate methods
     func textViewDidBeginEditing(_ textView: UITextView) {
         
+        textViewToolbar?.isHidden=false
         caption?.layer.borderWidth=1.0
         textViewBeginMethod()
     }
@@ -541,23 +567,23 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
             if (caption?.sizeThatFits((caption?.frame.size)!).width)!+30 > UIScreen.main.bounds.size.width-30 {
                 
                 //                caption?.frame = CGRect(x: 15, y: (photoPreviewImageView.frame.size.height/2) - 15, width: UIScreen.main.bounds.size.width - 30, height: 34)
-                caption?.frame = CGRect(x: 15, y: (photoPreviewImageView.frame.size.height/2) - ((caption?.sizeThatFits((caption?.frame.size)!).height)!/2), width: UIScreen.main.bounds.size.width - 30, height: (caption?.sizeThatFits((caption?.frame.size)!).height)!)
+                caption?.frame = CGRect(x: 15, y: (photoPreviewImageView.frame.size.height/2) - ((caption?.sizeThatFits((caption?.frame.size)!).height)!/2) - 44, width: UIScreen.main.bounds.size.width - 30, height: (caption?.sizeThatFits((caption?.frame.size)!).height)!)
             }
             else {
                 
                 //                caption?.frame = CGRect(x: (UIScreen.main.bounds.size.width/2)-((caption?.sizeThatFits((caption?.frame.size)!).width)!/2)-15, y: (photoPreviewImageView.frame.size.height/2) - 15, width: (caption?.sizeThatFits((caption?.frame.size)!).width)!+30, height: 34)
-                caption?.frame = CGRect(x: (UIScreen.main.bounds.size.width/2)-((caption?.sizeThatFits((caption?.frame.size)!).width)!/2)-15, y: (photoPreviewImageView.frame.size.height/2) - ((caption?.sizeThatFits((caption?.frame.size)!).height)!/2), width: (caption?.sizeThatFits((caption?.frame.size)!).width)!+30, height: (caption?.sizeThatFits((caption?.frame.size)!).height)!)
+                caption?.frame = CGRect(x: (UIScreen.main.bounds.size.width/2)-((caption?.sizeThatFits((caption?.frame.size)!).width)!/2)-15, y: (photoPreviewImageView.frame.size.height/2) - ((caption?.sizeThatFits((caption?.frame.size)!).height)!/2) - 44, width: (caption?.sizeThatFits((caption?.frame.size)!).width)!+30, height: (caption?.sizeThatFits((caption?.frame.size)!).height)!)
             }
         }
         else {
             
             if (caption?.sizeThatFits((caption?.frame.size)!).width)!+30 > UIScreen.main.bounds.size.width-30 {
                 
-                caption?.frame = CGRect(x: 15, y: (photoPreviewImageView.frame.size.height/2) - 15, width: UIScreen.main.bounds.size.width - 30, height: 34)
+                caption?.frame = CGRect(x: 15, y: (photoPreviewImageView.frame.size.height/2) - 15 - 44, width: UIScreen.main.bounds.size.width - 30, height: 34)
             }
             else {
                 
-                caption?.frame = CGRect(x: (UIScreen.main.bounds.size.width/2)-((caption?.sizeThatFits((caption?.frame.size)!).width)!/2)-15, y: (photoPreviewImageView.frame.size.height/2) - 15, width: (caption?.sizeThatFits((caption?.frame.size)!).width)!+30, height: 34)
+                caption?.frame = CGRect(x: (UIScreen.main.bounds.size.width/2)-((caption?.sizeThatFits((caption?.frame.size)!).width)!/2)-15, y: (photoPreviewImageView.frame.size.height/2) - 15 - 44, width: (caption?.sizeThatFits((caption?.frame.size)!).width)!+30, height: 34)
             }
             
             //             caption = UITextView.init(frame: CGRect(x: (UIScreen.main.bounds.size.width/2)-5, y: (photoPreviewImageView.frame.size.height/2) - 15, width: 10, height: 34))

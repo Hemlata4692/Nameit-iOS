@@ -45,7 +45,9 @@ class AirBrushViewController: GlobalBackViewController, UIScrollViewDelegate, UI
     // MARK: - UIView life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
+        airbrushButton.layer.cornerRadius=20
+        airbrushButton.layer.masksToBounds=true
         // Do any additional setup after loading the view.
     }
     
@@ -108,7 +110,8 @@ class AirBrushViewController: GlobalBackViewController, UIScrollViewDelegate, UI
         rotateButton.isEnabled=false;
         addTextButton.isEnabled=false;
         
-        selectedColor=UIColor.red
+        selectedColor=UIColor.green
+        airbrushButton.backgroundColor=selectedColor
         colorPreviewView.isHidden=true;
         colorPreviewView.backgroundColor=selectedColor
         colorPreviewView.layer.cornerRadius=18
@@ -198,6 +201,7 @@ class AirBrushViewController: GlobalBackViewController, UIScrollViewDelegate, UI
                     colorPreviewView.frame=CGRect(x: UIScreen.main.bounds.size.width - 70, y: locationAtMainView.y - 18, width: 36, height: 36)
                     selectedColor = getPixelColorAtPoint(point: location)
                     colorPreviewView.backgroundColor=selectedColor
+                    airbrushButton.backgroundColor=selectedColor
                 }
             }
         }
@@ -252,6 +256,7 @@ class AirBrushViewController: GlobalBackViewController, UIScrollViewDelegate, UI
                         
                         selectedColor = getPixelColorAtPoint(point: location)
                         colorPreviewView.backgroundColor=selectedColor
+                        airbrushButton.backgroundColor=selectedColor
                     }
                 }
             }
