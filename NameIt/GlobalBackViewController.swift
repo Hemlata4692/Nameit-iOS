@@ -53,7 +53,7 @@ class GlobalBackViewController: UIViewController {
         let framing:CGRect=CGRect(x: 0, y: 0, width: 50, height: 30)
         let saveButton=UIButton.init(frame: framing)
         saveButton.titleLabel!.font =  UIFont().montserratLightWithSize(size: 17)
-        saveButton.setTitle("Save", for: UIControlState.normal)
+        saveButton.setTitle("Done", for: UIControlState.normal)
         saveButton.titleEdgeInsets = UIEdgeInsetsMake(0.0, 10.0, 0.0, -10.0)
         let saveBarButton:UIBarButtonItem=UIBarButtonItem.init(customView: saveButton)
         saveButton.addTarget(self, action: #selector(saveButtonAction), for: UIControlEvents.touchUpInside)

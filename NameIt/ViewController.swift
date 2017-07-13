@@ -45,6 +45,9 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.navigationController?.isNavigationBarHidden=false
+        UIApplication.shared.isStatusBarHidden=false
+        
         //Fetch all entries from local dataBase
         renameDatabaseDicData=AppDelegate().fetchRenameEntries().mutableCopy() as! NSMutableDictionary
         // Do any additional setup after loading the view.
@@ -291,6 +294,13 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
                 }
                 else {
                     
+                    //Stop indicator
+                    AppDelegate().stopIndicator(uiView: self.view)
+                    self.searchBarBackView.isHidden=true
+                    self.rightButton?.isEnabled=false;
+                    self.photoAccessDeniedLabel.isHidden=false
+                    self.photoAccessDeniedLabel.text="No captured photos are found"
+                    self.cameraRollCollectionView.isHidden=true;
                 }
             } else {
             }
