@@ -38,6 +38,12 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
     
     var isAirBrushDone:Bool=false
     
+    //Select add textLabel color
+    @IBOutlet var selectTextColorBackView: UIView!
+    @IBOutlet var whiteColorButton: UIButton!
+    @IBOutlet var blackColorButton: UIButton!
+    var selectedColor:UIColor?
+    
     // MARK: - UIView life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -94,6 +100,14 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
         photoPreviewImageView.image=selectedPhoto
         photoPreviewImageView.isUserInteractionEnabled=true
         
+        selectTextColorBackView.isHidden=true
+//        whiteColorButton.layer.cornerRadius=13
+//        whiteColorButton.layer.masksToBounds=true
+//        blackColorButton.layer.cornerRadius=13
+//        blackColorButton.layer.masksToBounds=true
+//        whiteColorButton.layer.borderColor=UIColor(red: 5.0/255.0, green: 144.0/255.0, blue: 201.0/255.0, alpha: 1.0).cgColor
+//        whiteColorButton.layer.borderWidth=2.0
+        selectedColor=UIColor.black
         //Change photoPreviewImageView according to selected image size ratio
         changeImageRatio()
     }
@@ -210,6 +224,7 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
         
         if !isAddTextSelected {
             
+            selectedColor=UIColor.black
             isAddTextSelected=true
             rotateButton.isEnabled=false;
             commonMethodOfRotateAddTextAction()
@@ -264,7 +279,7 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
     
         selectedImageSize = selectedPhoto?.size
         photoPreviewImageView.image=selectedPhoto
-        
+//        selectTextColorBackView.isHidden=true
         if isAddTextSelected {
             
             caption?.removeGestureRecognizer(drag!)
@@ -281,6 +296,7 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
     
     override func doneButtonAction() {
     
+//         selectTextColorBackView.isHidden=true
         isImageEdited=true
         selectedPhoto=photoPreviewImageView.image
         selectedImageSize = selectedPhoto?.size
@@ -313,6 +329,35 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
             
             caption?.layer.borderWidth=0.0
             caption?.resignFirstResponder()
+        }
+    }
+    
+    @IBAction func selectBlackColor(_ sender: UIButton) {
+        
+        whiteColorButton.layer.borderColor=UIColor.clear.cgColor
+        whiteColorButton.layer.borderWidth=0.0
+        blackColorButton.layer.borderColor=UIColor(red: 5.0/255.0, green: 144.0/255.0, blue: 201.0/255.0, alpha: 1.0).cgColor
+        blackColorButton.layer.borderWidth=2.0
+        selectedColor=UIColor.black
+        if caption != nil {
+            
+            caption?.textColor=selectedColor
+            caption?.layer.borderColor=selectedColor?.cgColor
+        }
+    }
+    
+    @IBAction func selectWhiteColor(_ sender: UIButton) {
+        
+        blackColorButton.layer.borderColor=UIColor.clear.cgColor
+        blackColorButton.layer.borderWidth=0.0
+        whiteColorButton.layer.borderColor=UIColor(red: 5.0/255.0, green: 144.0/255.0, blue: 201.0/255.0, alpha: 1.0).cgColor
+        whiteColorButton.layer.borderWidth=2.0
+        selectedColor=UIColor.white
+        
+        if caption != nil {
+            
+            caption?.textColor=selectedColor
+            caption?.layer.borderColor=selectedColor?.cgColor
         }
     }
     // MARK: - end
@@ -423,7 +468,7 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
         
         if error != nil {
             //We got back an error!
-            let alertViewController = UIAlertController(title: "Alert", message: "Edited Image is not saved.", preferredStyle: .alert)
+            let alertViewController = UIAlertController(title: nil, message: "Some error occurred, Please try again later.", preferredStyle: .alert)
             
             let okAction = UIAlertAction(title: "OK", style: .default) { (action) -> Void in
                 
@@ -433,7 +478,7 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
             present(alertViewController, animated: true, completion: nil)
         } else {
             
-            let alertViewController = UIAlertController(title: "Alert", message: "Edited Image is saved.", preferredStyle: .alert)
+            let alertViewController = UIAlertController(title: nil, message: "Image has been saved.", preferredStyle: .alert)
             
             let okAction = UIAlertAction(title: "OK", style: .default) { (action) -> Void in
                 
@@ -491,6 +536,16 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
         //        print(translation)
         
         caption?.center=CGPoint(x: translation.x, y: translation.y)
+//        selectTextColorBackView.isHidden=true
+//        if(gestureRecognizer.state == UIGestureRecognizerState.ended) {
+//            
+////            selectTextColorBackView.isHidden=false
+//            caption?.backgroundColor = UIColor.clear
+//        }
+//        else {
+//        
+//            caption?.backgroundColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.5)
+//        }
         //        if(gestureRecognizer.state == UIGestureRecognizerState.ended) {
         //
         //            //Set drag limit of caption at photoPreviewImageView
@@ -560,6 +615,9 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
     
     func textViewBeginMethod() {
         
+//        selectTextColorBackView.isHidden=false
+        caption?.textColor=selectedColor
+        caption?.layer.borderColor=selectedColor?.cgColor
         if ((caption?.sizeThatFits((caption?.frame.size)!).height)! > CGFloat(36.0)) {
             
             //            caption?.frame = CGRect(x: 0, y: (photoPreviewImageView.frame.size.height/2) - ((caption?.sizeThatFits((caption?.frame.size)!).height)!/2), width: UIScreen.main.bounds.size.width, height: (caption?.sizeThatFits((caption?.frame.size)!).height)!)

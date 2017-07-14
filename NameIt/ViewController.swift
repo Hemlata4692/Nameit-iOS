@@ -89,7 +89,7 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
         searchBarObject.translatesAutoresizingMaskIntoConstraints=true
         searchBarObject.frame=CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: 44)
         
-        photoAccessDeniedLabel.text="Allow NameIt to access Gallery in Settings"
+        photoAccessDeniedLabel.text="Allow Name-It to access Gallery in Settings"
         photoAccessDeniedLabel.isHidden=true;
         isSelectable = true
         
@@ -130,7 +130,7 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
         //Navigation right bar buttons
         var framing:CGRect=CGRect(x: 0, y: 0, width: 60, height: 30)
         rightButton=UIButton.init(frame: framing)
-        rightButton?.isEnabled=false
+        rightButton?.isHidden=true
         rightButton?.setTitleColor(UIColor.white, for: UIControlState.normal)
         rightButton?.setTitle("", for: UIControlState.normal)
         rightButton?.titleLabel!.font =  UIFont().montserratLightWithSize(size: 17)
@@ -197,7 +197,7 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
             cell?.editButton.isHidden=true
             cell?.selectUnselectImageView.isHidden=false
             //Manage image selection
-            if (selectUnselectImageArray.contains(indexPath.row)) {
+            if (selectUnselectImageArray.contains((imageName.lowercased()))) {
                 
                 cell?.selectUnselectImageView.image=UIImage.init(named: "select")
             }
@@ -222,14 +222,27 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
             
             //Manage image selectiong
             let cell = collectionView.cellForItem(at: indexPath) as! PhotoGridCollectionViewCell
-            if (selectUnselectImageArray.contains(indexPath.row)) {
+            
+            var tempDictData:NSDictionary?
+            if isSearch {
                 
-                selectUnselectImageArray.remove(indexPath.row)
+                tempDictData=searchedCameraRollAssets[indexPath.row] as? NSDictionary
+            }
+            else {
+                tempDictData=cameraRollAssets[indexPath.row] as? NSDictionary
+            }
+            
+            
+            let imageName:String=tempDictData?.object(forKey: "FileName") as! String
+            
+            if (selectUnselectImageArray.contains(imageName.lowercased())) {
+                
+                selectUnselectImageArray.remove(imageName.lowercased())
                 cell.selectUnselectImageView.image=UIImage()
             }
             else {
                 
-                selectUnselectImageArray.add(indexPath.row)
+                selectUnselectImageArray.add((imageName.lowercased()))
                 cell.selectUnselectImageView.image=UIImage.init(named: "select")
             }
             
@@ -297,7 +310,7 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
                     //Stop indicator
                     AppDelegate().stopIndicator(uiView: self.view)
                     self.searchBarBackView.isHidden=true
-                    self.rightButton?.isEnabled=false;
+                    self.rightButton?.isHidden=true;
                     self.photoAccessDeniedLabel.isHidden=false
                     self.photoAccessDeniedLabel.text="No captured photos are found"
                     self.cameraRollCollectionView.isHidden=true;
@@ -317,13 +330,13 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
             switch code {
             case ALAssetsLibraryAccessUserDeniedError, ALAssetsLibraryAccessGloballyDeniedError:
                 
-                self.rightButton?.isEnabled=false;
-                self.photoAccessDeniedLabel.text="Allow NameIt to access Gallery in Settings"
+                self.rightButton?.isHidden=true;
+                self.photoAccessDeniedLabel.text="Allow Name-It to access Gallery in Settings"
                 self.photoAccessDeniedLabel.isHidden=false;
 
                 if !(UserDefaultManager().getValue(key: "NameItPhotoAccessAlreadyCheck") is NSNull) {
                     //Exist
-                    self.showPhotoAccessAlertMessage(title: "\"NameIt\" Would Like ot Access Your Photos", message: "Allow NameIt to access Gallery in Settings", cancel: "Cancel", ok: "Allow")
+                    self.showPhotoAccessAlertMessage(title: "\"Name-It\" Would Like to Access Your Photos", message: "Allow Name-It to access Gallery in Settings", cancel: "Cancel", ok: "Allow")
                 }
                 else {
                     //Not exist
@@ -350,12 +363,12 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
                     
                     var tempString:String=self.renameDatabaseDicData.object(forKey: assetRepresent.filename().components(separatedBy: ".").first?.lowercased() as Any) as! String
                     tempString.append(".\(assetRepresent.filename().components(separatedBy: ".").last!)")
-                    self.cameraRollAssets.add(["FileName":tempString,
+                    self.cameraRollAssets.add(["FileName":tempString.lowercased(),
                                                "Asset":result])
                 }
                 else {
                     
-                    self.cameraRollAssets.add(["FileName":assetRepresent.filename(),
+                    self.cameraRollAssets.add(["FileName":assetRepresent.filename().lowercased(),
                                                "Asset":result])
                 }
                 
@@ -381,14 +394,15 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
             }
             
             searchBarBackView.isHidden=false
-            rightButton?.isEnabled=true;
-            photoAccessDeniedLabel.text="Allow NameIt to access Gallery in Settings"
+            rightButton?.isHidden=false;
+            photoAccessDeniedLabel.text="Allow Name-It to access Gallery in Settings"
             cameraRollCollectionView.isHidden=false;
         }
         else {
         
             searchBarBackView.isHidden=true
-            rightButton?.isEnabled=false;
+            rightButton?.isHidden=true;
+            self.photoAccessDeniedLabel.isHidden=false
             photoAccessDeniedLabel.text="No captured photos are found"
             cameraRollCollectionView.isHidden=true;
         }
@@ -571,8 +585,16 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
                     var tempString:String=(alertTextField.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines))!
                     tempString = tempString + "." + fileName.components(separatedBy: ".").last!
                     
-                    //First check entered name is already exist or not
-                    if !self.isImageNameAlreadyExist(searchText: tempString) {
+                    let characterset = CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_")
+ 
+                    //Check for special character
+                    if alertTextField.text?.rangeOfCharacter(from: characterset.inverted) != nil {
+                    
+                        alert.dismiss(animated: false, completion: nil)
+                        self.showImageNameAlreadyExistAlert(title: "Alert", message: "Special characters are not allowed except underscore.", tempString: tempString, seletedImageTag: seletedImageTag)
+                    }
+                        //Check entered name is already exist or not
+                    else if !self.isImageNameAlreadyExist(searchText: tempString) {
                         
                         self.editFilenameHandlingLocalAndDB(seletedImageTag: seletedImageTag, updatedText: alertTextField.text!, updtedTextWithExtension: tempString, selectedDictData: tempDictData!)
                         self.cameraRollCollectionView.reloadData()
@@ -580,7 +602,7 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
                     else {
                         
                         alert.dismiss(animated: false, completion: nil)
-                        self.showImageNameAlreadyExistAlert(title: "Alert", message: "This updated image name is already exist.", tempString: tempString, seletedImageTag: seletedImageTag)
+                        self.showImageNameAlreadyExistAlert(title: "Alert", message: "This image name is already exist.", tempString: tempString, seletedImageTag: seletedImageTag)
                     }
                 }
             }
@@ -588,6 +610,7 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
         alert.addAction(saveAction)
         alert.addTextField(configurationHandler: { (textField) in
             textField.placeholder = "Enter image name"
+            textField.keyboardType=UIKeyboardType.asciiCapable
             
             if self.lastEnteredUpdatedImageName == "" {
                 textField.text=fileName
@@ -642,7 +665,7 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
     func isImageNameAlreadyExist(searchText:String) -> Bool {
         
         let tempString=searchText.components(separatedBy: ".").first! + "."
-        let photoNamePredicate = NSPredicate(format: "FileName BEGINSWITH %@", tempString)
+        let photoNamePredicate = NSPredicate(format: "FileName BEGINSWITH %@", tempString.lowercased())
         let tempFilteredArray:NSMutableArray=cameraRollAssets.filtered(using: photoNamePredicate) as! NSMutableArray
 //        print(tempFilteredArray.count)
         
@@ -656,10 +679,16 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
     //Textfield delegate
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         
-        let characterset = CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
-        if string.rangeOfCharacter(from: characterset.inverted) != nil {
-            return false
-        }
+//        let characterset = CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
+//        if string.rangeOfCharacter(from: characterset.inverted) != nil {
+//            return false
+//        }
+//        if ([[[textField textInputMode] primaryLanguage] isEqualToString:@"emoji"] || ![[textField textInputMode] primaryLanguage]) { // In fact, in iOS7, '[[textField textInputMode] primaryLanguage]' is nil
+//            return NO;
+//        }
+//        if textField.textInputMode?.primaryLanguage == "emoji" || !((textField.textInputMode?.primaryLanguage) != nil) {
+//            return false
+//        }
         
         let textLimit=30
         let str = (textField.text! + string)

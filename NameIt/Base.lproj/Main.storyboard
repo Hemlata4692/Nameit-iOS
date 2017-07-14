@@ -9,6 +9,9 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
+        <array key="Montserrat-Bold.ttf">
+            <string>Montserrat-Bold</string>
+        </array>
         <array key="Montserrat-Light.ttf">
             <string>Montserrat-Light</string>
         </array>
@@ -300,6 +303,48 @@
                                 </constraints>
                                 <color key="color" red="0.019607843140000001" green="0.56470588239999997" blue="0.78823529410000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </activityIndicatorView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ri8-qK-8Og">
+                                <rect key="frame" x="240" y="0.0" width="80" height="47"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CUz-wz-qjm">
+                                        <rect key="frame" x="10" y="11" width="25" height="25"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="25" id="9S9-5d-wg6"/>
+                                            <constraint firstAttribute="height" constant="25" id="elZ-Xe-iD1"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="30"/>
+                                        <state key="normal" title="A"/>
+                                        <connections>
+                                            <action selector="selectWhiteColor:" destination="D9M-c7-J6L" eventType="touchUpInside" id="mMK-Rn-sW4"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Yyf-Jk-Q8S">
+                                        <rect key="frame" x="47" y="11" width="25" height="25"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="25" id="5O3-6L-nWs"/>
+                                            <constraint firstAttribute="height" constant="25" id="sEd-jp-1iT"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="30"/>
+                                        <state key="normal" title="A">
+                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="selectBlackColor:" destination="D9M-c7-J6L" eventType="touchUpInside" id="lmK-MK-ycG"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.47374331039755352" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="80" id="7TN-Lu-eam"/>
+                                    <constraint firstItem="Yyf-Jk-Q8S" firstAttribute="top" secondItem="ri8-qK-8Og" secondAttribute="top" constant="11" id="bTm-94-5Ws"/>
+                                    <constraint firstItem="Yyf-Jk-Q8S" firstAttribute="leading" secondItem="CUz-wz-qjm" secondAttribute="trailing" constant="12" id="ofc-PJ-KyO"/>
+                                    <constraint firstAttribute="height" constant="47" id="rWT-Vu-6Ci"/>
+                                    <constraint firstAttribute="trailing" secondItem="Yyf-Jk-Q8S" secondAttribute="trailing" constant="8" id="rgm-dC-F9k"/>
+                                    <constraint firstItem="CUz-wz-qjm" firstAttribute="top" secondItem="ri8-qK-8Og" secondAttribute="top" constant="11" id="vsw-qP-duK"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -312,6 +357,8 @@
                             <constraint firstItem="ypf-3g-VQW" firstAttribute="centerX" secondItem="oYF-SJ-Owi" secondAttribute="centerX" constant="30" id="JNF-6n-yWb"/>
                             <constraint firstItem="8Gr-Y2-eLK" firstAttribute="top" secondItem="Snq-ue-FD9" secondAttribute="bottom" id="Qkb-nI-xs1"/>
                             <constraint firstAttribute="trailing" secondItem="8Gr-Y2-eLK" secondAttribute="trailing" id="T1H-6M-mZe"/>
+                            <constraint firstAttribute="trailing" secondItem="ri8-qK-8Og" secondAttribute="trailing" id="VWr-tR-Bap"/>
+                            <constraint firstItem="ri8-qK-8Og" firstAttribute="top" secondItem="Snq-ue-FD9" secondAttribute="bottom" id="at9-xl-Wuf"/>
                             <constraint firstItem="d7h-hN-dLq" firstAttribute="top" secondItem="ypf-3g-VQW" secondAttribute="bottom" constant="12" id="dw2-f4-25g"/>
                             <constraint firstItem="d7h-hN-dLq" firstAttribute="top" secondItem="tzc-z4-CQh" secondAttribute="bottom" constant="12" id="fic-1e-aQK"/>
                             <constraint firstItem="d7h-hN-dLq" firstAttribute="top" secondItem="p6K-7h-hx7" secondAttribute="bottom" constant="12" id="qcv-uE-su5"/>
@@ -325,11 +372,14 @@
                         <outlet property="activityControllerObject" destination="2fe-0z-ek2" id="TDl-I3-UDb"/>
                         <outlet property="addTextButton" destination="tzc-z4-CQh" id="clB-zb-hDi"/>
                         <outlet property="airbrushButton" destination="p6K-7h-hx7" id="QKh-5R-dEb"/>
+                        <outlet property="blackColorButton" destination="Yyf-Jk-Q8S" id="cmU-rw-qp3"/>
                         <outlet property="photoBackView" destination="JnV-Kb-1NC" id="ZeZ-aF-WSk"/>
                         <outlet property="photoPreviewImageView" destination="Z4U-w4-5Tj" id="caU-fQ-hd6"/>
                         <outlet property="rotateButton" destination="ypf-3g-VQW" id="gzV-R7-kwh"/>
                         <outlet property="scrollViewObject" destination="8Gr-Y2-eLK" id="opT-eL-Vjw"/>
+                        <outlet property="selectTextColorBackView" destination="ri8-qK-8Og" id="VDv-aq-RyE"/>
                         <outlet property="shareButton" destination="DrY-IN-Cp5" id="GDC-3M-Xdh"/>
+                        <outlet property="whiteColorButton" destination="CUz-wz-qjm" id="0E7-cy-DIq"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jG5-O7-dcy" userLabel="First Responder" sceneMemberID="firstResponder"/>
