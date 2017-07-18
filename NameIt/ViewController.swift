@@ -47,14 +47,14 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
         
         self.navigationController?.isNavigationBarHidden=false
         UIApplication.shared.isStatusBarHidden=false
-        
-        //Fetch all entries from local dataBase
-        renameDatabaseDicData=AppDelegate().fetchRenameEntries().mutableCopy() as! NSMutableDictionary
         // Do any additional setup after loading the view.
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        //Fetch all entries from local dataBase
+        renameDatabaseDicData=AppDelegate().fetchRenameEntries().mutableCopy() as! NSMutableDictionary
         
         //Reload gallery image when come in foreground from background state
         NotificationCenter.default.addObserver(self, selector:#selector(applicationWillEnterForeground(_:)), name:NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
@@ -197,7 +197,7 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
             cell?.editButton.isHidden=true
             cell?.selectUnselectImageView.isHidden=false
             //Manage image selection
-            if (selectUnselectImageArray.contains((imageName.lowercased()))) {
+            if (selectUnselectImageArray.contains(tempDictData as Any)) {
                 
                 cell?.selectUnselectImageView.image=UIImage.init(named: "select")
             }
@@ -232,17 +232,14 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
                 tempDictData=cameraRollAssets[indexPath.row] as? NSDictionary
             }
             
-            
-            let imageName:String=tempDictData?.object(forKey: "FileName") as! String
-            
-            if (selectUnselectImageArray.contains(imageName.lowercased())) {
+            if (selectUnselectImageArray.contains(tempDictData as Any)) {
                 
-                selectUnselectImageArray.remove(imageName.lowercased())
+                selectUnselectImageArray.remove(tempDictData as Any)
                 cell.selectUnselectImageView.image=UIImage()
             }
             else {
                 
-                selectUnselectImageArray.add((imageName.lowercased()))
+                selectUnselectImageArray.add(tempDictData as Any)
                 cell.selectUnselectImageView.image=UIImage.init(named: "select")
             }
             
@@ -275,7 +272,8 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
             photoPreviewViewObj?.selectedPhotoAsset=tempDictData?.object(forKey: "Asset") as? ALAsset
             
             let imageName:String=tempDictData?.object(forKey: "FileName") as! String
-            photoPreviewViewObj?.selectedPhotoName=imageName.components(separatedBy: ".").first?.capitalized
+            photoPreviewViewObj?.selectedPhotoName=imageName
+            photoPreviewViewObj?.cameraRollAssets=(cameraRollAssets.mutableCopy() as! NSMutableArray)
             self.navigationController?.pushViewController(photoPreviewViewObj!, animated: true)
         }
     }
@@ -320,9 +318,8 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
         }
         let groupFailureBlock : ALAssetsLibraryAccessFailureBlock = {
             (err:Error!) in
-//            print(err.localizedDescription)
+            
             self.photoAccessDeniedLabel.isHidden=true;
-//            self.activityControllerObject.isHidden=true;
             //Stop indicator
             AppDelegate().stopIndicator(uiView: self.view)
             
@@ -383,7 +380,6 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
         //        self.assetsGroup?.enumerateAssets(assetsEnumerationBlock) //Show in asscending order
         self.assetsGroup?.enumerateAssets(options: .reverse, using: assetsEnumerationBlock)
         
-//        activityControllerObject.isHidden=true;
         //Stop indicator
         AppDelegate().stopIndicator(uiView: self.view)
         if self.cameraRollAssets.count>0 {
@@ -452,18 +448,9 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
 //        var selectedImageArrayToShare:Array<NSData> = [NSData]()
         var selectedImageArrayToShare:Array<UIImage> = [UIImage]()
         //Add selected image
-        for index in selectUnselectImageArray {
+        for tempDictData in selectUnselectImageArray {
             
-            var tempDictData:NSDictionary?
-            if isSearch {
-                
-                tempDictData=searchedCameraRollAssets[index as! Int] as? NSDictionary
-            }
-            else {
-                tempDictData=cameraRollAssets[index as! Int] as? NSDictionary
-            }
-            
-            let tempAsset:ALAsset?=tempDictData?.object(forKey: "Asset") as? ALAsset
+            let tempAsset:ALAsset?=(tempDictData as AnyObject).object(forKey: "Asset") as? ALAsset
             
             let tempAssetRepresent:ALAssetRepresentation=tempAsset!.defaultRepresentation()
             let tempFullImageRef:CGImage=tempAssetRepresent.fullScreenImage().takeUnretainedValue()
@@ -585,15 +572,21 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
                     var tempString:String=(alertTextField.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines))!
                     tempString = tempString + "." + fileName.components(separatedBy: ".").last!
                     
-                    let characterset = CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_")
- 
                     //Check for special character
-                    if alertTextField.text?.rangeOfCharacter(from: characterset.inverted) != nil {
+//                    let characterset = CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_")
+//                    if alertTextField.text?.rangeOfCharacter(from: characterset.inverted) != nil {
+//                        
+//                        alert.dismiss(animated: false, completion: nil)
+//                        self.showImageNameAlreadyExistAlert(title: "Alert", message: "Special characters are not allowed except underscore.", tempString: tempString, seletedImageTag: seletedImageTag)
+//                    }
                     
+                    //Check for dot '.' character
+                    let charset = CharacterSet(charactersIn: ".")
+                    if alertTextField.text?.rangeOfCharacter(from: charset) != nil {
                         alert.dismiss(animated: false, completion: nil)
-                        self.showImageNameAlreadyExistAlert(title: "Alert", message: "Special characters are not allowed except underscore.", tempString: tempString, seletedImageTag: seletedImageTag)
+                        self.showImageNameAlreadyExistAlert(title: "Alert", message: "Dot character '.' is not allowed.", tempString: alertTextField.text!, seletedImageTag: seletedImageTag)
                     }
-                        //Check entered name is already exist or not
+                    //Check entered name is already exist or not
                     else if !self.isImageNameAlreadyExist(searchText: tempString) {
                         
                         self.editFilenameHandlingLocalAndDB(seletedImageTag: seletedImageTag, updatedText: alertTextField.text!, updtedTextWithExtension: tempString, selectedDictData: tempDictData!)
@@ -602,7 +595,7 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
                     else {
                         
                         alert.dismiss(animated: false, completion: nil)
-                        self.showImageNameAlreadyExistAlert(title: "Alert", message: "This image name is already exist.", tempString: tempString, seletedImageTag: seletedImageTag)
+                        self.showImageNameAlreadyExistAlert(title: "Alert", message: "This image name is already exist.", tempString: alertTextField.text!, seletedImageTag: seletedImageTag)
                     }
                 }
             }
@@ -610,15 +603,16 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
         alert.addAction(saveAction)
         alert.addTextField(configurationHandler: { (textField) in
             textField.placeholder = "Enter image name"
-            textField.keyboardType=UIKeyboardType.asciiCapable
-            
+            textField.keyboardType=UIKeyboardType.default
+            textField.autocapitalizationType=UITextAutocapitalizationType.words
+            textField.autocorrectionType=UITextAutocorrectionType.no
             if self.lastEnteredUpdatedImageName == "" {
                 textField.text=fileName
                     .components(separatedBy: ".").first?.capitalized
             }
             else {
                 textField.text=self.lastEnteredUpdatedImageName
-                    .components(separatedBy: ".").first?.capitalized
+                    //.components(separatedBy: ".").first?.capitalized
             }
             self.lastEnteredUpdatedImageName=""
             textField.delegate=self
@@ -654,7 +648,7 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
         let tempDictData:NSDictionary=self.cameraRollAssets.object(at: index) as! NSDictionary
         let tempMutableData:NSMutableDictionary=tempDictData.mutableCopy() as! NSMutableDictionary
         
-        tempMutableData.setValue(updtedTextWithExtension, forKey: "FileName")
+        tempMutableData.setValue(updtedTextWithExtension.lowercased(), forKey: "FileName")
         self.cameraRollAssets.replaceObject(at: index, with: tempMutableData)
         if self.isSearch {
             
@@ -678,17 +672,6 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
     
     //Textfield delegate
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        
-//        let characterset = CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
-//        if string.rangeOfCharacter(from: characterset.inverted) != nil {
-//            return false
-//        }
-//        if ([[[textField textInputMode] primaryLanguage] isEqualToString:@"emoji"] || ![[textField textInputMode] primaryLanguage]) { // In fact, in iOS7, '[[textField textInputMode] primaryLanguage]' is nil
-//            return NO;
-//        }
-//        if textField.textInputMode?.primaryLanguage == "emoji" || !((textField.textInputMode?.primaryLanguage) != nil) {
-//            return false
-//        }
         
         let textLimit=30
         let str = (textField.text! + string)

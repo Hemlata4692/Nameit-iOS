@@ -9,13 +9,13 @@
 import UIKit
 import AssetsLibrary
 
-class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate, UITextViewDelegate, UIGestureRecognizerDelegate {
+class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate, UITextViewDelegate, UITextFieldDelegate, UIGestureRecognizerDelegate {
     
     @IBOutlet var airbrushButton: UIButton!
     @IBOutlet var addTextButton: UIButton!
     @IBOutlet var rotateButton: UIButton!
     @IBOutlet var shareButton: UIButton!
-    @IBOutlet var activityControllerObject: UIActivityIndicatorView!
+    @IBOutlet var renameButton: UIButton!
     
     @IBOutlet var photoBackView: UIView!
     @IBOutlet var photoPreviewImageView: UIImageView!
@@ -32,6 +32,8 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
     var isAddTextSelected:Bool = false
     var isImageEdited:Bool = false
     
+    var assetRepresent:ALAssetRepresentation?
+    
     var caption:UITextView?
     var textViewToolbar:UIToolbar?
     var drag:UIPanGestureRecognizer?
@@ -44,18 +46,28 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
     @IBOutlet var blackColorButton: UIButton!
     var selectedColor:UIColor?
     
+    
+    var lastEnteredUpdatedImageName:String=""
+    var nonUpdatedPhotoName:String=""
+    var cameraRollAssets: NSMutableArray?
+    var isImageRenamed:Bool = false
+    var keyboardHeight:CGFloat=258
+    
     // MARK: - UIView life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
         viewIntialization()
+        nonUpdatedPhotoName=selectedPhotoName!
+        
+        //Set keyboard show notification
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        
         // Do any additional setup after loading the view.
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-//        activityControllerObject.isHidden=true;
         
         if isAirBrushDone {
             
@@ -89,24 +101,26 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
         drag?.delegate=self
         
         //Load full image and image name from selectedImageAsset
-        let assetRepresent:ALAssetRepresentation=selectedPhotoAsset!.defaultRepresentation()
-        let fullImageRef:CGImage=assetRepresent.fullScreenImage().takeUnretainedValue()
+        assetRepresent = selectedPhotoAsset!.defaultRepresentation()
+        let fullImageRef:CGImage=assetRepresent!.fullScreenImage().takeUnretainedValue()
         let fullImage:UIImage=UIImage.init(cgImage: fullImageRef)
         selectedPhoto=fullImage
         
         //Set navigation title
-        self.navigationItem.title=selectedPhotoName
+        self.navigationItem.title=selectedPhotoName?.components(separatedBy: ".").first?.capitalized
         selectedImageSize = selectedPhoto?.size
         photoPreviewImageView.image=selectedPhoto
         photoPreviewImageView.isUserInteractionEnabled=true
         
         selectTextColorBackView.isHidden=true
-//        whiteColorButton.layer.cornerRadius=13
-//        whiteColorButton.layer.masksToBounds=true
-//        blackColorButton.layer.cornerRadius=13
-//        blackColorButton.layer.masksToBounds=true
-//        whiteColorButton.layer.borderColor=UIColor(red: 5.0/255.0, green: 144.0/255.0, blue: 201.0/255.0, alpha: 1.0).cgColor
-//        whiteColorButton.layer.borderWidth=2.0
+        whiteColorButton.layer.cornerRadius=13
+        whiteColorButton.layer.masksToBounds=true
+        blackColorButton.layer.cornerRadius=13
+        blackColorButton.layer.masksToBounds=true
+        blackColorButton.layer.borderColor=UIColor(red: 5.0/255.0, green: 144.0/255.0, blue: 201.0/255.0, alpha: 1.0).cgColor
+        blackColorButton.layer.borderWidth=2.0
+        whiteColorButton.layer.borderColor=UIColor.lightGray.cgColor
+        whiteColorButton.layer.borderWidth=2.0
         selectedColor=UIColor.black
         //Change photoPreviewImageView according to selected image size ratio
         changeImageRatio()
@@ -116,7 +130,6 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
     //Set UIImageView size according to image size ratio
     func changeImageRatio() {
         
-//        print(scrollViewObject.zoomScale)
         let ratio = (selectedImageSize?.width)!/(selectedImageSize?.height)!
         let selectedImageWidth:CGFloat=(selectedImageSize?.width)!
         let selectedImageHeight:CGFloat=(selectedImageSize?.height)!
@@ -186,6 +199,11 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
     // MARK: - end
     
     // MARK: - IBActions
+    @IBAction func renameImage(_ sender: UIButton) {
+        
+        editImageNameRecursiveMethod()
+    }
+    
     @IBAction func shareImage(_ sender: UIButton) {
         
 //        var selectedImageArrayToShare:Array<NSData> = [NSData]()
@@ -230,21 +248,10 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
             commonMethodOfRotateAddTextAction()
             photoPreviewImageView.translatesAutoresizingMaskIntoConstraints=true;
             photoPreviewImageView.frame=CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height-(64.0+64.0))
-            
-            //            photoPreviewImageView.frame=CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height-128)  //height=navigationBar_Height(64)+bottom_space(64)
-            //            photoPreviewImageView.addGestureRecognizer(drag!)
             initCaption()
         }
         else {
             
-            //            if ((caption?.sizeThatFits((caption?.frame.size)!).height)! > CGFloat(36.0)) {
-            //
-            //                caption?.frame = CGRect(x: 0, y: (photoPreviewImageView.frame.size.height/2) - ((caption?.sizeThatFits((caption?.frame.size)!).height)!/2), width: UIScreen.main.bounds.size.width, height: (caption?.sizeThatFits((caption?.frame.size)!).height)!)
-            //            }
-            //            else {
-            //
-            //                caption?.frame = CGRect(x: 0, y: (photoPreviewImageView.frame.size.height/2) - 15, width: UIScreen.main.bounds.size.width, height: 34)
-            //            }
             caption?.becomeFirstResponder()
         }
     }
@@ -266,12 +273,18 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
         
             scrollViewObject.zoomScale=1.0
             //Show indicator
-//            activityControllerObject.isHidden=false;
             AppDelegate().showIndicator(uiView: self.view)
             self.perform( #selector(saveEditedImage), with: nil, afterDelay: 0.01)
         }
         else {
-            self.navigationController?.popViewController(animated: true)
+            
+            if isImageRenamed {
+                
+                self.editFilenameHandlingLocalAndDB()
+            }
+            else {
+                self.navigationController?.popViewController(animated: true)
+            }
         }
     }
     
@@ -334,8 +347,8 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
     
     @IBAction func selectBlackColor(_ sender: UIButton) {
         
-        whiteColorButton.layer.borderColor=UIColor.clear.cgColor
-        whiteColorButton.layer.borderWidth=0.0
+        whiteColorButton.layer.borderColor=UIColor.lightGray.cgColor
+        whiteColorButton.layer.borderWidth=2.0
         blackColorButton.layer.borderColor=UIColor(red: 5.0/255.0, green: 144.0/255.0, blue: 201.0/255.0, alpha: 1.0).cgColor
         blackColorButton.layer.borderWidth=2.0
         selectedColor=UIColor.black
@@ -348,8 +361,8 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
     
     @IBAction func selectWhiteColor(_ sender: UIButton) {
         
-        blackColorButton.layer.borderColor=UIColor.clear.cgColor
-        blackColorButton.layer.borderWidth=0.0
+        blackColorButton.layer.borderColor=UIColor.lightGray.cgColor
+        blackColorButton.layer.borderWidth=2.0
         whiteColorButton.layer.borderColor=UIColor(red: 5.0/255.0, green: 144.0/255.0, blue: 201.0/255.0, alpha: 1.0).cgColor
         whiteColorButton.layer.borderWidth=2.0
         selectedColor=UIColor.white
@@ -436,7 +449,7 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
         
         //Show back bar button and show save button if image is edited
         addBackBarButton()
-        if isImageEdited {
+        if isImageEdited || isImageRenamed {
             addSaveBarButton()
         }
     }
@@ -464,7 +477,6 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
         
         //Stop indicator
         AppDelegate().stopIndicator(uiView: self.view)
-//        activityControllerObject.isHidden=true;
         
         if error != nil {
             //We got back an error!
@@ -482,7 +494,11 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
             
             let okAction = UIAlertAction(title: "OK", style: .default) { (action) -> Void in
                 
-                self.navigationController?.popViewController(animated: true)
+                if self.isImageRenamed {
+                    
+                    self.editFilenameHandlingLocalAndDB()
+                }
+                
             }
             alertViewController.addAction(okAction)
             
@@ -494,11 +510,12 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
     // MARK: - Add caption(Text) at selected image
     func initCaption() {
         
-        caption = UITextView.init(frame: CGRect(x: (UIScreen.main.bounds.size.width/2)-15, y: (photoPreviewImageView.frame.size.height/2) - 15 - 44, width: 30, height: 34))
+        caption = UITextView.init(frame: CGRect(x: (UIScreen.main.bounds.size.width/2)-15, y: (photoPreviewImageView.frame.size.height/2) - 15 - 88, width: 30, height: 34))
         //        caption?.backgroundColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.5)
         caption?.backgroundColor = UIColor.clear
         caption?.textAlignment = NSTextAlignment.center
         caption?.textColor = UIColor.black
+        caption?.keyboardType=UIKeyboardType.asciiCapable
         caption?.keyboardAppearance = UIKeyboardAppearance.default
         caption?.tintColor = UIColor.white
         caption?.font=UIFont().montserratLightWithSize(size: 15)
@@ -511,7 +528,7 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
         caption?.isScrollEnabled=false
         caption?.addGestureRecognizer(drag!)
         
-        textViewToolbar = UIToolbar.init(frame: CGRect(x: 0, y: UIScreen.main.bounds.size.height-64-258, width: UIScreen.main.bounds.size.width, height: 44))
+        textViewToolbar = UIToolbar.init(frame: CGRect(x: 0, y: UIScreen.main.bounds.size.height-64-keyboardHeight, width: UIScreen.main.bounds.size.width, height: 44))
         textViewToolbar?.barStyle = UIBarStyle.default
         textViewToolbar?.items = [
             UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace, target: nil, action: nil),
@@ -580,36 +597,6 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
     
     func textViewDidChange(_ textView: UITextView) { //Handle the text changes here
         
-        ////        print(textView.text.characters.count); //the textView parameter is the textView where text was changed
-        //        if ((caption?.sizeThatFits((caption?.frame.size)!).height)! > CGFloat(36.0)) {
-        //
-        ////            caption?.frame = CGRect(x: 0, y: (photoPreviewImageView.frame.size.height/2) - ((caption?.sizeThatFits((caption?.frame.size)!).height)!/2), width: UIScreen.main.bounds.size.width, height: (caption?.sizeThatFits((caption?.frame.size)!).height)!)
-        //
-        //            if (caption?.sizeThatFits((caption?.frame.size)!).width)!+30 > UIScreen.main.bounds.size.width-30 {
-        //
-        ////                caption?.frame = CGRect(x: 15, y: (photoPreviewImageView.frame.size.height/2) - 15, width: UIScreen.main.bounds.size.width - 30, height: 34)
-        //                caption?.frame = CGRect(x: 15, y: (photoPreviewImageView.frame.size.height/2) - ((caption?.sizeThatFits((caption?.frame.size)!).height)!/2), width: UIScreen.main.bounds.size.width - 30, height: (caption?.sizeThatFits((caption?.frame.size)!).height)!)
-        //            }
-        //            else {
-        //
-        ////                caption?.frame = CGRect(x: (UIScreen.main.bounds.size.width/2)-((caption?.sizeThatFits((caption?.frame.size)!).width)!/2)-15, y: (photoPreviewImageView.frame.size.height/2) - 15, width: (caption?.sizeThatFits((caption?.frame.size)!).width)!+30, height: 34)
-        //                caption?.frame = CGRect(x: (UIScreen.main.bounds.size.width/2)-((caption?.sizeThatFits((caption?.frame.size)!).width)!/2)-15, y: (photoPreviewImageView.frame.size.height/2) - ((caption?.sizeThatFits((caption?.frame.size)!).height)!/2), width: (caption?.sizeThatFits((caption?.frame.size)!).width)!+30, height: (caption?.sizeThatFits((caption?.frame.size)!).height)!)
-        //            }
-        //        }
-        //        else {
-        //
-        //            if (caption?.sizeThatFits((caption?.frame.size)!).width)!+30 > UIScreen.main.bounds.size.width-30 {
-        //
-        //                caption?.frame = CGRect(x: 15, y: (photoPreviewImageView.frame.size.height/2) - 15, width: UIScreen.main.bounds.size.width - 30, height: 34)
-        //            }
-        //            else {
-        //
-        //                caption?.frame = CGRect(x: (UIScreen.main.bounds.size.width/2)-((caption?.sizeThatFits((caption?.frame.size)!).width)!/2)-15, y: (photoPreviewImageView.frame.size.height/2) - 15, width: (caption?.sizeThatFits((caption?.frame.size)!).width)!+30, height: 34)
-        //            }
-        //
-        ////             caption = UITextView.init(frame: CGRect(x: (UIScreen.main.bounds.size.width/2)-5, y: (photoPreviewImageView.frame.size.height/2) - 15, width: 10, height: 34))
-        //        }
-        
         textViewBeginMethod()
     }
     
@@ -620,31 +607,25 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
         caption?.layer.borderColor=selectedColor?.cgColor
         if ((caption?.sizeThatFits((caption?.frame.size)!).height)! > CGFloat(36.0)) {
             
-            //            caption?.frame = CGRect(x: 0, y: (photoPreviewImageView.frame.size.height/2) - ((caption?.sizeThatFits((caption?.frame.size)!).height)!/2), width: UIScreen.main.bounds.size.width, height: (caption?.sizeThatFits((caption?.frame.size)!).height)!)
-            
             if (caption?.sizeThatFits((caption?.frame.size)!).width)!+30 > UIScreen.main.bounds.size.width-30 {
                 
-                //                caption?.frame = CGRect(x: 15, y: (photoPreviewImageView.frame.size.height/2) - 15, width: UIScreen.main.bounds.size.width - 30, height: 34)
-                caption?.frame = CGRect(x: 15, y: (photoPreviewImageView.frame.size.height/2) - ((caption?.sizeThatFits((caption?.frame.size)!).height)!/2) - 44, width: UIScreen.main.bounds.size.width - 30, height: (caption?.sizeThatFits((caption?.frame.size)!).height)!)
+                caption?.frame = CGRect(x: 15, y: (photoPreviewImageView.frame.size.height/2) - ((caption?.sizeThatFits((caption?.frame.size)!).height)!/2) - 88, width: UIScreen.main.bounds.size.width - 30, height: (caption?.sizeThatFits((caption?.frame.size)!).height)!)
             }
             else {
                 
-                //                caption?.frame = CGRect(x: (UIScreen.main.bounds.size.width/2)-((caption?.sizeThatFits((caption?.frame.size)!).width)!/2)-15, y: (photoPreviewImageView.frame.size.height/2) - 15, width: (caption?.sizeThatFits((caption?.frame.size)!).width)!+30, height: 34)
-                caption?.frame = CGRect(x: (UIScreen.main.bounds.size.width/2)-((caption?.sizeThatFits((caption?.frame.size)!).width)!/2)-15, y: (photoPreviewImageView.frame.size.height/2) - ((caption?.sizeThatFits((caption?.frame.size)!).height)!/2) - 44, width: (caption?.sizeThatFits((caption?.frame.size)!).width)!+30, height: (caption?.sizeThatFits((caption?.frame.size)!).height)!)
+                caption?.frame = CGRect(x: (UIScreen.main.bounds.size.width/2)-((caption?.sizeThatFits((caption?.frame.size)!).width)!/2)-15, y: (photoPreviewImageView.frame.size.height/2) - ((caption?.sizeThatFits((caption?.frame.size)!).height)!/2) - 88, width: (caption?.sizeThatFits((caption?.frame.size)!).width)!+30, height: (caption?.sizeThatFits((caption?.frame.size)!).height)!)
             }
         }
         else {
             
             if (caption?.sizeThatFits((caption?.frame.size)!).width)!+30 > UIScreen.main.bounds.size.width-30 {
                 
-                caption?.frame = CGRect(x: 15, y: (photoPreviewImageView.frame.size.height/2) - 15 - 44, width: UIScreen.main.bounds.size.width - 30, height: 34)
+                caption?.frame = CGRect(x: 15, y: (photoPreviewImageView.frame.size.height/2) - 15 - 88, width: UIScreen.main.bounds.size.width - 30, height: 34)
             }
             else {
                 
-                caption?.frame = CGRect(x: (UIScreen.main.bounds.size.width/2)-((caption?.sizeThatFits((caption?.frame.size)!).width)!/2)-15, y: (photoPreviewImageView.frame.size.height/2) - 15 - 44, width: (caption?.sizeThatFits((caption?.frame.size)!).width)!+30, height: 34)
+                caption?.frame = CGRect(x: (UIScreen.main.bounds.size.width/2)-((caption?.sizeThatFits((caption?.frame.size)!).width)!/2)-15, y: (photoPreviewImageView.frame.size.height/2) - 15 - 88, width: (caption?.sizeThatFits((caption?.frame.size)!).width)!+30, height: 34)
             }
-            
-            //             caption = UITextView.init(frame: CGRect(x: (UIScreen.main.bounds.size.width/2)-5, y: (photoPreviewImageView.frame.size.height/2) - 15, width: 10, height: 34))
         }
     }
     
@@ -666,6 +647,136 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
             let numberOfChars = newText.characters.count // for Swift use count(newText)
             return numberOfChars < 101;
         }
+    }
+    // MARK: - end
+    
+    // MARK: - Keyboard show-hide methods
+    func keyboardWillShow(notification: NSNotification) {
+        
+        let info:NSDictionary=notification.userInfo as NSDictionary!
+        let aValue:NSValue=info.object(forKey: UIKeyboardFrameEndUserInfoKey) as! NSValue
+        
+        keyboardHeight=aValue.cgRectValue.size.height
+        print(keyboardHeight)
+        textViewToolbar?.frame = CGRect(x: 0, y: UIScreen.main.bounds.size.height-64-keyboardHeight-44, width: UIScreen.main.bounds.size.width, height: 44)
+    }
+    // MARK: - end
+    
+    // MARK: - Image rename handling
+    func editImageNameRecursiveMethod() {
+        
+        let alert = UIAlertController(title: "", message: "Please enter new image name", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        let saveAction = UIAlertAction(title:"Apply", style: .default, handler: { (action) -> Void in
+            
+            if let alertTextField = alert.textFields?.first, alertTextField.text != nil {
+                
+                if alertTextField.text?.lowercased().trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) != self.nonUpdatedPhotoName
+                    .components(separatedBy: ".").first!.lowercased().trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) {
+                    
+                    var tempString:String=(alertTextField.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines))!
+                    tempString = tempString + "." + (self.selectedPhotoName?.components(separatedBy: ".").last!)!
+                    
+                    //Check for dot '.' character
+                    let charset = CharacterSet(charactersIn: ".")
+                    if alertTextField.text?.rangeOfCharacter(from: charset) != nil {
+                        alert.dismiss(animated: false, completion: nil)
+                        self.showImageNameAlreadyExistAlert(title: "Alert", message: "Dot character '.' is not allowed.", tempString: alertTextField.text!)
+                    }
+                        //Check entered name is already exist or not
+                    else if !self.isImageNameAlreadyExist(searchText: tempString) {
+                        
+                        self.isImageRenamed=true
+                        let tempString:String=(alertTextField.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines))!
+                        self.selectedPhotoName = tempString + "." + self.selectedPhotoName!.components(separatedBy: ".").last!
+                        //Set navigation title
+                        self.navigationItem.title=self.selectedPhotoName?.components(separatedBy: ".").first?.capitalized
+                        self.addSaveBarButton()
+                    }
+                    else {
+                        
+                        alert.dismiss(animated: false, completion: nil)
+                        self.showImageNameAlreadyExistAlert(title: "Alert", message: "This image name is already exist.", tempString: alertTextField.text!)
+                    }
+                }
+                else {
+                
+                    self.selectedPhotoName = self.nonUpdatedPhotoName
+                    //Set navigation title
+                    self.navigationItem.title=self.selectedPhotoName?.components(separatedBy: ".").first?.capitalized
+                }
+            }
+        })
+        alert.addAction(saveAction)
+        alert.addTextField(configurationHandler: { (textField) in
+            textField.placeholder = "Enter image name"
+            textField.keyboardType=UIKeyboardType.default
+            textField.autocapitalizationType=UITextAutocapitalizationType.words
+            textField.autocorrectionType=UITextAutocorrectionType.no
+            if self.lastEnteredUpdatedImageName == "" {
+                textField.text=self.selectedPhotoName?
+                    .components(separatedBy: ".").first?.capitalized
+            }
+            else {
+                textField.text=self.lastEnteredUpdatedImageName
+                //.components(separatedBy: ".").first?.capitalized
+            }
+            self.lastEnteredUpdatedImageName=""
+            textField.delegate=self
+            
+            NotificationCenter.default.addObserver(forName: NSNotification.Name.UITextFieldTextDidChange, object: textField, queue: OperationQueue.main) { (notification) in
+                saveAction.isEnabled = (textField.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).characters.count)! > 0
+            }
+        })
+        present(alert, animated: true, completion: nil)
+    }
+    
+    func editFilenameHandlingLocalAndDB() {
+        
+        AppDelegate().insertUpdateRenamedText(imageName: (assetRepresent?.filename().components(separatedBy: ".").first!.lowercased())!, rename: (selectedPhotoName?.components(separatedBy: ".").first!.lowercased())!)
+        self.navigationController?.popViewController(animated: true)
+    }
+    
+    func isImageNameAlreadyExist(searchText:String) -> Bool {
+        
+        let tempString=searchText.components(separatedBy: ".").first! + "."
+        let photoNamePredicate = NSPredicate(format: "FileName BEGINSWITH %@", tempString.lowercased())
+        let tempFilteredArray:NSMutableArray=cameraRollAssets!.filtered(using: photoNamePredicate) as! NSMutableArray
+        //        print(tempFilteredArray.count)
+        
+        if tempFilteredArray.count > 0 {
+            
+            return true
+        }
+        return false
+    }
+    
+    //Textfield delegate
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        
+        let textLimit=30
+        let str = (textField.text! + string)
+        if str.characters.count <= textLimit {
+            return true
+        }
+        textField.text = str.substring(to: str.index(str.startIndex, offsetBy: textLimit))
+        return false
+    }
+    // MARK: - end
+    
+    // MARK: - Show popUp
+    func showImageNameAlreadyExistAlert(title:String, message messageText:String, tempString:String) {
+        
+        let alertViewController = UIAlertController(title: title, message: messageText, preferredStyle: .alert)
+        
+        let okAction = UIAlertAction(title: "OK", style: .default) { (action) -> Void in
+            
+            self.lastEnteredUpdatedImageName=tempString
+            alertViewController.dismiss(animated: false, completion: nil)
+            self.editImageNameRecursiveMethod()
+        }
+        alertViewController.addAction(okAction)
+        self.navigationController?.present(alertViewController, animated: false, completion: nil)
     }
     // MARK: - end
     

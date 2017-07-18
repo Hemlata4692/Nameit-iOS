@@ -15,6 +15,7 @@ class AirBrushViewController: GlobalBackViewController, UIScrollViewDelegate, UI
     @IBOutlet var addTextButton: UIButton!
     @IBOutlet var rotateButton: UIButton!
     @IBOutlet var shareButton: UIButton!
+    @IBOutlet var renameButton: UIButton!
     @IBOutlet var eraserButton: UIButton!
     
     @IBOutlet var photoPreviewImageView: UIImageView!
@@ -105,6 +106,7 @@ class AirBrushViewController: GlobalBackViewController, UIScrollViewDelegate, UI
         //Set navigation title
         self.navigationItem.title=screenTitle! as String
         
+        renameButton.isEnabled=false;
         shareButton.isEnabled=false;
         airbrushButton.isEnabled=true;
         rotateButton.isEnabled=false;
