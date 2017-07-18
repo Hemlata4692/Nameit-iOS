@@ -46,12 +46,12 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
     @IBOutlet var blackColorButton: UIButton!
     var selectedColor:UIColor?
     
-    
     var lastEnteredUpdatedImageName:String=""
     var nonUpdatedPhotoName:String=""
     var cameraRollAssets: NSMutableArray?
     var isImageRenamed:Bool = false
     var keyboardHeight:CGFloat=258
+    var assetsGroup:ALAssetsGroup?
     
     // MARK: - UIView life cycle
     override func viewDidLoad() {
@@ -280,7 +280,7 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
             
             if isImageRenamed {
                 
-                self.editFilenameHandlingLocalAndDB()
+                self.editFilenameHandlingLocalAndDB(filename: (assetRepresent?.filename().components(separatedBy: ".").first!.lowercased())!, message: "Image has been renamed.")
             }
             else {
                 self.navigationController?.popViewController(animated: true)
@@ -446,6 +446,7 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
         airbrushButton.isEnabled=true;
         rotateButton.isEnabled=true;
         addTextButton.isEnabled=true;
+        renameButton.isEnabled=true;
         
         //Show back bar button and show save button if image is edited
         addBackBarButton()
@@ -460,6 +461,7 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
         scrollViewObject.delegate=nil
         shareButton.isEnabled=false;
         airbrushButton.isEnabled=false;
+        renameButton.isEnabled=false;
         addBarButtonWithDone()
     }
     // MARK: - end
@@ -467,43 +469,38 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
     // MARK: - Save image
     func saveEditedImage() {
     
-        //Adds the edited image to the user’s Camera Roll album
-        UIImageWriteToSavedPhotosAlbum(photoPreviewImageView.image!, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
-    }
-    
-    //UIImagePickerController delegate
-    //Selector should be called after the image has been written to the Camera Roll album
-    func image(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
-        
-        //Stop indicator
-        AppDelegate().stopIndicator(uiView: self.view)
-        
-        if error != nil {
-            //We got back an error!
-            let alertViewController = UIAlertController(title: nil, message: "Some error occurred, Please try again later.", preferredStyle: .alert)
-            
-            let okAction = UIAlertAction(title: "OK", style: .default) { (action) -> Void in
-                
-            }
-            alertViewController.addAction(okAction)
-            
-            present(alertViewController, animated: true, completion: nil)
-        } else {
-            
-            let alertViewController = UIAlertController(title: nil, message: "Image has been saved.", preferredStyle: .alert)
-            
-            let okAction = UIAlertAction(title: "OK", style: .default) { (action) -> Void in
-                
-                if self.isImageRenamed {
+        let library = ALAssetsLibrary()
+        library.writeImage(toSavedPhotosAlbum: photoPreviewImageView.image?.cgImage, orientation: ALAssetOrientation.init(rawValue: (photoPreviewImageView.image?.imageOrientation.rawValue)!)!, completionBlock: {
+            url, error in
+            if error == nil {
+                library.asset(for: url, resultBlock: { (asset) -> Void in
                     
-                    self.editFilenameHandlingLocalAndDB()
-                }
+                    if self.isImageRenamed {
+                        
+                        self.editFilenameHandlingLocalAndDB(filename: (asset?.defaultRepresentation().filename().components(separatedBy: ".").first!.lowercased())!, message: "Image has been saved.")
+                    }
+                    else {
+                    
+                        self.showImageSavedPopUp(message: "Image has been saved.")
+                    }
+                    
+                }, failureBlock: { (error) -> Void in
+                    
+                })
+            } else {
                 
+                AppDelegate().stopIndicator(uiView: self.view)
+                let alertViewController = UIAlertController(title: nil, message: "Some error occurred, Please try again later.", preferredStyle: .alert)
+                
+                let okAction = UIAlertAction(title: "OK", style: .default) { (action) -> Void in
+                    
+                }
+                alertViewController.addAction(okAction)
+                
+                self.navigationController?.present(alertViewController, animated: true, completion: nil)
+                // We have the URL here
             }
-            alertViewController.addAction(okAction)
-            
-            present(alertViewController, animated: true, completion: nil)
-        }
+        })
     }
     // MARK: - end
     
@@ -515,7 +512,7 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
         caption?.backgroundColor = UIColor.clear
         caption?.textAlignment = NSTextAlignment.center
         caption?.textColor = UIColor.black
-        caption?.keyboardType=UIKeyboardType.asciiCapable
+        caption?.keyboardType=UIKeyboardType.default
         caption?.keyboardAppearance = UIKeyboardAppearance.default
         caption?.tintColor = UIColor.white
         caption?.font=UIFont().montserratLightWithSize(size: 15)
@@ -731,10 +728,10 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
         present(alert, animated: true, completion: nil)
     }
     
-    func editFilenameHandlingLocalAndDB() {
+    func editFilenameHandlingLocalAndDB(filename:String, message msg:String) {
         
-        AppDelegate().insertUpdateRenamedText(imageName: (assetRepresent?.filename().components(separatedBy: ".").first!.lowercased())!, rename: (selectedPhotoName?.components(separatedBy: ".").first!.lowercased())!)
-        self.navigationController?.popViewController(animated: true)
+        AppDelegate().insertUpdateRenamedText(imageName: filename, rename: (selectedPhotoName?.components(separatedBy: ".").first!.lowercased())!)
+        self.showImageSavedPopUp(message: msg)
     }
     
     func isImageNameAlreadyExist(searchText:String) -> Bool {
@@ -777,6 +774,20 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
         }
         alertViewController.addAction(okAction)
         self.navigationController?.present(alertViewController, animated: false, completion: nil)
+    }
+    
+    func showImageSavedPopUp(message:String) {
+        
+        AppDelegate().stopIndicator(uiView: self.view)
+        let alertViewController = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        
+        let okAction = UIAlertAction(title: "OK", style: .default) { (action) -> Void in
+            
+            self.navigationController?.popViewController(animated: true)
+        }
+        alertViewController.addAction(okAction)
+        
+        present(alertViewController, animated: true, completion: nil)
     }
     // MARK: - end
     

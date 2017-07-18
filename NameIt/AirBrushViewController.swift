@@ -306,7 +306,6 @@ class AirBrushViewController: GlobalBackViewController, UIScrollViewDelegate, UI
                     colorPreviewView.isHidden=true;
                 }
             }
-            
         }
     }
     // MARK: - end
