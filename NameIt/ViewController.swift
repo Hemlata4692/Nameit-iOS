@@ -44,6 +44,7 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        createImagesFolder()
         self.navigationController?.isNavigationBarHidden=false
         UIApplication.shared.isStatusBarHidden=false
         // Do any additional setup after loading the view.
@@ -96,6 +97,9 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
         
         //Customize right button according to image selection
         viewCustomization()
+        
+        //Remove all shared images from documentDirectory
+        clearAllFilesFromTempDirectory()
         
         //Fetch group and then fetch image assets
         //Show indicator
@@ -274,6 +278,7 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        
         let picDimension = self.view.frame.size.width / 3.0
         return CGSize(width: picDimension-5, height: picDimension+30)
     }
@@ -438,21 +443,65 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
     func leftBarButtonAction() {
         
         searchBarObject.resignFirstResponder()
-        var selectedImageArrayToShare:Array<UIImage> = [UIImage]()
+        
+        //Remove all shared images from documentDirectory
+        clearAllFilesFromTempDirectory()
+        
+        var selectedImageArrayToShare:Array<NSURL> = [NSURL]()
         //Add selected image
         for tempDictData in selectUnselectImageArray {
             
-            let tempAsset:ALAsset?=(tempDictData as AnyObject).object(forKey: "Asset") as? ALAsset
-            
-            let tempAssetRepresent:ALAssetRepresentation=tempAsset!.defaultRepresentation()
-            let tempFullImageRef:CGImage=tempAssetRepresent.fullScreenImage().takeUnretainedValue()
-            let tempFullImage:UIImage=UIImage.init(cgImage: tempFullImageRef)
-            selectedImageArrayToShare.append(tempFullImage)
+            let tempString:String = (tempDictData as AnyObject).object(forKey: "FileName") as! String
+            //Save selected images in documentDirectory and fetch image path then append this image path in selectedImageArrayToShare
+            selectedImageArrayToShare.append(saveActivityControllerImage(tempAsset: (tempDictData as AnyObject).object(forKey: "Asset") as! ALAsset, fileName: tempString.capitalized))
         }
-        
         //Present UIActivityViewController to share images
         let activityViewController:UIActivityViewController = UIActivityViewController(activityItems: selectedImageArrayToShare as [Any], applicationActivities: nil)
         self.present(activityViewController, animated: true, completion: nil)
+    }
+    // MARK: - end
+    
+    // MARK: - Save selected image in DocumentDirectory and return path of images
+    func saveActivityControllerImage(tempAsset:ALAsset, fileName imageName:String) -> NSURL {
+        
+        let tempAssetRepresent:ALAssetRepresentation=tempAsset.defaultRepresentation()
+        let tempFullImage:UIImage=UIImage.init(cgImage: tempAssetRepresent.fullScreenImage().takeUnretainedValue())
+        var name:String=imageName.capitalized
+        print(name.components(separatedBy: ".").last as Any)
+        if name.components(separatedBy: ".").last!.lowercased() != "png" {
+            
+            name = name.replacingOccurrences(of: ".\(name.components(separatedBy: ".").last!)", with: ".jpg")
+        }
+        else {
+            name = name.replacingOccurrences(of: ".\(name.components(separatedBy: ".").last!)", with: ".png")
+        }
+        let urlString : NSURL = getDocumentDirectoryPath(fileName: name)
+        print("Image path : \(urlString)")
+        if !FileManager.default.fileExists(atPath: urlString.absoluteString!) {
+            do {
+                
+                var isSaved : Bool = false
+                print(urlString.pathExtension as Any)
+                if urlString.pathExtension?.lowercased() == "png" {
+                    
+                    isSaved = ((try  UIImagePNGRepresentation(tempFullImage)?.write(to: urlString as URL, options: Data.WritingOptions.atomic)) != nil)
+                }
+                else {
+                    
+                    isSaved = ((try  UIImageJPEGRepresentation(tempFullImage, 1.0)?.write(to: urlString as URL, options: Data.WritingOptions.atomic)) != nil)
+                }
+                
+                if (isSaved) {
+                    return urlString
+                    
+                } else {
+                    return NSURL.fileURL(withPath: "Blank") as NSURL
+                }
+            } catch {
+                return NSURL.fileURL(withPath: "Blank") as NSURL
+            }
+        }
+        return urlString
     }
     // MARK: - end
     
@@ -564,10 +613,10 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
 //                    }
                     
                     //Check for dot '.' character
-                    let charset = CharacterSet(charactersIn: ".")
+                    let charset = CharacterSet(charactersIn: "./")
                     if alertTextField.text?.rangeOfCharacter(from: charset) != nil {
                         alert.dismiss(animated: false, completion: nil)
-                        self.showImageNameAlreadyExistAlert(title: "Alert", message: "Dot character '.' is not allowed.", tempString: alertTextField.text!, seletedImageTag: seletedImageTag)
+                        self.showImageNameAlreadyExistAlert(title: "Alert", message: "Dot '.' and Slash '/' characters are not allowed", tempString: alertTextField.text!, seletedImageTag: seletedImageTag)
                     }
                     //Check entered name is already exist or not
                     else if !self.isImageNameAlreadyExist(searchText: tempString) {
@@ -696,6 +745,61 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
         }
         alertViewController.addAction(okAction)
         self.navigationController?.present(alertViewController, animated: false, completion: nil)
+    }
+    // MARK: - end
+    
+    // MARK: - DocumentDirectory handling
+    //Create NameIt folder
+    func createImagesFolder() {
+        
+        // path to documents directory
+        let documentDirectoryPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first
+        if let documentDirectoryPath = documentDirectoryPath {
+            // create the custom folder path
+            let imagesDirectoryPath = documentDirectoryPath.appending("/NameIt")
+            let fileManager = FileManager.default
+            if !fileManager.fileExists(atPath: imagesDirectoryPath) {
+                do {
+                    try fileManager.createDirectory(atPath: imagesDirectoryPath,
+                                                    withIntermediateDirectories: false,
+                                                    attributes: nil)
+                } catch {
+                    print("Error creating images folder in documents dir: \(error)")
+                }
+            }
+        }
+    }
+    
+    //Clear all image from NameIt folder before adding new images
+    func clearAllFilesFromTempDirectory(){
+        
+        let fileManager = FileManager.default
+        let documentsUrl =  NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true) as NSArray
+        let documentsPath:NSString = documentsUrl.object(at: 0) as! NSString
+        
+        do {
+            let fileNames = try fileManager.contentsOfDirectory(atPath: "\(documentsPath.appending("/NameIt"))")
+            print("all files in cache: \(fileNames)")
+            for fileName in fileNames {
+                
+                let filePathName = "\(documentsPath.appending("/NameIt"))/\(fileName)"
+                try fileManager.removeItem(atPath: filePathName)
+            }
+            
+            let files = try fileManager.contentsOfDirectory(atPath: "\(documentsPath)")
+            print("all files in cache after deleting images: \(files)")
+            
+        }
+        catch {
+        }
+    }
+    
+    //Get documentDirectory path
+    func getDocumentDirectoryPath(fileName:String) -> NSURL {
+        
+        let paths:NSArray = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true) as NSArray
+        let docuementDir:NSString = paths.object(at: 0) as! NSString
+        return NSURL.fileURL(withPath: docuementDir.appendingPathComponent("NameIt/\(fileName)")) as NSURL
     }
     // MARK: - end
 

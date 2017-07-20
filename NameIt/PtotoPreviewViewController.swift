@@ -206,8 +206,8 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
     
     @IBAction func shareImage(_ sender: UIButton) {
         
-        var selectedImageArrayToShare:Array<UIImage> = [UIImage]()
-        selectedImageArrayToShare.append(photoPreviewImageView.image!)
+        var selectedImageArrayToShare:Array<NSURL> = [NSURL]()
+        selectedImageArrayToShare.append(saveActivityControllerImage())
         
         //Present UIActivityViewController to share images
         let activityViewController:UIActivityViewController = UIActivityViewController(activityItems: selectedImageArrayToShare as [Any], applicationActivities: nil)
@@ -637,10 +637,10 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
                     tempString = tempString + "." + (self.selectedPhotoName?.components(separatedBy: ".").last!)!
                     
                     //Check for dot '.' character
-                    let charset = CharacterSet(charactersIn: ".")
+                    let charset = CharacterSet(charactersIn: "./")
                     if alertTextField.text?.rangeOfCharacter(from: charset) != nil {
                         alert.dismiss(animated: false, completion: nil)
-                        self.showImageNameAlreadyExistAlert(title: "Alert", message: "Dot character '.' is not allowed.", tempString: alertTextField.text!)
+                        self.showImageNameAlreadyExistAlert(title: "Alert", message: "Dot '.' and Slash '/' characters are not allowed", tempString: alertTextField.text!)
                     }
                         //Check entered name is already exist or not
                     else if !self.isImageNameAlreadyExist(searchText: tempString) {
@@ -718,6 +718,56 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
         }
         textField.text = str.substring(to: str.index(str.startIndex, offsetBy: textLimit))
         return false
+    }
+    // MARK: - end
+    
+    // MARK: - Save selected image in DocumentDirectory and return path of images
+    func saveActivityControllerImage() -> NSURL {
+        
+        var name:String=selectedPhotoName!.capitalized
+        print(name.components(separatedBy: ".").last as Any)
+        if name.components(separatedBy: ".").last!.lowercased() != "png" {
+            
+            name = name.replacingOccurrences(of: ".\(name.components(separatedBy: ".").last!)", with: ".jpg")
+        }
+        else {
+            name = name.replacingOccurrences(of: ".\(name.components(separatedBy: ".").last!)", with: ".png")
+        }
+        let urlString : NSURL = getDocumentDirectoryPath(fileName: name)
+        print("Image path : \(urlString)")
+        if !FileManager.default.fileExists(atPath: urlString.absoluteString!) {
+            do {
+                
+                var isSaved : Bool = false
+                print(urlString.pathExtension as Any)
+                if urlString.pathExtension?.lowercased() == "png" {
+                    
+                    isSaved = ((try  UIImagePNGRepresentation(photoPreviewImageView.image!)?.write(to: urlString as URL, options: Data.WritingOptions.atomic)) != nil)
+                }
+                else {
+                    
+                    isSaved = ((try  UIImageJPEGRepresentation(photoPreviewImageView.image!, 1.0)?.write(to: urlString as URL, options: Data.WritingOptions.atomic)) != nil)
+                }
+                
+                if (isSaved) {
+                    return urlString
+                    
+                } else {
+                    return NSURL.fileURL(withPath: "Blank") as NSURL
+                }
+            } catch {
+                return NSURL.fileURL(withPath: "Blank") as NSURL
+            }
+        }
+        return urlString
+    }
+    
+    //Get documentDirectory path
+    func getDocumentDirectoryPath(fileName:String) -> NSURL {
+        
+        let paths:NSArray = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true) as NSArray
+        let docuementDir:NSString = paths.object(at: 0) as! NSString
+        return NSURL.fileURL(withPath: docuementDir.appendingPathComponent("NameIt/\(fileName)")) as NSURL
     }
     // MARK: - end
     
