@@ -129,7 +129,6 @@ class AirBrushViewController: GlobalBackViewController, UIScrollViewDelegate, UI
         tempPhotoImageView.image=UIImage()
         photoPreviewImageView.image=selectedPhoto
         photoPreviewImageView.isUserInteractionEnabled=true
-//        changeImageRatio()
         
         //Customize slider view
         resizeSlider.value=5.0
@@ -168,7 +167,6 @@ class AirBrushViewController: GlobalBackViewController, UIScrollViewDelegate, UI
     
     @IBAction func sliderAction(_ sender: UISlider) {
         
-//        print(sender.value)
         brushWidth=CGFloat(sender.value)
         brushView.frame=CGRect(x: Int(brushView.frame.origin.x), y: Int(brushView.frame.origin.y), width: Int(resizeSlider.value)+6, height: Int(resizeSlider.value)+6)
     }
@@ -178,7 +176,7 @@ class AirBrushViewController: GlobalBackViewController, UIScrollViewDelegate, UI
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         swiped = false
         for touch: AnyObject in touches {
-//            print(touch.view.tag)
+            
             if (touch.view == tempPhotoImageView) {
                 
                 if let touch = touches.first {
@@ -250,7 +248,7 @@ class AirBrushViewController: GlobalBackViewController, UIScrollViewDelegate, UI
                 if let touch = touches.first {
                     
                     let location = touch.location(in: colorSliderImageView)
-//                    print(location.x)
+                    
                     if location.y > 1 && location.y < 245 && location.x > 1 && location.x < 15 {
                         let locationAtMainView = touch.location(in: tempPhotoImageView)
                         colorPreviewView.isHidden=false;
@@ -273,7 +271,7 @@ class AirBrushViewController: GlobalBackViewController, UIScrollViewDelegate, UI
                 if touches.first != nil {
                     
                     if !swiped {
-//                        eraserButton.isEnabled=true
+                        
                         UIGraphicsBeginImageContext(size)
                         let context = UIGraphicsGetCurrentContext()
                         tempPhotoImageView.image?.draw(in: CGRect(x: 0, y: 0, width: size.width, height: size.height))
@@ -335,13 +333,6 @@ class AirBrushViewController: GlobalBackViewController, UIScrollViewDelegate, UI
     
     // MARK: - Merge airbrushed image
     func mergeAirbrushedImage() {
-        
-//        //Merge tempImageView into mainImageView
-//        UIGraphicsBeginImageContext(size)
-//        photoPreviewImageView.image?.draw(in: CGRect(x: 0, y: 0, width: size.width, height: size.height), blendMode:CGBlendMode.normal, alpha: 1.0)
-//        tempPhotoImageView.image?.draw(in: CGRect(x: 0, y: 0, width: size.width, height:size.height), blendMode:CGBlendMode.normal, alpha: 1.0)
-//        photoPreviewImageView.image = UIGraphicsGetImageFromCurrentImageContext()
-//        tempPhotoImageView.image = nil
         
         let tempImage:UIImageView=tempPhotoImageView
         photoPreviewImageView.addSubview(tempImage)

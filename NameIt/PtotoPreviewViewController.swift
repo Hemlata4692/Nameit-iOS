@@ -206,13 +206,7 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
     
     @IBAction func shareImage(_ sender: UIButton) {
         
-//        var selectedImageArrayToShare:Array<NSData> = [NSData]()
         var selectedImageArrayToShare:Array<UIImage> = [UIImage]()
-        
-        //NSData *compressedImage = UIImageJPEGRepresentation(self.resultImage, 0.8 );
-        //            let cI:NSData=UIImageJPEGRepresentation(tempFullImage, 0.8)! as NSData
-//        let cI:NSData=UIImagePNGRepresentation(tempFullImage)! as NSData
-//        selectedImageArrayToShare.append(cI)
         selectedImageArrayToShare.append(photoPreviewImageView.image!)
         
         //Present UIActivityViewController to share images
@@ -292,7 +286,7 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
     
         selectedImageSize = selectedPhoto?.size
         photoPreviewImageView.image=selectedPhoto
-//        selectTextColorBackView.isHidden=true
+        
         if isAddTextSelected {
             
             caption?.removeGestureRecognizer(drag!)
@@ -309,7 +303,6 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
     
     override func doneButtonAction() {
     
-//         selectTextColorBackView.isHidden=true
         isImageEdited=true
         selectedPhoto=photoPreviewImageView.image
         selectedImageSize = selectedPhoto?.size
@@ -433,9 +426,6 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
     // MARK: - Common Methods
     func commonMethodOfCancelDoneAction() {
         
-//        if isAddTextSelected {
-//            photoPreviewImageView.removeGestureRecognizer(drag!)
-//        }
         scrollViewObject.delegate=self
         //Change photoPreviewImageView according to selected image size ratio
         changeImageRatio()
@@ -508,7 +498,6 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
     func initCaption() {
         
         caption = UITextView.init(frame: CGRect(x: (UIScreen.main.bounds.size.width/2)-15, y: (photoPreviewImageView.frame.size.height/2) - 15 - 88, width: 30, height: 34))
-        //        caption?.backgroundColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.5)
         caption?.backgroundColor = UIColor.clear
         caption?.textAlignment = NSTextAlignment.center
         caption?.textColor = UIColor.black
@@ -521,7 +510,6 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
         caption?.layer.borderWidth=1.0
         caption?.layer.borderColor=UIColor.black.cgColor
         photoPreviewImageView.addSubview(caption!)
-//        caption?.becomeFirstResponder()
         caption?.isScrollEnabled=false
         caption?.addGestureRecognizer(drag!)
         
@@ -531,6 +519,7 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
             UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace, target: nil, action: nil),
             UIBarButtonItem(title: "Done", style: UIBarButtonItemStyle.plain, target: self, action: #selector(self.doneWithNumberPad))]
         photoBackView.addSubview(textViewToolbar!)
+        
         caption?.becomeFirstResponder()
     }
     
@@ -547,33 +536,7 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
     func captionDrag(gestureRecognizer:UIGestureRecognizer) {
         
         let translation = gestureRecognizer.location(in: photoPreviewImageView)
-        //        print(translation)
-        
         caption?.center=CGPoint(x: translation.x, y: translation.y)
-//        selectTextColorBackView.isHidden=true
-//        if(gestureRecognizer.state == UIGestureRecognizerState.ended) {
-//            
-////            selectTextColorBackView.isHidden=false
-//            caption?.backgroundColor = UIColor.clear
-//        }
-//        else {
-//        
-//            caption?.backgroundColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.5)
-//        }
-        //        if(gestureRecognizer.state == UIGestureRecognizerState.ended) {
-        //
-        //            //Set drag limit of caption at photoPreviewImageView
-        //            if translation.y < ((caption?.frame.size.height)!/2)  {
-        //
-        //                caption?.center=CGPoint(x: translation.x, y: ((caption?.frame.size.height)!/2))
-        ////                caption?.center=CGPoint(x: UIScreen.main.bounds.size.width / 2.0, y: ((caption?.frame.size.height)!/2))
-        //            }
-        //            else if translation.y > (photoPreviewImageView.frame.size.height - ((caption?.frame.size.height)!/2))  {
-        //
-        //                caption?.center=CGPoint(x: translation.x, y: (photoPreviewImageView.frame.size.height - ((caption?.frame.size.height)!/2)))
-        ////                caption?.center=CGPoint(x: UIScreen.main.bounds.size.width / 2.0, y: (photoPreviewImageView.frame.size.height - ((caption?.frame.size.height)!/2)))
-        //            }
-        //        }
     }
     
     func setCustomTextAtSelectedImage() {
@@ -599,7 +562,6 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
     
     func textViewBeginMethod() {
         
-//        selectTextColorBackView.isHidden=false
         caption?.textColor=selectedColor
         caption?.layer.borderColor=selectedColor?.cgColor
         if ((caption?.sizeThatFits((caption?.frame.size)!).height)! > CGFloat(36.0)) {
@@ -629,7 +591,7 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         
         if(text == "\n") {
-            //            print(caption?.sizeThatFits((caption?.frame.size)!).height as Any)
+            
             if (caption?.sizeThatFits((caption?.frame.size)!).height)! > CGFloat(85.0) {
                 return false
             }
@@ -716,7 +678,6 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
             }
             else {
                 textField.text=self.lastEnteredUpdatedImageName
-                //.components(separatedBy: ".").first?.capitalized
             }
             self.lastEnteredUpdatedImageName=""
             textField.delegate=self
@@ -739,7 +700,6 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
         let tempString=searchText.components(separatedBy: ".").first! + "."
         let photoNamePredicate = NSPredicate(format: "FileName BEGINSWITH %@", tempString.lowercased())
         let tempFilteredArray:NSMutableArray=cameraRollAssets!.filtered(using: photoNamePredicate) as! NSMutableArray
-        //        print(tempFilteredArray.count)
         
         if tempFilteredArray.count > 0 {
             

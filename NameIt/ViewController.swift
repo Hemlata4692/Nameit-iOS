@@ -11,7 +11,6 @@ import AssetsLibrary
 
 class ViewController: UIViewController,UICollectionViewDataSource, UICollectionViewDelegate,UICollectionViewDelegateFlowLayout, UISearchBarDelegate, UITextFieldDelegate {
 
-    @IBOutlet var activityControllerObject: UIActivityIndicatorView!
     @IBOutlet var searchBarBackView: UIView!
     @IBOutlet var searchBarObject: UISearchBar!
     @IBOutlet var searchCancelButton: UIButton!
@@ -60,7 +59,6 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
         NotificationCenter.default.addObserver(self, selector:#selector(applicationWillEnterForeground(_:)), name:NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
         
         self.navigationItem.title="Gallery"
-//        activityControllerObject.isHidden=false;
         
         let tempDeleteEntryArray:NSArray = renameDatabaseDicData.allKeys as NSArray
         deletingDBEntries = tempDeleteEntryArray.mutableCopy() as! NSMutableArray
@@ -103,7 +101,6 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
         //Show indicator
         AppDelegate().showIndicator(uiView: self.view)
         self.perform( #selector(getAssest), with: nil, afterDelay: 0.01)
-//        getAssest()
     }
     
     func viewCustomization() {
@@ -169,7 +166,6 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
         let cell:PhotoGridCollectionViewCell? = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath as IndexPath) as? PhotoGridCollectionViewCell
         
         // Load the asset for this cell
-        
         var tempDictData:NSDictionary?
         if isSearch {
             
@@ -180,7 +176,6 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
         }
         
         let asset:ALAsset?=tempDictData?.object(forKey: "Asset") as? ALAsset
-//        let assetRepresent:ALAssetRepresentation=asset!.defaultRepresentation()
         let thumbnailImageRef:CGImage=asset!.aspectRatioThumbnail().takeUnretainedValue()
         let thumbnail:UIImage=UIImage.init(cgImage: thumbnailImageRef)
         cell?.cameraRollImageView.image=thumbnail
@@ -405,14 +400,13 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
         
         self.cameraRollCollectionView.reloadData()
     }
-    // MARK: - end
     
     func deleteEntry() {
         
         DispatchQueue.global(qos: .background).async {
             // Background Thread
             if self.deletingDBEntries.count > 0 {
-            
+                
                 if AppDelegate().deleteEntries(imageName: self.deletingDBEntries.object(at: 0) as! String) {
                     self.renameDatabaseDicData.removeObject(forKey: self.deletingDBEntries.object(at: 0))
                     self.deletingDBEntries.removeObject(at: 0)
@@ -427,15 +421,14 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
             }
         }
     }
+    // MARK: - end
     
     // MARK: - IBAction
     @IBAction func editSelectedPhotoName(_ sender: UIButton) {
     
         editImageNameRecursiveMethod(seletedImageTag: sender.tag)
     }
-    // MARK: - end
-
-    // MARK: - BarButton actions
+    
     func rightBarButtonAction() {
         
         searchBarObject.resignFirstResponder()
@@ -445,7 +438,6 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
     func leftBarButtonAction() {
         
         searchBarObject.resignFirstResponder()
-//        var selectedImageArrayToShare:Array<NSData> = [NSData]()
         var selectedImageArrayToShare:Array<UIImage> = [UIImage]()
         //Add selected image
         for tempDictData in selectUnselectImageArray {
@@ -455,21 +447,12 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
             let tempAssetRepresent:ALAssetRepresentation=tempAsset!.defaultRepresentation()
             let tempFullImageRef:CGImage=tempAssetRepresent.fullScreenImage().takeUnretainedValue()
             let tempFullImage:UIImage=UIImage.init(cgImage: tempFullImageRef)
-            //NSData *compressedImage = UIImageJPEGRepresentation(self.resultImage, 0.8 );
-//            let cI:NSData=UIImageJPEGRepresentation(tempFullImage, 0.8)! as NSData
-//            let cI:NSData=UIImagePNGRepresentation(tempFullImage)! as NSData
-//            selectedImageArrayToShare.append(cI)
             selectedImageArrayToShare.append(tempFullImage)
         }
         
         //Present UIActivityViewController to share images
         let activityViewController:UIActivityViewController = UIActivityViewController(activityItems: selectedImageArrayToShare as [Any], applicationActivities: nil)
         self.present(activityViewController, animated: true, completion: nil)
-        
-        //Method for completion of image send or cancel
-//        activityViewController.completionWithItemsHandler = { (activityType, completed:Bool, returnedItems:[Any]?, error: Error?) in
-//            activityViewController.dismiss(animated: true, completion: nil)
-//        }
     }
     // MARK: - end
     
@@ -612,7 +595,6 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
             }
             else {
                 textField.text=self.lastEnteredUpdatedImageName
-                    //.components(separatedBy: ".").first?.capitalized
             }
             self.lastEnteredUpdatedImageName=""
             textField.delegate=self
@@ -661,7 +643,6 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
         let tempString=searchText.components(separatedBy: ".").first! + "."
         let photoNamePredicate = NSPredicate(format: "FileName BEGINSWITH %@", tempString.lowercased())
         let tempFilteredArray:NSMutableArray=cameraRollAssets.filtered(using: photoNamePredicate) as! NSMutableArray
-//        print(tempFilteredArray.count)
         
         if tempFilteredArray.count > 0 {
             
@@ -724,9 +705,7 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
         let tempDeleteEntryArray:NSArray = renameDatabaseDicData.allKeys as NSArray
         deletingDBEntries = tempDeleteEntryArray.mutableCopy() as! NSMutableArray
         
-        //Show indicator
-//        AppDelegate().showIndicator(uiView: self.view)
-//        self.perform( #selector(viewInitialization), with: nil, afterDelay: 0.01)
+        //View initialized method called
         viewInitialization()
     }
     // MARK: - end

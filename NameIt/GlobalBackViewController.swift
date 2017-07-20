@@ -79,7 +79,6 @@ class GlobalBackViewController: UIViewController {
         framing=CGRect(x: 0, y: 0, width: 50, height: 30)
         let doneButton=UIButton.init(frame: framing)
         doneButton.titleLabel!.font =  UIFont().montserratLightWithSize(size: 17)
-//        doneButton.backgroundColor=UIColor.red
         doneButton.setTitle("Apply", for: UIControlState.normal)
         doneButton.titleEdgeInsets = UIEdgeInsetsMake(0.0, 10.0, 0.0, -10.0)
         let doneBarButton:UIBarButtonItem=UIBarButtonItem.init(customView: doneButton)
