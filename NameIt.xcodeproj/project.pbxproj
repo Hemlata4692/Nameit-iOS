@@ -16,6 +16,28 @@
 		B70F35961F0A4B2B00BA3575 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B70F35951F0A4B2B00BA3575 /* libsqlite3.tbd */; };
 		B70F35981F0A4B8200BA3575 /* DatabaseFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = B70F35971F0A4B8200BA3575 /* DatabaseFile.swift */; };
 		B70F359D1F0A4EC400BA3575 /* NameItDatabase.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = B70F359C1F0A4EC400BA3575 /* NameItDatabase.sqlite */; };
+		B7687AE01F0F69DD001A6006 /* AirBrushViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7687ADF1F0F69DD001A6006 /* AirBrushViewController.swift */; };
+		B7687AE31F0F6BA8001A6006 /* colorPickerPlate.png in Resources */ = {isa = PBXBuildFile; fileRef = B7687AE21F0F6BA8001A6006 /* colorPickerPlate.png */; };
+		B7687AE51F0F6CB4001A6006 /* colorPickerPlate1.png in Resources */ = {isa = PBXBuildFile; fileRef = B7687AE41F0F6CB4001A6006 /* colorPickerPlate1.png */; };
+		B76A54591F16278200EBB045 /* Montserrat-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B76A54561F16278200EBB045 /* Montserrat-Bold.ttf */; };
+		B76A545A1F16278200EBB045 /* Montserrat-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B76A54571F16278200EBB045 /* Montserrat-Light.ttf */; };
+		B76A545B1F16278200EBB045 /* Montserrat-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B76A54581F16278200EBB045 /* Montserrat-Regular.ttf */; };
+		B76A545D1F16294900EBB045 /* CustomFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = B76A545C1F16294900EBB045 /* CustomFont.swift */; };
+		B77EF2211F0E521300ADDC22 /* UserDefaultManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B77EF2201F0E521300ADDC22 /* UserDefaultManager.swift */; };
+		B784BAE01F0CBA7B009A5F89 /* PhotoGridCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B784BADF1F0CBA7B009A5F89 /* PhotoGridCollectionViewCell.swift */; };
+		B784BAE41F0CCE29009A5F89 /* GlobalBackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B784BAE31F0CCE29009A5F89 /* GlobalBackViewController.swift */; };
+		B798FA8B1F137DA3008B5BF0 /* MMMaterialDesignSpinner.m in Sources */ = {isa = PBXBuildFile; fileRef = B798FA8A1F137DA3008B5BF0 /* MMMaterialDesignSpinner.m */; };
+		B7C95C2C1F178F6E00BB1762 /* launchScreen.png in Resources */ = {isa = PBXBuildFile; fileRef = B7C95C2B1F178F6E00BB1762 /* launchScreen.png */; };
+		B7E5C6251F178BEA00A8FA37 /* image1.png in Resources */ = {isa = PBXBuildFile; fileRef = B7E5C61B1F178BEA00A8FA37 /* image1.png */; };
+		B7E5C6261F178BEA00A8FA37 /* image2.png in Resources */ = {isa = PBXBuildFile; fileRef = B7E5C61C1F178BEA00A8FA37 /* image2.png */; };
+		B7E5C6271F178BEA00A8FA37 /* image3.png in Resources */ = {isa = PBXBuildFile; fileRef = B7E5C61D1F178BEA00A8FA37 /* image3.png */; };
+		B7E5C6281F178BEA00A8FA37 /* image4.png in Resources */ = {isa = PBXBuildFile; fileRef = B7E5C61E1F178BEA00A8FA37 /* image4.png */; };
+		B7E5C6291F178BEA00A8FA37 /* image5.png in Resources */ = {isa = PBXBuildFile; fileRef = B7E5C61F1F178BEA00A8FA37 /* image5.png */; };
+		B7E5C62A1F178BEA00A8FA37 /* image6.png in Resources */ = {isa = PBXBuildFile; fileRef = B7E5C6201F178BEA00A8FA37 /* image6.png */; };
+		B7E5C62B1F178BEA00A8FA37 /* image7.png in Resources */ = {isa = PBXBuildFile; fileRef = B7E5C6211F178BEA00A8FA37 /* image7.png */; };
+		B7E5C62C1F178BEA00A8FA37 /* image8.png in Resources */ = {isa = PBXBuildFile; fileRef = B7E5C6221F178BEA00A8FA37 /* image8.png */; };
+		B7E5C62D1F178BEA00A8FA37 /* image9.png in Resources */ = {isa = PBXBuildFile; fileRef = B7E5C6231F178BEA00A8FA37 /* image9.png */; };
+		B7E5C6311F178C1C00A8FA37 /* SplashViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7E5C6301F178C1C00A8FA37 /* SplashViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,6 +53,29 @@
 		B70F35951F0A4B2B00BA3575 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		B70F35971F0A4B8200BA3575 /* DatabaseFile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatabaseFile.swift; sourceTree = "<group>"; };
 		B70F359C1F0A4EC400BA3575 /* NameItDatabase.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = NameItDatabase.sqlite; sourceTree = "<group>"; };
+		B7687ADF1F0F69DD001A6006 /* AirBrushViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AirBrushViewController.swift; sourceTree = "<group>"; };
+		B7687AE21F0F6BA8001A6006 /* colorPickerPlate.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = colorPickerPlate.png; sourceTree = "<group>"; };
+		B7687AE41F0F6CB4001A6006 /* colorPickerPlate1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = colorPickerPlate1.png; sourceTree = "<group>"; };
+		B76A54561F16278200EBB045 /* Montserrat-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Bold.ttf"; sourceTree = "<group>"; };
+		B76A54571F16278200EBB045 /* Montserrat-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Light.ttf"; sourceTree = "<group>"; };
+		B76A54581F16278200EBB045 /* Montserrat-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Regular.ttf"; sourceTree = "<group>"; };
+		B76A545C1F16294900EBB045 /* CustomFont.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomFont.swift; sourceTree = "<group>"; };
+		B77EF2201F0E521300ADDC22 /* UserDefaultManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDefaultManager.swift; sourceTree = "<group>"; };
+		B784BADF1F0CBA7B009A5F89 /* PhotoGridCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoGridCollectionViewCell.swift; sourceTree = "<group>"; };
+		B784BAE31F0CCE29009A5F89 /* GlobalBackViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GlobalBackViewController.swift; sourceTree = "<group>"; };
+		B798FA891F137DA3008B5BF0 /* MMMaterialDesignSpinner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMMaterialDesignSpinner.h; sourceTree = "<group>"; };
+		B798FA8A1F137DA3008B5BF0 /* MMMaterialDesignSpinner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMMaterialDesignSpinner.m; sourceTree = "<group>"; };
+		B7C95C2B1F178F6E00BB1762 /* launchScreen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = launchScreen.png; sourceTree = "<group>"; };
+		B7E5C61B1F178BEA00A8FA37 /* image1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = image1.png; sourceTree = "<group>"; };
+		B7E5C61C1F178BEA00A8FA37 /* image2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = image2.png; sourceTree = "<group>"; };
+		B7E5C61D1F178BEA00A8FA37 /* image3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = image3.png; sourceTree = "<group>"; };
+		B7E5C61E1F178BEA00A8FA37 /* image4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = image4.png; sourceTree = "<group>"; };
+		B7E5C61F1F178BEA00A8FA37 /* image5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = image5.png; sourceTree = "<group>"; };
+		B7E5C6201F178BEA00A8FA37 /* image6.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = image6.png; sourceTree = "<group>"; };
+		B7E5C6211F178BEA00A8FA37 /* image7.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = image7.png; sourceTree = "<group>"; };
+		B7E5C6221F178BEA00A8FA37 /* image8.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = image8.png; sourceTree = "<group>"; };
+		B7E5C6231F178BEA00A8FA37 /* image9.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = image9.png; sourceTree = "<group>"; };
+		B7E5C6301F178C1C00A8FA37 /* SplashViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SplashViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,12 +112,15 @@
 			children = (
 				B70F357B1F0A4A1200BA3575 /* AppDelegate.swift */,
 				B70F35A31F0A519900BA3575 /* Controllers */,
+				B784BAE11F0CCE08009A5F89 /* View */,
 				B70F35921F0A4AE400BA3575 /* DataModel */,
+				B798FA871F137D80008B5BF0 /* HelperClasses */,
 				B70F35911F0A4ACC00BA3575 /* SupportingFiles */,
 				B70F357F1F0A4A1200BA3575 /* Main.storyboard */,
 				B70F35821F0A4A1200BA3575 /* Assets.xcassets */,
 				B70F35841F0A4A1200BA3575 /* LaunchScreen.storyboard */,
 				B70F35871F0A4A1200BA3575 /* Info.plist */,
+				B7687AE21F0F6BA8001A6006 /* colorPickerPlate.png */,
 			);
 			path = NameIt;
 			sourceTree = "<group>";
@@ -81,21 +129,25 @@
 			isa = PBXGroup;
 			children = (
 				B70F357D1F0A4A1200BA3575 /* ViewController.swift */,
+				B784BADF1F0CBA7B009A5F89 /* PhotoGridCollectionViewCell.swift */,
 			);
 			name = PhotosViewController;
 			sourceTree = "<group>";
 		};
-		B70F358E1F0A4A9F00BA3575 /* PhotoPreviewController */ = {
+		B70F358E1F0A4A9F00BA3575 /* EditPhotoViewController */ = {
 			isa = PBXGroup;
 			children = (
-				B70F358F1F0A4AC100BA3575 /* PtotoPreviewViewController.swift */,
+				B7687AE11F0F6A05001A6006 /* PhotoPreviewViewController */,
+				B7687ADE1F0F69C0001A6006 /* AirBrushViewController */,
 			);
-			name = PhotoPreviewController;
+			name = EditPhotoViewController;
 			sourceTree = "<group>";
 		};
 		B70F35911F0A4ACC00BA3575 /* SupportingFiles */ = {
 			isa = PBXGroup;
 			children = (
+				B76A54551F16270900EBB045 /* Fonts */,
+				B798FA8C1F13ACB8008B5BF0 /* SupportingImages */,
 				B70F35931F0A4B1300BA3575 /* NameIt_Bridging_Header.h */,
 			);
 			name = SupportingFiles;
@@ -129,10 +181,122 @@
 		B70F35A31F0A519900BA3575 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				B7E5C62F1F178C0D00A8FA37 /* SplashAnimationViewController */,
 				B70F358D1F0A4A9200BA3575 /* PhotosViewController */,
-				B70F358E1F0A4A9F00BA3575 /* PhotoPreviewController */,
+				B70F358E1F0A4A9F00BA3575 /* EditPhotoViewController */,
 			);
 			name = Controllers;
+			sourceTree = "<group>";
+		};
+		B7687ADE1F0F69C0001A6006 /* AirBrushViewController */ = {
+			isa = PBXGroup;
+			children = (
+				B7687ADF1F0F69DD001A6006 /* AirBrushViewController.swift */,
+			);
+			name = AirBrushViewController;
+			sourceTree = "<group>";
+		};
+		B7687AE11F0F6A05001A6006 /* PhotoPreviewViewController */ = {
+			isa = PBXGroup;
+			children = (
+				B70F358F1F0A4AC100BA3575 /* PtotoPreviewViewController.swift */,
+			);
+			name = PhotoPreviewViewController;
+			sourceTree = "<group>";
+		};
+		B76A54551F16270900EBB045 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				B76A54561F16278200EBB045 /* Montserrat-Bold.ttf */,
+				B76A54571F16278200EBB045 /* Montserrat-Light.ttf */,
+				B76A54581F16278200EBB045 /* Montserrat-Regular.ttf */,
+			);
+			name = Fonts;
+			sourceTree = "<group>";
+		};
+		B77EF21F1F0E520A00ADDC22 /* UserDefaultManager */ = {
+			isa = PBXGroup;
+			children = (
+				B77EF2201F0E521300ADDC22 /* UserDefaultManager.swift */,
+			);
+			name = UserDefaultManager;
+			sourceTree = "<group>";
+		};
+		B784BAE11F0CCE08009A5F89 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				B77EF21F1F0E520A00ADDC22 /* UserDefaultManager */,
+				B784BAE21F0CCE12009A5F89 /* GlobalBackViewController */,
+			);
+			name = View;
+			sourceTree = "<group>";
+		};
+		B784BAE21F0CCE12009A5F89 /* GlobalBackViewController */ = {
+			isa = PBXGroup;
+			children = (
+				B784BAE31F0CCE29009A5F89 /* GlobalBackViewController.swift */,
+			);
+			name = GlobalBackViewController;
+			sourceTree = "<group>";
+		};
+		B798FA871F137D80008B5BF0 /* HelperClasses */ = {
+			isa = PBXGroup;
+			children = (
+				B7A6968C1F1899ED0052F819 /* Font */,
+				B798FA881F137D8F008B5BF0 /* MMMaterialDesignSpinner */,
+			);
+			name = HelperClasses;
+			sourceTree = "<group>";
+		};
+		B798FA881F137D8F008B5BF0 /* MMMaterialDesignSpinner */ = {
+			isa = PBXGroup;
+			children = (
+				B798FA891F137DA3008B5BF0 /* MMMaterialDesignSpinner.h */,
+				B798FA8A1F137DA3008B5BF0 /* MMMaterialDesignSpinner.m */,
+			);
+			name = MMMaterialDesignSpinner;
+			sourceTree = "<group>";
+		};
+		B798FA8C1F13ACB8008B5BF0 /* SupportingImages */ = {
+			isa = PBXGroup;
+			children = (
+				B7E5C61A1F178BC800A8FA37 /* SplashAnimation */,
+				B7687AE41F0F6CB4001A6006 /* colorPickerPlate1.png */,
+			);
+			name = SupportingImages;
+			sourceTree = "<group>";
+		};
+		B7A6968C1F1899ED0052F819 /* Font */ = {
+			isa = PBXGroup;
+			children = (
+				B76A545C1F16294900EBB045 /* CustomFont.swift */,
+			);
+			name = Font;
+			sourceTree = "<group>";
+		};
+		B7E5C61A1F178BC800A8FA37 /* SplashAnimation */ = {
+			isa = PBXGroup;
+			children = (
+				B7E5C61B1F178BEA00A8FA37 /* image1.png */,
+				B7E5C61C1F178BEA00A8FA37 /* image2.png */,
+				B7E5C61D1F178BEA00A8FA37 /* image3.png */,
+				B7E5C61E1F178BEA00A8FA37 /* image4.png */,
+				B7E5C61F1F178BEA00A8FA37 /* image5.png */,
+				B7E5C6201F178BEA00A8FA37 /* image6.png */,
+				B7E5C6211F178BEA00A8FA37 /* image7.png */,
+				B7E5C6221F178BEA00A8FA37 /* image8.png */,
+				B7E5C6231F178BEA00A8FA37 /* image9.png */,
+				B7C95C2B1F178F6E00BB1762 /* launchScreen.png */,
+			);
+			name = SplashAnimation;
+			sourceTree = "<group>";
+		};
+		B7E5C62F1F178C0D00A8FA37 /* SplashAnimationViewController */ = {
+			isa = PBXGroup;
+			children = (
+				B7E5C6301F178C1C00A8FA37 /* SplashViewController.swift */,
+			);
+			name = SplashAnimationViewController;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -196,8 +360,23 @@
 			buildActionMask = 2147483647;
 			files = (
 				B70F359D1F0A4EC400BA3575 /* NameItDatabase.sqlite in Resources */,
+				B7687AE31F0F6BA8001A6006 /* colorPickerPlate.png in Resources */,
+				B7E5C62C1F178BEA00A8FA37 /* image8.png in Resources */,
+				B7E5C62D1F178BEA00A8FA37 /* image9.png in Resources */,
+				B7E5C6261F178BEA00A8FA37 /* image2.png in Resources */,
+				B7C95C2C1F178F6E00BB1762 /* launchScreen.png in Resources */,
+				B7E5C62B1F178BEA00A8FA37 /* image7.png in Resources */,
+				B7687AE51F0F6CB4001A6006 /* colorPickerPlate1.png in Resources */,
+				B7E5C6281F178BEA00A8FA37 /* image4.png in Resources */,
+				B76A545A1F16278200EBB045 /* Montserrat-Light.ttf in Resources */,
+				B7E5C62A1F178BEA00A8FA37 /* image6.png in Resources */,
+				B7E5C6251F178BEA00A8FA37 /* image1.png in Resources */,
+				B76A54591F16278200EBB045 /* Montserrat-Bold.ttf in Resources */,
 				B70F35861F0A4A1200BA3575 /* LaunchScreen.storyboard in Resources */,
 				B70F35831F0A4A1200BA3575 /* Assets.xcassets in Resources */,
+				B7E5C6291F178BEA00A8FA37 /* image5.png in Resources */,
+				B7E5C6271F178BEA00A8FA37 /* image3.png in Resources */,
+				B76A545B1F16278200EBB045 /* Montserrat-Regular.ttf in Resources */,
 				B70F35811F0A4A1200BA3575 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -210,9 +389,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				B70F357E1F0A4A1200BA3575 /* ViewController.swift in Sources */,
+				B798FA8B1F137DA3008B5BF0 /* MMMaterialDesignSpinner.m in Sources */,
+				B7687AE01F0F69DD001A6006 /* AirBrushViewController.swift in Sources */,
+				B784BAE01F0CBA7B009A5F89 /* PhotoGridCollectionViewCell.swift in Sources */,
 				B70F357C1F0A4A1200BA3575 /* AppDelegate.swift in Sources */,
+				B76A545D1F16294900EBB045 /* CustomFont.swift in Sources */,
 				B70F35981F0A4B8200BA3575 /* DatabaseFile.swift in Sources */,
+				B784BAE41F0CCE29009A5F89 /* GlobalBackViewController.swift in Sources */,
+				B77EF2211F0E521300ADDC22 /* UserDefaultManager.swift in Sources */,
 				B70F35901F0A4AC100BA3575 /* PtotoPreviewViewController.swift in Sources */,
+				B7E5C6311F178C1C00A8FA37 /* SplashViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -260,9 +446,12 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Ranosys Technologies Pte Ltd";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Ranosys Technologies Pte Ltd";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = M8A7BYS443;
+				ENABLE_BITCODE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -282,6 +471,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				PROVISIONING_PROFILE = "5d36d161-4eab-49e9-b4bd-cc5088e93d30";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OBJC_BRIDGING_HEADER = NameIt/NameIt_Bridging_Header.h;
@@ -311,9 +501,12 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Ranosys Technologies Pte Ltd";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Ranosys Technologies Pte Ltd";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = M8A7BYS443;
+				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -326,6 +519,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				PROVISIONING_PROFILE = "5d36d161-4eab-49e9-b4bd-cc5088e93d30";
 				SDKROOT = iphoneos;
 				SWIFT_OBJC_BRIDGING_HEADER = NameIt/NameIt_Bridging_Header.h;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
@@ -337,8 +531,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Ranosys Technologies Pte Ltd";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Ranosys Technologies Pte Ltd";
 				DEVELOPMENT_TEAM = M8A7BYS443;
+				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = NameIt/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ranosys.NameIt;
@@ -354,8 +550,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Ranosys Technologies Pte Ltd";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Ranosys Technologies Pte Ltd";
 				DEVELOPMENT_TEAM = M8A7BYS443;
+				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = NameIt/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ranosys.NameIt;
@@ -386,6 +584,7 @@
 				B70F358C1F0A4A1200BA3575 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

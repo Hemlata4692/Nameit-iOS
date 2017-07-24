@@ -15,7 +15,7 @@ class DatabaseFile: NSObject {
     let databaseName:String="NameItDatabase.sqlite"
     var photoAlbumDb:OpaquePointer? = nil
   
-//MARK: - Check Database existence
+// MARK: - Check Database existence
      private func getDBPath() -> NSString {
         
         let paths:NSArray = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true) as NSArray
@@ -28,7 +28,6 @@ class DatabaseFile: NSObject {
         let success:Bool = FileManager.default.fileExists(atPath: getDBPath() as String)
         if !success {
             
-            print(Bundle.main.resourcePath!)
             let defaultDBPath = Bundle.main.resourcePath! + "/" + databaseName
             do {
                 try FileManager.default.copyItem(atPath: defaultDBPath, toPath: getDBPath() as String
@@ -39,7 +38,7 @@ class DatabaseFile: NSObject {
         }
     }
     
-//MARK: - Create table in exist database
+// MARK: - Create table in exist database
     func createTable(query:NSString) {
 
         // 1
@@ -51,20 +50,20 @@ class DatabaseFile: NSObject {
             if sqlite3_prepare_v2(photoAlbumDb, cSql, -1, &createTableStatement, nil) == SQLITE_OK {
                 // 3
                 if sqlite3_step(createTableStatement) == SQLITE_DONE {
-                    print("Contact table created.")
+//                    print("Contact table created.")
                 } else {
-                    print("Contact table could not be created.")
+//                    print("Contact table could not be created.")
                 }
             } else {
-                print("CREATE TABLE statement could not be prepared.")
+//                print("CREATE TABLE statement could not be prepared.")
             }
             // 4
             sqlite3_finalize(createTableStatement)
-            sqlite3_close(photoAlbumDb);
+//            sqlite3_close(photoAlbumDb);
         }
     }
     
-//MARK: - Insert data into database
+// MARK: - Insert data into database
     func insertIntoDatabase(query:NSString, tempArray:NSMutableArray) {
         
         var dataRows:OpaquePointer? = nil
@@ -73,7 +72,7 @@ class DatabaseFile: NSObject {
             
             if sqlite3_prepare_v2(photoAlbumDb, cSql, -1, &dataRows, nil) != SQLITE_OK {
             
-                 print("error while preparing \(sqlite3_errmsg(photoAlbumDb))")
+//                 print("error while preparing \(sqlite3_errmsg(photoAlbumDb))")
             }
         
             for x in 0 ..< tempArray.count {
@@ -110,16 +109,16 @@ class DatabaseFile: NSObject {
 //                }
                  sqlite3_finalize(dataRows)
             }
-            sqlite3_close(photoAlbumDb);
+//            sqlite3_close(photoAlbumDb);
         }
         else {
         
-            sqlite3_close(photoAlbumDb);
+//            sqlite3_close(photoAlbumDb);
             photoAlbumDb=nil;
         }
     }
     
-//MARK: - Update data into database
+// MARK: - Update data into database
     func update(updateStatementString:NSString) {
         
         var updateStatement: OpaquePointer? = nil
@@ -127,19 +126,19 @@ class DatabaseFile: NSObject {
         if sqlite3_open(getDBPath().utf8String, &photoAlbumDb) == SQLITE_OK {
             if sqlite3_prepare_v2(photoAlbumDb, cSql, -1, &updateStatement, nil) == SQLITE_OK {
                 if sqlite3_step(updateStatement) == SQLITE_DONE {
-                    print("Successfully updated row.")
+//                    print("Successfully updated row.")
                 } else {
-                    print("Could not update row.")
+//                    print("Could not update row.")
                 }
             } else {
-                print("UPDATE statement could not be prepared")
+//                print("UPDATE statement could not be prepared")
             }
             sqlite3_finalize(updateStatement)
-            sqlite3_close(photoAlbumDb);
+//            sqlite3_close(photoAlbumDb);
         }
     }
 
-//MARK: - Check via query data is already exist
+// MARK: - Check via query data is already exist
     func isExistDataQuery(query:NSString) -> Bool {
         
         let cSql = query.cString(using: String.Encoding.utf8.rawValue)
@@ -156,11 +155,11 @@ class DatabaseFile: NSObject {
                 }
                 
             } else {
-                print("SELECT statement could not be prepared")
+//                print("SELECT statement could not be prepared")
             }
             // 6
             sqlite3_finalize(queryStatement)
-            sqlite3_close(photoAlbumDb);
+//            sqlite3_close(photoAlbumDb);
             if flag==0 {
                 return false
             }
@@ -174,10 +173,10 @@ class DatabaseFile: NSObject {
         }
     }
 
-//MARK: - Fetch data with where clause
-    func selectQuery(query:NSString) -> NSMutableArray {
+// MARK: - Fetch data with where clause
+    func selectQuery(query:NSString) -> NSMutableDictionary {
         
-        var queryData: NSMutableArray = []
+        var queryData: NSMutableDictionary = [:]
         let cSql = query.cString(using: String.Encoding.utf8.rawValue)
         var queryStatement: OpaquePointer? = nil
 
@@ -193,26 +192,28 @@ class DatabaseFile: NSObject {
 //                    let name = String(cString: queryResultCol1!)
 //                    print("Query Result:")
 //                    print("\(id) | \(name)")
-                    let myDictOfDict:NSDictionary = [
-                        "PhotoActualName" : String(cString: sqlite3_column_text(queryStatement, 0)!)
-                        , "PhotoRename" : String(cString: sqlite3_column_text(queryStatement, 1)!)]
-                    queryData.add(myDictOfDict)
+//                    let myDictOfDict:NSDictionary = [
+//                        "PhotoActualName" : String(cString: sqlite3_column_text(queryStatement, 0)!)
+//                        , "PhotoRename" : String(cString: sqlite3_column_text(queryStatement, 1)!)]
+//                    queryData.add(myDictOfDict)
+                    queryData.setValue(String(cString: sqlite3_column_text(queryStatement, 1)!), forKey: String(cString: sqlite3_column_text(queryStatement, 0)!))
                 }
                 
             } else {
-                print("SELECT statement could not be prepared")
+//                print("SELECT statement could not be prepared")
             }
             // 6
             sqlite3_finalize(queryStatement)
-            sqlite3_close(photoAlbumDb);
+//            sqlite3_close(photoAlbumDb);
             return queryData
         }
         else {
+            queryData=[:]
             return queryData
         }
     }
     
-//MARK: - Delete data from selected table
+// MARK: - Delete data from selected table
     func delete(deleteStatementStirng:NSString) -> Bool {
         
         let cSql = deleteStatementStirng.cString(using: String.Encoding.utf8.rawValue)
@@ -221,16 +222,16 @@ class DatabaseFile: NSObject {
         if sqlite3_open(getDBPath().utf8String, &photoAlbumDb) == SQLITE_OK {
             if sqlite3_prepare_v2(photoAlbumDb, cSql, -1, &deleteStatement, nil) == SQLITE_OK {
                 if sqlite3_step(deleteStatement) == SQLITE_DONE {
-                    print("Successfully deleted row.")
+//                    print("Successfully deleted row.")
                      flag=1
                 } else {
-                    print("Could not delete row.")
+//                    print("Could not delete row.")
                 }
             } else {
-                print("DELETE statement could not be prepared")
+//                print("DELETE statement could not be prepared")
             }
             sqlite3_finalize(deleteStatement)
-            sqlite3_close(photoAlbumDb);
+//            sqlite3_close(photoAlbumDb);
         }
         if flag==0 {
             return false
