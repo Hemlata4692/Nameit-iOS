@@ -53,6 +53,9 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
     var keyboardHeight:CGFloat=258
     var assetsGroup:ALAssetsGroup?
     
+    var dashboardViewObject:ViewController?
+    var selectedDictData:NSDictionary?
+    
     // MARK: - UIView life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -274,7 +277,17 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
             
             if isImageRenamed {
                 
-                self.editFilenameHandlingLocalAndDB(filename: (assetRepresent?.filename().components(separatedBy: ".").first!.lowercased())!, message: "Image has been renamed.")
+                AppDelegate().insertUpdateRenamedText(imageName: (assetRepresent?.filename().components(separatedBy: ".").first!.lowercased())!, rename: (selectedPhotoName?.components(separatedBy: ".").first!.lowercased())!)
+                
+                dashboardViewObject?.renameDatabaseDicData?.setValue((selectedPhotoName?.components(separatedBy: ".").first!.lowercased())!, forKey: (assetRepresent?.filename().components(separatedBy: ".").first!.lowercased())!)
+                
+                editedNameInDashboardView(tempDict: (dashboardViewObject?.cameraRollAssets)!)
+                
+                if (dashboardViewObject?.searchedCameraRollAssets.count)!>0 {
+                    editedNameInDashboardView(tempDict: (dashboardViewObject?.searchedCameraRollAssets)!)
+                }
+                self.showImageSavedPopUp(message: "Image has been renamed.")
+//                self.editFilenameHandlingLocalAndDB(filename: (assetRepresent?.filename().components(separatedBy: ".").first!.lowercased())!, message: "Image has been renamed.")
             }
             else {
                 self.navigationController?.popViewController(animated: true)
@@ -467,10 +480,15 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
                     
                     if self.isImageRenamed {
                         
-                        self.editFilenameHandlingLocalAndDB(filename: (asset?.defaultRepresentation().filename().components(separatedBy: ".").first!.lowercased())!, message: "Image has been saved.")
+                        AppDelegate().insertUpdateRenamedText(imageName: (asset?.defaultRepresentation().filename().components(separatedBy: ".").first!.lowercased())!, rename: (self.selectedPhotoName?.components(separatedBy: ".").first!.lowercased())!)
+                        self.dashboardViewObject?.loadVeiwImageEdited()
+                        self.showImageSavedPopUp(message: "Image has been saved.")
+                        
+//                        self.editFilenameHandlingLocalAndDB(filename: (asset?.defaultRepresentation().filename().components(separatedBy: ".").first!.lowercased())!, message: "Image has been saved.")
                     }
                     else {
                     
+                        self.dashboardViewObject?.loadVeiwImageEdited()
                         self.showImageSavedPopUp(message: "Image has been saved.")
                     }
                     
@@ -655,7 +673,7 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
                     else {
                         
                         alert.dismiss(animated: false, completion: nil)
-                        self.showImageNameAlreadyExistAlert(title: "Alert", message: "This image name is already exist.", tempString: alertTextField.text!)
+                        self.showImageNameAlreadyExistAlert(title: "Alert", message: "This image name already exists.", tempString: alertTextField.text!)
                     }
                 }
                 else {
@@ -689,10 +707,20 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
         present(alert, animated: true, completion: nil)
     }
     
-    func editFilenameHandlingLocalAndDB(filename:String, message msg:String) {
+//    func editFilenameHandlingLocalAndDB(filename:String, message msg:String) {
+//        
+//        AppDelegate().insertUpdateRenamedText(imageName: filename, rename: (selectedPhotoName?.components(separatedBy: ".").first!.lowercased())!)
+//        self.showImageSavedPopUp(message: msg)
+//    }
+    
+    func editedNameInDashboardView(tempDict:NSMutableArray) {
         
-        AppDelegate().insertUpdateRenamedText(imageName: filename, rename: (selectedPhotoName?.components(separatedBy: ".").first!.lowercased())!)
-        self.showImageSavedPopUp(message: msg)
+        let index:Int=tempDict.index(of: selectedDictData as Any)
+        let tempDictData:NSDictionary=tempDict.object(at: index) as! NSDictionary
+        let tempMutableData:NSMutableDictionary=tempDictData.mutableCopy() as! NSMutableDictionary
+        
+        tempMutableData.setValue(selectedPhotoName?.lowercased(), forKey: "FileName")
+        tempDict.replaceObject(at: index, with: tempMutableData)
     }
     
     func isImageNameAlreadyExist(searchText:String) -> Bool {

@@ -36,7 +36,7 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
     var lastSelectedRenameTextfield:UITextField?
     var currentSelectedRenameButton:UIButton?
     var lastSelectedRenameButton:UIButton?
-    var renameDatabaseDicData:NSMutableDictionary=[:]
+    var renameDatabaseDicData:NSMutableDictionary?
     var lastEnteredUpdatedImageName:String=""
     var deletingDBEntries: NSMutableArray = []
     
@@ -47,24 +47,15 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
         createImagesFolder()
         self.navigationController?.isNavigationBarHidden=false
         UIApplication.shared.isStatusBarHidden=false
+        
+        loadVeiwImageEdited()
         // Do any additional setup after loading the view.
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        //Fetch all entries from local dataBase
-        renameDatabaseDicData=AppDelegate().fetchRenameEntries().mutableCopy() as! NSMutableDictionary
-        
-        //Reload gallery image when come in foreground from background state
-        NotificationCenter.default.addObserver(self, selector:#selector(applicationWillEnterForeground(_:)), name:NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
-        
-        self.navigationItem.title="Gallery"
-        
-        let tempDeleteEntryArray:NSArray = renameDatabaseDicData.allKeys as NSArray
-        deletingDBEntries = tempDeleteEntryArray.mutableCopy() as! NSMutableArray
-        
-        viewInitialization()
+        cameraRollCollectionView.reloadData()
     }
     
     override func didReceiveMemoryWarning() {
@@ -74,6 +65,24 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
     // MARK: - end
     
     // MARK: - View customization
+    //Load view when image is edited
+    func loadVeiwImageEdited() {
+    
+        renameDatabaseDicData=[:]
+        //Fetch all entries from local dataBase
+        renameDatabaseDicData=AppDelegate().fetchRenameEntries().mutableCopy() as? NSMutableDictionary
+        
+        //Reload gallery image when come in foreground from background state
+        NotificationCenter.default.addObserver(self, selector:#selector(applicationWillEnterForeground(_:)), name:NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
+        
+        self.navigationItem.title="Gallery"
+        
+        let tempDeleteEntryArray:NSArray = renameDatabaseDicData!.allKeys as NSArray
+        deletingDBEntries = tempDeleteEntryArray.mutableCopy() as! NSMutableArray
+        
+        viewInitialization()
+    }
+    
     func viewInitialization() {
         
         //Initialized variables
@@ -273,6 +282,8 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
             let imageName:String=tempDictData?.object(forKey: "FileName") as! String
             photoPreviewViewObj?.selectedPhotoName=imageName
             photoPreviewViewObj?.cameraRollAssets=(cameraRollAssets.mutableCopy() as! NSMutableArray)
+            photoPreviewViewObj?.dashboardViewObject=self
+            photoPreviewViewObj?.selectedDictData=tempDictData;
             self.navigationController?.pushViewController(photoPreviewViewObj!, animated: true)
         }
     }
@@ -356,9 +367,9 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
                 
                 let assetRepresent:ALAssetRepresentation=result!.defaultRepresentation()
                 
-                if ((self.renameDatabaseDicData.object(forKey: assetRepresent.filename().components(separatedBy: ".").first?.lowercased() as Any)) != nil) {
+                if ((self.renameDatabaseDicData?.object(forKey: assetRepresent.filename().components(separatedBy: ".").first?.lowercased() as Any)) != nil) {
                     
-                    var tempString:String=self.renameDatabaseDicData.object(forKey: assetRepresent.filename().components(separatedBy: ".").first?.lowercased() as Any) as! String
+                    var tempString:String=self.renameDatabaseDicData!.object(forKey: assetRepresent.filename().components(separatedBy: ".").first?.lowercased() as Any) as! String
                     tempString.append(".\(assetRepresent.filename().components(separatedBy: ".").last!)")
                     self.cameraRollAssets.add(["FileName":tempString.lowercased(),
                                                "Asset":result])
@@ -393,6 +404,7 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
             rightButton?.isHidden=false;
             photoAccessDeniedLabel.text="Allow Name-It to access Gallery in Settings"
             cameraRollCollectionView.isHidden=false;
+            
         }
         else {
         
@@ -404,6 +416,7 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
         }
         
         self.cameraRollCollectionView.reloadData()
+        cameraRollCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
     }
     
     func deleteEntry() {
@@ -413,7 +426,7 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
             if self.deletingDBEntries.count > 0 {
                 
                 if AppDelegate().deleteEntries(imageName: self.deletingDBEntries.object(at: 0) as! String) {
-                    self.renameDatabaseDicData.removeObject(forKey: self.deletingDBEntries.object(at: 0))
+                    self.renameDatabaseDicData?.removeObject(forKey: self.deletingDBEntries.object(at: 0))
                     self.deletingDBEntries.removeObject(at: 0)
                 }
             }
@@ -554,6 +567,7 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
         isSearch=false
         searchBarObject.text=""
         photoAccessDeniedLabel.isHidden=true
+        searchedCameraRollAssets.removeAllObjects()
         searchBarObject.resignFirstResponder()
         cameraRollCollectionView.reloadData()
         unEditedSearchBarAnimation()
@@ -627,7 +641,7 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
                     else {
                         
                         alert.dismiss(animated: false, completion: nil)
-                        self.showImageNameAlreadyExistAlert(title: "Alert", message: "This image name is already exist.", tempString: alertTextField.text!, seletedImageTag: seletedImageTag)
+                        self.showImageNameAlreadyExistAlert(title: "Alert", message: "This image name already exists.", tempString: alertTextField.text!, seletedImageTag: seletedImageTag)
                     }
                 }
             }
@@ -671,8 +685,8 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
         
         AppDelegate().insertUpdateRenamedText(imageName: assetRepresent.filename()
             .components(separatedBy: ".").first!.lowercased(), rename: (updatedText.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).lowercased()))
-        self.renameDatabaseDicData.setValue((updatedText.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).lowercased()), forKey: assetRepresent.filename().components(separatedBy: ".").first!.lowercased())
-        let tempDeleteEntryArray:NSArray = renameDatabaseDicData.allKeys as NSArray
+        self.renameDatabaseDicData?.setValue((updatedText.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).lowercased()), forKey: assetRepresent.filename().components(separatedBy: ".").first!.lowercased())
+        let tempDeleteEntryArray:NSArray = renameDatabaseDicData!.allKeys as NSArray
         deletingDBEntries = tempDeleteEntryArray.mutableCopy() as! NSMutableArray
         
         let index:Int=self.cameraRollAssets.index(of: selectedDictData as Any)
@@ -752,7 +766,8 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
     //Create NameIt folder
     func createImagesFolder() {
         
-        // path to documents directory
+        // path to documents directoryRanosyS
+        
         let documentDirectoryPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first
         if let documentDirectoryPath = documentDirectoryPath {
             // create the custom folder path
@@ -806,7 +821,7 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
     // MARK: - Notification observer method
     func applicationWillEnterForeground(_ notification: NSNotification) {
         
-        let tempDeleteEntryArray:NSArray = renameDatabaseDicData.allKeys as NSArray
+        let tempDeleteEntryArray:NSArray = renameDatabaseDicData!.allKeys as NSArray
         deletingDBEntries = tempDeleteEntryArray.mutableCopy() as! NSMutableArray
         
         //View initialized method called

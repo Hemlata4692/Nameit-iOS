@@ -33,7 +33,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="GVa-Gg-9Hl">
-                                <rect key="frame" x="3" y="47" width="314" height="460"/>
+                                <rect key="frame" x="3" y="47" width="314" height="457"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="4" minimumInteritemSpacing="3" id="7Qe-bO-WfG">
                                     <size key="itemSize" width="112" height="121"/>
@@ -176,7 +176,7 @@
                             <constraint firstItem="vQX-1F-a9G" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="hER-bH-XRw"/>
                             <constraint firstAttribute="trailing" secondItem="GVa-Gg-9Hl" secondAttribute="trailing" constant="3" id="hjJ-0s-D7F"/>
                             <constraint firstAttribute="trailing" secondItem="vQX-1F-a9G" secondAttribute="trailing" constant="15" id="y7z-h6-YFn"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="GVa-Gg-9Hl" secondAttribute="bottom" constant="-3" id="z10-4p-Kwh"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="GVa-Gg-9Hl" secondAttribute="bottom" id="z10-4p-Kwh"/>
                         </constraints>
                     </view>
                     <extendedEdge key="edgesForExtendedLayout"/>
