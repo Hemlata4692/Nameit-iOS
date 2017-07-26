@@ -55,6 +55,8 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        //Reload gallery image when come in foreground from background state
+        NotificationCenter.default.addObserver(self, selector:#selector(applicationWillEnterForeground(_:)), name:NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
         cameraRollCollectionView.reloadData()
     }
     
@@ -72,11 +74,7 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
         //Fetch all entries from local dataBase
         renameDatabaseDicData=AppDelegate().fetchRenameEntries().mutableCopy() as? NSMutableDictionary
         
-        //Reload gallery image when come in foreground from background state
-        NotificationCenter.default.addObserver(self, selector:#selector(applicationWillEnterForeground(_:)), name:NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
-        
         self.navigationItem.title="Gallery"
-        
         let tempDeleteEntryArray:NSArray = renameDatabaseDicData!.allKeys as NSArray
         deletingDBEntries = tempDeleteEntryArray.mutableCopy() as! NSMutableArray
         
