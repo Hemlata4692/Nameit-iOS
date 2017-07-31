@@ -40,6 +40,8 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
     var lastEnteredUpdatedImageName:String=""
     var deletingDBEntries: NSMutableArray = []
     
+    var scrollAtIndex:Int=0
+    
     // MARK: - UIView life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -57,7 +59,16 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
         
         //Reload gallery image when come in foreground from background state
         NotificationCenter.default.addObserver(self, selector:#selector(applicationWillEnterForeground(_:)), name:NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
+        
+//        [cameraRollCollectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionCenteredVertically animated:NO];
+        
         cameraRollCollectionView.reloadData()
+    }
+    
+    
+    func scrolledCollectionAtIndexPath() {
+        
+        cameraRollCollectionView.scrollToItem(at: IndexPath(row: scrollAtIndex, section: 0), at: .centeredVertically, animated: false)
     }
     
     override func didReceiveMemoryWarning() {
@@ -280,8 +291,10 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
             let imageName:String=tempDictData?.object(forKey: "FileName") as! String
             photoPreviewViewObj?.selectedPhotoName=imageName
             photoPreviewViewObj?.cameraRollAssets=(cameraRollAssets.mutableCopy() as! NSMutableArray)
-            photoPreviewViewObj?.dashboardViewObject=self
             photoPreviewViewObj?.selectedDictData=tempDictData;
+            photoPreviewViewObj?.selectedImageIndex=indexPath.row
+            photoPreviewViewObj?.dashboardViewObject=self
+            
             self.navigationController?.pushViewController(photoPreviewViewObj!, animated: true)
         }
     }

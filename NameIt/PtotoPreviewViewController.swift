@@ -56,6 +56,12 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
     var dashboardViewObject:ViewController?
     var selectedDictData:NSDictionary?
     
+    //Swipe gesture
+    var swipeRight:UISwipeGestureRecognizer?
+    var swipeLeft:UISwipeGestureRecognizer?
+    var selectedImageIndex:Int?
+    var swipedImageAssetArray: NSMutableArray = []
+    
     // MARK: - UIView life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -63,6 +69,7 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
         viewIntialization()
         nonUpdatedPhotoName=selectedPhotoName!
         
+        initializedSwipeGesture()   //Set swipe gesture at photoBackView
         //Set keyboard show notification
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         
@@ -84,6 +91,8 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
 
             isImageEdited=true
             addSaveBarButton()
+            
+            addSwipeGesture()
         }
     }
     
@@ -125,6 +134,11 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
         whiteColorButton.layer.borderColor=UIColor.lightGray.cgColor
         whiteColorButton.layer.borderWidth=2.0
         selectedColor=UIColor.black
+        
+        //Set back left bar button
+        addBackBarButton()
+        isImageEdited=false;
+        
         //Change photoPreviewImageView according to selected image size ratio
         changeImageRatio()
     }
@@ -221,6 +235,7 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
         
         if !isRotateSelected {
             
+            removeSwipeGesture()
             isRotateSelected=true
             addTextButton.isEnabled=false;
             commonMethodOfRotateAddTextAction()
@@ -239,6 +254,7 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
         
         if !isAddTextSelected {
             
+            removeSwipeGesture()
             selectedColor=UIColor.black
             isAddTextSelected=true
             rotateButton.isEnabled=false;
@@ -255,6 +271,7 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
     
     @IBAction func addAirbrush(_ sender: UIButton) {
         
+        removeSwipeGesture()
         isAirBrushDone=false
         //Navigate to photoGrid screen in edit mode
         let airBrushViewObj = self.storyboard?.instantiateViewController(withIdentifier: "AirBrushViewController") as? AirBrushViewController
@@ -286,10 +303,16 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
                 if (dashboardViewObject?.searchedCameraRollAssets.count)!>0 {
                     editedNameInDashboardView(tempDict: (dashboardViewObject?.searchedCameraRollAssets)!)
                 }
+                
+                dashboardViewObject?.scrollAtIndex=selectedImageIndex!
+                dashboardViewObject?.scrolledCollectionAtIndexPath()
                 self.showImageSavedPopUp(message: "Image has been renamed.")
 //                self.editFilenameHandlingLocalAndDB(filename: (assetRepresent?.filename().components(separatedBy: ".").first!.lowercased())!, message: "Image has been renamed.")
             }
             else {
+                
+                dashboardViewObject?.scrollAtIndex=selectedImageIndex!
+                dashboardViewObject?.scrolledCollectionAtIndexPath()
                 self.navigationController?.popViewController(animated: true)
             }
         }
@@ -379,6 +402,13 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
             caption?.layer.borderColor=selectedColor?.cgColor
         }
     }
+    
+    override func backButtonAction() {
+        
+        dashboardViewObject?.scrollAtIndex=selectedImageIndex!
+        dashboardViewObject?.scrolledCollectionAtIndexPath()
+        self.navigationController?.popViewController(animated: true)
+    }
     // MARK: - end
     
     // MARK: - Image rotate at given degrees
@@ -456,6 +486,7 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
         if isImageEdited || isImageRenamed {
             addSaveBarButton()
         }
+        addSwipeGesture()
     }
     
     func commonMethodOfRotateAddTextAction() {
@@ -826,6 +857,129 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
         alertViewController.addAction(okAction)
         
         present(alertViewController, animated: true, completion: nil)
+    }
+    // MARK: - end
+    
+    // MARK: - Add swipe gesture
+    func initializedSwipeGesture() {
+ 
+        if (dashboardViewObject?.isSearch)! {
+            
+            swipedImageAssetArray=(dashboardViewObject?.searchedCameraRollAssets.mutableCopy() as! NSMutableArray)
+        }
+        else {
+            swipedImageAssetArray=(cameraRollAssets?.mutableCopy() as! NSMutableArray)
+        }
+        
+        setSwipeGesture()
+    }
+    
+    func setSwipeGesture () {
+        
+        swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(PtotoPreviewViewController.respondToSwipeGestureRight))
+        swipeRight?.direction = UISwipeGestureRecognizerDirection.right
+        swipeRight?.delegate=self
+        
+        swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(PtotoPreviewViewController.respondToSwipeGestureLeft))
+        swipeLeft?.direction = UISwipeGestureRecognizerDirection.left
+        swipeLeft?.delegate=self
+        
+        addSwipeGesture()
+    }
+    
+    func respondToSwipeGestureRight () {
+        
+        print("right");
+        
+        selectedImageIndex = selectedImageIndex!-1;
+        if selectedImageIndex! >= 0 {
+            
+            //Swipe image
+            resetAllInitializedVariables()
+            
+            //Load full image and image name from selectedImageAsset
+            assetRepresent = selectedPhotoAsset!.defaultRepresentation()
+            let fullImageRef:CGImage=assetRepresent!.fullScreenImage().takeUnretainedValue()
+            let fullImage:UIImage=UIImage.init(cgImage: fullImageRef)
+            photoPreviewImageView.image=fullImage
+            let moveImageView:UIImageView=photoPreviewImageView
+            addRightAnimationPresentToView(viewTobeAnimatedRight: moveImageView)
+        }
+        else {
+            selectedImageIndex = 0;
+        }
+    }
+    
+    func respondToSwipeGestureLeft () {
+        print("Left");
+        
+        selectedImageIndex = selectedImageIndex!+1;
+        if selectedImageIndex!<swipedImageAssetArray.count {
+            
+            //Swipe image
+            resetAllInitializedVariables()
+            //Load full image and image name from selectedImageAsset
+            assetRepresent = selectedPhotoAsset!.defaultRepresentation()
+            let fullImageRef:CGImage=assetRepresent!.fullScreenImage().takeUnretainedValue()
+            let fullImage:UIImage=UIImage.init(cgImage: fullImageRef)
+            photoPreviewImageView.image=fullImage
+            let moveImageView:UIImageView=photoPreviewImageView
+            addLeftAnimationPresentToView(viewTobeAnimatedLeft: moveImageView)
+        }
+        else {
+            selectedImageIndex = swipedImageAssetArray.count-1;
+        }
+    }
+    
+    func resetAllInitializedVariables() {
+        
+        var tempDictData:NSDictionary?
+        tempDictData=swipedImageAssetArray[selectedImageIndex!] as? NSDictionary
+        
+        selectedPhotoAsset=tempDictData?.object(forKey: "Asset") as? ALAsset
+        let imageName:String=tempDictData?.object(forKey: "FileName") as! String
+        selectedPhotoName=imageName
+        selectedDictData=tempDictData;
+        
+        viewIntialization()
+    }
+
+    func removeSwipeGesture() {
+        
+        photoBackView.removeGestureRecognizer(swipeRight!)
+        photoBackView.removeGestureRecognizer(swipeLeft!)
+    }
+    
+    func addSwipeGesture() {
+        
+        photoBackView.addGestureRecognizer(swipeRight!)
+        photoBackView.addGestureRecognizer(swipeLeft!)
+    }
+    
+    //Adding left animation to banner images
+    func addLeftAnimationPresentToView(viewTobeAnimatedLeft:UIView) {
+        
+        let transition = CATransition()
+        transition.duration = 0.2
+        transition.timingFunction=CAMediaTimingFunction.init(name: kCAMediaTimingFunctionLinear)
+        transition.setValue("IntroSwipeIn", forKey: "IntroAnimation")
+        transition.fillMode=kCAFillModeForwards
+        transition.type = kCATransitionPush
+        transition.subtype = kCATransitionFromRight
+        viewTobeAnimatedLeft.layer.add(transition, forKey: nil)
+    }
+    
+    //Adding right animation to banner images
+    func addRightAnimationPresentToView(viewTobeAnimatedRight:UIView) {
+        
+        let transition = CATransition()
+        transition.duration = 0.2
+        transition.timingFunction=CAMediaTimingFunction.init(name: kCAMediaTimingFunctionLinear)
+        transition.setValue("IntroSwipeIn", forKey: "IntroAnimation")
+        transition.fillMode=kCAFillModeForwards
+        transition.type = kCATransitionPush
+        transition.subtype = kCATransitionFromLeft
+        viewTobeAnimatedRight.layer.add(transition, forKey: nil)
     }
     // MARK: - end
     
