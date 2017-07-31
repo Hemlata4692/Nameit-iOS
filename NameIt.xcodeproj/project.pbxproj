@@ -16,6 +16,8 @@
 		B70F35961F0A4B2B00BA3575 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B70F35951F0A4B2B00BA3575 /* libsqlite3.tbd */; };
 		B70F35981F0A4B8200BA3575 /* DatabaseFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = B70F35971F0A4B8200BA3575 /* DatabaseFile.swift */; };
 		B70F359D1F0A4EC400BA3575 /* NameItDatabase.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = B70F359C1F0A4EC400BA3575 /* NameItDatabase.sqlite */; };
+		B71FC9DC1F29ED74004127A7 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B71FC9DA1F29ED74004127A7 /* Fabric.framework */; };
+		B71FC9DD1F29ED74004127A7 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B71FC9DB1F29ED74004127A7 /* Crashlytics.framework */; };
 		B7687AE01F0F69DD001A6006 /* AirBrushViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7687ADF1F0F69DD001A6006 /* AirBrushViewController.swift */; };
 		B7687AE31F0F6BA8001A6006 /* colorPickerPlate.png in Resources */ = {isa = PBXBuildFile; fileRef = B7687AE21F0F6BA8001A6006 /* colorPickerPlate.png */; };
 		B7687AE51F0F6CB4001A6006 /* colorPickerPlate1.png in Resources */ = {isa = PBXBuildFile; fileRef = B7687AE41F0F6CB4001A6006 /* colorPickerPlate1.png */; };
@@ -53,6 +55,8 @@
 		B70F35951F0A4B2B00BA3575 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		B70F35971F0A4B8200BA3575 /* DatabaseFile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatabaseFile.swift; sourceTree = "<group>"; };
 		B70F359C1F0A4EC400BA3575 /* NameItDatabase.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = NameItDatabase.sqlite; sourceTree = "<group>"; };
+		B71FC9DA1F29ED74004127A7 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
+		B71FC9DB1F29ED74004127A7 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		B7687ADF1F0F69DD001A6006 /* AirBrushViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AirBrushViewController.swift; sourceTree = "<group>"; };
 		B7687AE21F0F6BA8001A6006 /* colorPickerPlate.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = colorPickerPlate.png; sourceTree = "<group>"; };
 		B7687AE41F0F6CB4001A6006 /* colorPickerPlate1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = colorPickerPlate1.png; sourceTree = "<group>"; };
@@ -84,6 +88,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				B70F35961F0A4B2B00BA3575 /* libsqlite3.tbd in Frameworks */,
+				B71FC9DD1F29ED74004127A7 /* Crashlytics.framework in Frameworks */,
+				B71FC9DC1F29ED74004127A7 /* Fabric.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -164,6 +170,8 @@
 		B70F35941F0A4B2B00BA3575 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B71FC9DA1F29ED74004127A7 /* Fabric.framework */,
+				B71FC9DB1F29ED74004127A7 /* Crashlytics.framework */,
 				B70F35951F0A4B2B00BA3575 /* libsqlite3.tbd */,
 			);
 			name = Frameworks;
@@ -309,6 +317,7 @@
 				B70F35741F0A4A1200BA3575 /* Sources */,
 				B70F35751F0A4A1200BA3575 /* Frameworks */,
 				B70F35761F0A4A1200BA3575 /* Resources */,
+				B71FC9D91F29ED54004127A7 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -383,6 +392,22 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		B71FC9D91F29ED54004127A7 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "./Fabric.framework/run 81630421073d63eaf289d5a21a759d9502c9d7d3 047d83aaba7dbbb1902aa4f22bc53ffc2792a0d293199606d274e8d5992a32d5";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		B70F35741F0A4A1200BA3575 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -449,7 +474,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Ranosys Technologies Pte Ltd";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Ranosys Technologies Pte Ltd";
 				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = M8A7BYS443;
 				ENABLE_BITCODE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -533,8 +558,13 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Ranosys Technologies Pte Ltd";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Ranosys Technologies Pte Ltd";
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = M8A7BYS443;
 				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = NameIt/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ranosys.NameIt;
@@ -552,8 +582,13 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Ranosys Technologies Pte Ltd";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Ranosys Technologies Pte Ltd";
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = M8A7BYS443;
 				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = NameIt/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ranosys.NameIt;

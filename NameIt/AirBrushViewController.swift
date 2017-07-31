@@ -144,6 +144,11 @@ class AirBrushViewController: GlobalBackViewController, UIScrollViewDelegate, UI
     // MARK: - IBActions
     @IBAction func eraserButtonAction(_ sender: Any) {
         
+        //----------Crash testing------------
+        //var l:Array=["a"]
+        //print(l[2])
+        //---------------end-----------------
+        
         eraserSelected=true
         brushView.isHidden=false
         brushView.frame=CGRect(x: 50, y: Int(UIScreen.main.bounds.size.height - 214), width: Int(resizeSlider.value)+6, height: Int(resizeSlider.value)+6)
