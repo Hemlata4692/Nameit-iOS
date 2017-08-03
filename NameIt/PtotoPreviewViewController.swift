@@ -298,14 +298,16 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
                 
                 dashboardViewObject?.renameDatabaseDicData?.setValue((selectedPhotoName?.components(separatedBy: ".").first!.lowercased())!, forKey: (assetRepresent?.filename().components(separatedBy: ".").first!.lowercased())!)
                 
-                editedNameInDashboardView(tempDict: (dashboardViewObject?.cameraRollAssets)!)
+                dashboardViewObject?.cameraRollAssets = editedNameInDashboardView(tempDict: (dashboardViewObject?.cameraRollAssets)!)
                 
                 if (dashboardViewObject?.searchedCameraRollAssets.count)!>0 {
-                    editedNameInDashboardView(tempDict: (dashboardViewObject?.searchedCameraRollAssets)!)
+                    dashboardViewObject?.searchedCameraRollAssets = editedNameInDashboardView(tempDict: (dashboardViewObject?.searchedCameraRollAssets)!)
                 }
                 
+                //Swipe with renaming feature comment this code
                 dashboardViewObject?.scrollAtIndex=selectedImageIndex!
                 dashboardViewObject?.scrolledCollectionAtIndexPath()
+                //end
                 self.showImageSavedPopUp(message: "Image has been renamed.")
 //                self.editFilenameHandlingLocalAndDB(filename: (assetRepresent?.filename().components(separatedBy: ".").first!.lowercased())!, message: "Image has been renamed.")
             }
@@ -744,7 +746,7 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
 //        self.showImageSavedPopUp(message: msg)
 //    }
     
-    func editedNameInDashboardView(tempDict:NSMutableArray) {
+    func editedNameInDashboardView(tempDict:NSMutableArray) -> NSMutableArray {
         
         let index:Int=tempDict.index(of: selectedDictData as Any)
         let tempDictData:NSDictionary=tempDict.object(at: index) as! NSDictionary
@@ -752,6 +754,7 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
         
         tempMutableData.setValue(selectedPhotoName?.lowercased(), forKey: "FileName")
         tempDict.replaceObject(at: index, with: tempMutableData)
+        return tempDict
     }
     
     func isImageNameAlreadyExist(searchText:String) -> Bool {
@@ -852,7 +855,24 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
         
         let okAction = UIAlertAction(title: "OK", style: .default) { (action) -> Void in
             
-            self.navigationController?.popViewController(animated: true)
+            //Swipe with renaming feature
+//            if !self.isImageEdited && self.isImageRenamed {
+//                
+//                if (self.dashboardViewObject?.isSearch)! {
+//                    
+//                    self.swipedImageAssetArray=(self.dashboardViewObject?.searchedCameraRollAssets.mutableCopy() as! NSMutableArray)
+//                }
+//                else {
+//                    self.swipedImageAssetArray=(self.dashboardViewObject?.cameraRollAssets.mutableCopy() as! NSMutableArray)
+//                }
+//                self.resetAllInitializedVariables ()
+//            }
+//            else {
+            //end
+                 self.navigationController?.popViewController(animated: true)
+            //Swipe with renaming feature
+//            }
+           //end
         }
         alertViewController.addAction(okAction)
         
