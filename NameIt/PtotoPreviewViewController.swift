@@ -305,8 +305,8 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
                 }
                 
                 //Swipe with renaming feature comment this code
-                dashboardViewObject?.scrollAtIndex=selectedImageIndex!
-                dashboardViewObject?.scrolledCollectionAtIndexPath()
+//                dashboardViewObject?.scrollAtIndex=selectedImageIndex!
+//                dashboardViewObject?.scrolledCollectionAtIndexPath()
                 //end
                 self.showImageSavedPopUp(message: "Image has been renamed.")
 //                self.editFilenameHandlingLocalAndDB(filename: (assetRepresent?.filename().components(separatedBy: ".").first!.lowercased())!, message: "Image has been renamed.")
@@ -855,24 +855,20 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
         
         let okAction = UIAlertAction(title: "OK", style: .default) { (action) -> Void in
             
-            //Swipe with renaming feature
-//            if !self.isImageEdited && self.isImageRenamed {
-//                
-//                if (self.dashboardViewObject?.isSearch)! {
-//                    
-//                    self.swipedImageAssetArray=(self.dashboardViewObject?.searchedCameraRollAssets.mutableCopy() as! NSMutableArray)
-//                }
-//                else {
-//                    self.swipedImageAssetArray=(self.dashboardViewObject?.cameraRollAssets.mutableCopy() as! NSMutableArray)
-//                }
-//                self.resetAllInitializedVariables ()
-//            }
-//            else {
-            //end
+            if !self.isImageEdited && self.isImageRenamed {
+                
+                if (self.dashboardViewObject?.isSearch)! {
+                    
+                    self.swipedImageAssetArray=(self.dashboardViewObject?.searchedCameraRollAssets.mutableCopy() as! NSMutableArray)
+                }
+                else {
+                    self.swipedImageAssetArray=(self.dashboardViewObject?.cameraRollAssets.mutableCopy() as! NSMutableArray)
+                }
+                self.resetAllInitializedVariables ()
+            }
+            else {
                  self.navigationController?.popViewController(animated: true)
-            //Swipe with renaming feature
-//            }
-           //end
+            }
         }
         alertViewController.addAction(okAction)
         
