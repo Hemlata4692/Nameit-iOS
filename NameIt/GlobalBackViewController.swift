@@ -13,13 +13,11 @@ class GlobalBackViewController: UIViewController {
     // MARK: - UIView life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-
         // Do any additional setup after loading the view.
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
         addBackBarButton()
     }
 
@@ -31,10 +29,8 @@ class GlobalBackViewController: UIViewController {
     
     // MARK: - Add and customize navigation bar button
     func addBackBarButton() {
-        
         self.navigationItem.leftBarButtonItem=nil
         self.navigationItem.rightBarButtonItem=nil
-
         //Navigation bar buttons
         let framing:CGRect=CGRect(x: 0, y: 0, width: 20, height: 20)
         let backButton=UIButton.init(frame: framing)
@@ -46,9 +42,7 @@ class GlobalBackViewController: UIViewController {
     }
     
     func addSaveBarButton() {
-        
         self.navigationItem.rightBarButtonItem=nil
-        
         //Navigation bar buttons
         let framing:CGRect=CGRect(x: 0, y: 0, width: 50, height: 30)
         let saveButton=UIButton.init(frame: framing)
@@ -61,10 +55,8 @@ class GlobalBackViewController: UIViewController {
     }
     
     func addBarButtonWithDone() {
-        
         self.navigationItem.leftBarButtonItem=nil
         self.navigationItem.rightBarButtonItem=nil
-        
         //Navigation bar buttons
         var framing:CGRect=CGRect(x: 0, y: 0, width: 60, height: 30)
         let cancelButton=UIButton.init(frame: framing)
@@ -74,7 +66,6 @@ class GlobalBackViewController: UIViewController {
         let cancelBarButton:UIBarButtonItem=UIBarButtonItem.init(customView: cancelButton)
         cancelButton.addTarget(self, action: #selector(cancelButtonAction), for: UIControlEvents.touchUpInside)
         self.navigationItem.leftBarButtonItem=cancelBarButton
-        
         //Navigation bar buttons
         framing=CGRect(x: 0, y: 0, width: 50, height: 30)
         let doneButton=UIButton.init(frame: framing)
@@ -85,10 +76,10 @@ class GlobalBackViewController: UIViewController {
         doneButton.addTarget(self, action: #selector(doneButtonAction), for: UIControlEvents.touchUpInside)
         self.navigationItem.rightBarButtonItem=doneBarButton
     }
-
+    // MARK: - end
+    
     // MARK: - BarButton actions
     func backButtonAction() {
-        
         self.navigationController?.popViewController(animated: true)
     }
     
@@ -98,15 +89,4 @@ class GlobalBackViewController: UIViewController {
     
     func doneButtonAction() {}
     // MARK: - end
-    
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
