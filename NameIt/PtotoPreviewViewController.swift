@@ -16,46 +16,36 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
     @IBOutlet var rotateButton: UIButton!
     @IBOutlet var shareButton: UIButton!
     @IBOutlet var renameButton: UIButton!
-    
     @IBOutlet var photoBackView: UIView!
     @IBOutlet var photoPreviewImageView: UIImageView!
     @IBOutlet var scrollViewObject: UIScrollView!
-    
+    @IBOutlet var selectTextColorBackView: UIView!
+    @IBOutlet var whiteColorButton: UIButton!
+    @IBOutlet var blackColorButton: UIButton!
+    //Local variable declaration
     var selectedPhotoAsset:ALAsset?
     var selectedPhotoName:String?
     var selectedPhoto:UIImage?
-    
     var degree:Int=0
-    
     var selectedImageSize:CGSize?
     var isRotateSelected:Bool = false
     var isAddTextSelected:Bool = false
     var isImageEdited:Bool = false
-    
     var assetRepresent:ALAssetRepresentation?
-    
     var caption:UITextView?
     var textViewToolbar:UIToolbar?
     var drag:UIPanGestureRecognizer?
-    
     var isAirBrushDone:Bool=false
-    
     //Select add textLabel color
-    @IBOutlet var selectTextColorBackView: UIView!
-    @IBOutlet var whiteColorButton: UIButton!
-    @IBOutlet var blackColorButton: UIButton!
     var selectedColor:UIColor?
-    
     var lastEnteredUpdatedImageName:String=""
     var nonUpdatedPhotoName:String=""
     var cameraRollAssets: NSMutableArray?
     var isImageRenamed:Bool = false
     var keyboardHeight:CGFloat=258
     var assetsGroup:ALAssetsGroup?
-    
     var dashboardViewObject:ViewController?
     var selectedDictData:NSDictionary?
-    
     //Swipe gesture
     var swipeRight:UISwipeGestureRecognizer?
     var swipeLeft:UISwipeGestureRecognizer?
@@ -260,7 +250,7 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
                 if (dashboardViewObject?.searchedCameraRollAssets.count)!>0 {
                     dashboardViewObject?.searchedCameraRollAssets = editedNameInDashboardView(tempDict: (dashboardViewObject?.searchedCameraRollAssets)!)
                 }
-                self.showImageSavedPopUp(message: "Image has been renamed.")
+                self.showImageSavedPopUp(message:ConstantCode().renamedMsgString)
             }
             else {
                 dashboardViewObject?.scrollAtIndex=selectedImageIndex!
@@ -429,18 +419,18 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
                     if self.isImageRenamed {
                         AppDelegate().insertUpdateRenamedText(imageName: (asset?.defaultRepresentation().filename().components(separatedBy: ".").first!.lowercased())!, rename: (self.selectedPhotoName?.components(separatedBy: ".").first!.lowercased())!)
                         self.dashboardViewObject?.loadVeiwImageEdited()
-                        self.showImageSavedPopUp(message: "Image has been saved.")
+                        self.showImageSavedPopUp(message: ConstantCode().imageEditedString)
                     }
                     else {
                         self.dashboardViewObject?.loadVeiwImageEdited()
-                        self.showImageSavedPopUp(message: "Image has been saved.")
+                        self.showImageSavedPopUp(message: ConstantCode().imageEditedString)
                     }
                 }, failureBlock: { (error) -> Void in
                 })
             } else {
                 AppDelegate().stopIndicator(uiView: self.view)
-                let alertViewController = UIAlertController(title: nil, message: "Some error occurred, Please try again later.", preferredStyle: .alert)
-                let okAction = UIAlertAction(title: "OK", style: .default) { (action) -> Void in
+                let alertViewController = UIAlertController(title: nil, message: ConstantCode().someErrorString, preferredStyle: .alert)
+                let okAction = UIAlertAction(title: ConstantCode().okString, style: .default) { (action) -> Void in
                 }
                 alertViewController.addAction(okAction)
                 self.navigationController?.present(alertViewController, animated: true, completion: nil)
@@ -470,7 +460,7 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
         textViewToolbar?.barStyle = UIBarStyle.default
         textViewToolbar?.items = [
             UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace, target: nil, action: nil),
-            UIBarButtonItem(title: "Done", style: UIBarButtonItemStyle.plain, target: self, action: #selector(self.doneWithNumberPad))]
+            UIBarButtonItem(title: ConstantCode().doneString, style: UIBarButtonItemStyle.plain, target: self, action: #selector(self.doneWithNumberPad))]
         photoBackView.addSubview(textViewToolbar!)
         caption?.becomeFirstResponder()
     }
@@ -540,7 +530,7 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
         }
         else {
             let newText = (textView.text as NSString).replacingCharacters(in: range, with: text)
-            let numberOfChars = newText.characters.count // for Swift use count(newText)
+            let numberOfChars = newText.characters.count
             return numberOfChars < 101;
         }
     }
@@ -558,9 +548,9 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
     
     // MARK: - Image rename handling
     func editImageNameRecursiveMethod() {
-        let alert = UIAlertController(title: "", message: "Please enter new image name", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        let saveAction = UIAlertAction(title:"Apply", style: .default, handler: { (action) -> Void in
+        let alert = UIAlertController(title: "", message: ConstantCode().renameAlertString, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: ConstantCode().cancelString, style: .cancel, handler: nil))
+        let saveAction = UIAlertAction(title:ConstantCode().applyString, style: .default, handler: { (action) -> Void in
             if let alertTextField = alert.textFields?.first, alertTextField.text != nil {
                 if alertTextField.text?.lowercased().trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) != self.nonUpdatedPhotoName
                     .components(separatedBy: ".").first!.lowercased().trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) {
@@ -570,7 +560,7 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
                     let charset = CharacterSet(charactersIn: "./")
                     if alertTextField.text?.rangeOfCharacter(from: charset) != nil {
                         alert.dismiss(animated: false, completion: nil)
-                        self.showImageNameAlreadyExistAlert(title: "Alert", message: "Dot '.' and Slash '/' characters are not allowed", tempString: alertTextField.text!)
+                        self.showImageNameAlreadyExistAlert(title: ConstantCode().alertString, message: ConstantCode().notAllowedCharString, tempString: alertTextField.text!)
                     }
                         //Check entered name is already exist or not
                     else if !self.isImageNameAlreadyExist(searchText: tempString) {
@@ -583,7 +573,7 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
                     }
                     else {
                         alert.dismiss(animated: false, completion: nil)
-                        self.showImageNameAlreadyExistAlert(title: "Alert", message: "This image name already exists.", tempString: alertTextField.text!)
+                        self.showImageNameAlreadyExistAlert(title: ConstantCode().alertString, message: ConstantCode().imgAlreadyString, tempString: alertTextField.text!)
                     }
                 }
                 else {
@@ -691,7 +681,7 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
     // MARK: - Show popUp
     func showImageNameAlreadyExistAlert(title:String, message messageText:String, tempString:String) {
         let alertViewController = UIAlertController(title: title, message: messageText, preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "OK", style: .default) { (action) -> Void in
+        let okAction = UIAlertAction(title: ConstantCode().okString, style: .default) { (action) -> Void in
             self.lastEnteredUpdatedImageName=tempString
             alertViewController.dismiss(animated: false, completion: nil)
             self.editImageNameRecursiveMethod()
@@ -703,7 +693,7 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
     func showImageSavedPopUp(message:String) {
         AppDelegate().stopIndicator(uiView: self.view)
         let alertViewController = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "OK", style: .default) { (action) -> Void in
+        let okAction = UIAlertAction(title: ConstantCode().okString, style: .default) { (action) -> Void in
             if !self.isImageEdited && self.isImageRenamed {
                 if (self.dashboardViewObject?.isSearch)! {
                     self.swipedImageAssetArray=(self.dashboardViewObject?.searchedCameraRollAssets.mutableCopy() as! NSMutableArray)
@@ -735,7 +725,6 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
     }
     
     func setSwipeGesture () {
-        
         swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(PtotoPreviewViewController.respondToSwipeGestureRight))
         swipeRight?.direction = UISwipeGestureRecognizerDirection.right
         swipeRight?.delegate=self
@@ -743,7 +732,6 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
         swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(PtotoPreviewViewController.respondToSwipeGestureLeft))
         swipeLeft?.direction = UISwipeGestureRecognizerDirection.left
         swipeLeft?.delegate=self
-        
         addSwipeGesture()
     }
     
@@ -817,7 +805,6 @@ class PtotoPreviewViewController: GlobalBackViewController, UIScrollViewDelegate
     
     //Adding right animation to banner images
     func addRightAnimationPresentToView(viewTobeAnimatedRight:UIView) {
-        
         let transition = CATransition()
         transition.duration = 0.2
         transition.timingFunction=CAMediaTimingFunction.init(name: kCAMediaTimingFunctionLinear)

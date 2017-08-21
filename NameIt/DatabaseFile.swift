@@ -17,17 +17,14 @@ class DatabaseFile: NSObject {
   
 // MARK: - Check Database existence
      private func getDBPath() -> NSString {
-        
         let paths:NSArray = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true) as NSArray
         let docuementDir:NSString = paths.object(at: 0) as! NSString
         return docuementDir.appendingPathComponent(databaseName) as NSString
     }
 
     func checkDataBaseExistence() {
-        
         let success:Bool = FileManager.default.fileExists(atPath: getDBPath() as String)
         if !success {
-            
             let defaultDBPath = Bundle.main.resourcePath! + "/" + databaseName
             do {
                 try FileManager.default.copyItem(atPath: defaultDBPath, toPath: getDBPath() as String
@@ -40,13 +37,11 @@ class DatabaseFile: NSObject {
     
 // MARK: - Create table in exist database
     func createTable(query:NSString) {
-
         // 1
         let cSql = query.cString(using: String.Encoding.utf8.rawValue)
         var createTableStatement: OpaquePointer? = nil
         // 2
         if sqlite3_open(getDBPath().utf8String, &photoAlbumDb) == SQLITE_OK {
-            
             if sqlite3_prepare_v2(photoAlbumDb, cSql, -1, &createTableStatement, nil) == SQLITE_OK {
                 // 3
                 if sqlite3_step(createTableStatement) == SQLITE_DONE {
@@ -94,7 +89,6 @@ class DatabaseFile: NSObject {
     
 // MARK: - Update data into database
     func update(updateStatementString:NSString) {
-        
         var updateStatement: OpaquePointer? = nil
         let cSql = updateStatementString.cString(using: String.Encoding.utf8.rawValue)
         if sqlite3_open(getDBPath().utf8String, &photoAlbumDb) == SQLITE_OK {
@@ -139,15 +133,12 @@ class DatabaseFile: NSObject {
 
 // MARK: - Fetch data with where clause
     func selectQuery(query:NSString) -> NSMutableDictionary {
-        
         var queryData: NSMutableDictionary = [:]
         let cSql = query.cString(using: String.Encoding.utf8.rawValue)
         var queryStatement: OpaquePointer? = nil
-
         // 1
         if sqlite3_open(getDBPath().utf8String, &photoAlbumDb) == SQLITE_OK {
             if sqlite3_prepare_v2(photoAlbumDb, cSql, -1, &queryStatement, nil) == SQLITE_OK {
-                
                 // 2
                 while (sqlite3_step(queryStatement) == SQLITE_ROW) {
                     queryData.setValue(String(cString: sqlite3_column_text(queryStatement, 1)!), forKey: String(cString: sqlite3_column_text(queryStatement, 0)!))

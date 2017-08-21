@@ -21,15 +21,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        
         Fabric.with([Crashlytics.self])
-
         //Check database is exist or not
         DatabaseFile().checkDataBaseExistence()
-        
         //Set navigation bar properties.
         navigationCustomization()
-        
         return true
     }
 
@@ -56,14 +52,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func navigationCustomization() {
-        
         UINavigationBar.appearance().barTintColor = UIColor(red: 5.0/255.0, green: 144.0/255.0, blue: 201.0/255.0, alpha: 1.0)
         UINavigationBar.appearance().titleTextAttributes = [NSFontAttributeName : (UIFont().montserratRegularWithSize(size: 18)), NSForegroundColorAttributeName: UIColor.white]
     }
     
     // MARK: - Show indicator
     func showIndicator(uiView: UIView) {
-        
         spinnerBackground=UIImageView.init(frame: CGRect(x: 3.0, y: 3.0, width: 50.0, height: 50.0))
         spinnerBackground?.backgroundColor=UIColor.white
         spinnerBackground?.layer.cornerRadius=25.0
@@ -86,21 +80,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     // MARK: - Stop indicator
     func stopIndicator(uiView: UIView) {
-        
         spinnerView?.stopAnimating()
         for container in (UIApplication.shared.keyWindow?.subviews)!{
             if container.tag == 1001 {
-                
                 for subContainer in container.subviews{
                     if subContainer.tag == 1000 {
-                        
                         container.removeFromSuperview()
                     }
                 }
                 container.removeFromSuperview()
             }
             else if container.tag == 1002 {
-                
                 container.removeFromSuperview()
             }
         }
@@ -108,7 +98,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     // MARK: - Database handling
     func insertUpdateRenamedText(imageName:String, rename renameText:String) {
-        
         let check = DatabaseFile().isExistDataQuery(query: "SELECT * from PhotosData WHERE PhotoActualName = '\(imageName)';" as String as NSString)
         if check {
             DatabaseFile().update(updateStatementString: "UPDATE PhotosData SET PhotoRename = '\(renameText)' WHERE PhotoActualName = '\(imageName)';" as NSString)
@@ -120,18 +109,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func fetchRenameEntries()->NSMutableDictionary {
-        
          return DatabaseFile().selectQuery(query: "SELECT * from PhotosData;")
     }
     
     func deleteEntries(imageName:String) -> Bool {
-        
         let check = DatabaseFile().delete(deleteStatementStirng: "DELETE FROM PhotosData WHERE PhotoActualName = '\(imageName)';" as NSString)
         if check {
             return true
         }
         else {
-            
             return false
         }
     }

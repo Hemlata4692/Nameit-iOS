@@ -30,6 +30,7 @@
 		B784BAE41F0CCE29009A5F89 /* GlobalBackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B784BAE31F0CCE29009A5F89 /* GlobalBackViewController.swift */; };
 		B798FA8B1F137DA3008B5BF0 /* MMMaterialDesignSpinner.m in Sources */ = {isa = PBXBuildFile; fileRef = B798FA8A1F137DA3008B5BF0 /* MMMaterialDesignSpinner.m */; };
 		B7C95C2C1F178F6E00BB1762 /* launchScreen.png in Resources */ = {isa = PBXBuildFile; fileRef = B7C95C2B1F178F6E00BB1762 /* launchScreen.png */; };
+		B7D7CF391F4A914A00C6018E /* ConstantCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D7CF381F4A914A00C6018E /* ConstantCode.swift */; };
 		B7E5C6251F178BEA00A8FA37 /* image1.png in Resources */ = {isa = PBXBuildFile; fileRef = B7E5C61B1F178BEA00A8FA37 /* image1.png */; };
 		B7E5C6261F178BEA00A8FA37 /* image2.png in Resources */ = {isa = PBXBuildFile; fileRef = B7E5C61C1F178BEA00A8FA37 /* image2.png */; };
 		B7E5C6271F178BEA00A8FA37 /* image3.png in Resources */ = {isa = PBXBuildFile; fileRef = B7E5C61D1F178BEA00A8FA37 /* image3.png */; };
@@ -70,6 +71,7 @@
 		B798FA891F137DA3008B5BF0 /* MMMaterialDesignSpinner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMMaterialDesignSpinner.h; sourceTree = "<group>"; };
 		B798FA8A1F137DA3008B5BF0 /* MMMaterialDesignSpinner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMMaterialDesignSpinner.m; sourceTree = "<group>"; };
 		B7C95C2B1F178F6E00BB1762 /* launchScreen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = launchScreen.png; sourceTree = "<group>"; };
+		B7D7CF381F4A914A00C6018E /* ConstantCode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConstantCode.swift; sourceTree = "<group>"; };
 		B7E5C61B1F178BEA00A8FA37 /* image1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = image1.png; sourceTree = "<group>"; };
 		B7E5C61C1F178BEA00A8FA37 /* image2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = image2.png; sourceTree = "<group>"; };
 		B7E5C61D1F178BEA00A8FA37 /* image3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = image3.png; sourceTree = "<group>"; };
@@ -250,6 +252,7 @@
 		B798FA871F137D80008B5BF0 /* HelperClasses */ = {
 			isa = PBXGroup;
 			children = (
+				B7D7CF371F4A913000C6018E /* ConstantCode */,
 				B7A6968C1F1899ED0052F819 /* Font */,
 				B798FA881F137D8F008B5BF0 /* MMMaterialDesignSpinner */,
 			);
@@ -280,6 +283,14 @@
 				B76A545C1F16294900EBB045 /* CustomFont.swift */,
 			);
 			name = Font;
+			sourceTree = "<group>";
+		};
+		B7D7CF371F4A913000C6018E /* ConstantCode */ = {
+			isa = PBXGroup;
+			children = (
+				B7D7CF381F4A914A00C6018E /* ConstantCode.swift */,
+			);
+			name = ConstantCode;
 			sourceTree = "<group>";
 		};
 		B7E5C61A1F178BC800A8FA37 /* SplashAnimation */ = {
@@ -423,6 +434,7 @@
 				B784BAE41F0CCE29009A5F89 /* GlobalBackViewController.swift in Sources */,
 				B77EF2211F0E521300ADDC22 /* UserDefaultManager.swift in Sources */,
 				B70F35901F0A4AC100BA3575 /* PtotoPreviewViewController.swift in Sources */,
+				B7D7CF391F4A914A00C6018E /* ConstantCode.swift in Sources */,
 				B7E5C6311F178C1C00A8FA37 /* SplashViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

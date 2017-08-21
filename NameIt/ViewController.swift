@@ -16,21 +16,17 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
     @IBOutlet var searchCancelButton: UIButton!
     @IBOutlet var photoAccessDeniedLabel: UILabel!
     @IBOutlet var cameraRollCollectionView: UICollectionView!
-    
+    //Local variable declaration
     var isSelectable:Bool = true
     var rightButton:UIButton?
     var leftButton:UIButton?
     var selectUnselectImageArray:NSMutableArray = []
-    
     var cameraRollAssets: NSMutableArray = []
     var groupArray: NSMutableArray = []
     let assetLibrary : ALAssetsLibrary = ALAssetsLibrary()
-    
     var assetsGroup:ALAssetsGroup?
-    
     var isSearch:Bool=false
     var searchedCameraRollAssets: NSMutableArray = []
-    
     //Rename function
     var currentSelectedRenameTextfield:UITextField?
     var lastSelectedRenameTextfield:UITextField?
@@ -39,7 +35,6 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
     var renameDatabaseDicData:NSMutableDictionary?
     var lastEnteredUpdatedImageName:String=""
     var deletingDBEntries: NSMutableArray = []
-    
     var scrollAtIndex:Int=0
     
     // MARK: - UIView life cycle
@@ -49,7 +44,7 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
         createImagesFolder()
         self.navigationController?.isNavigationBarHidden=false
         UIApplication.shared.isStatusBarHidden=false
-        
+        //Fetch entries from local database
         loadVeiwImageEdited()
         // Do any additional setup after loading the view.
     }
@@ -60,7 +55,6 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
         NotificationCenter.default.addObserver(self, selector:#selector(applicationWillEnterForeground(_:)), name:NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
         cameraRollCollectionView.reloadData()
     }
-    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -94,12 +88,10 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
         groupArray = []
         cameraRollCollectionView.reloadData()
         searchBarObject.text=""
-        
         isSearch=false
         searchBarObject.translatesAutoresizingMaskIntoConstraints=true
         searchBarObject.frame=CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: 44)
-        
-        photoAccessDeniedLabel.text="Allow Name-Pic to access Gallery in Settings"
+        photoAccessDeniedLabel.text=ConstantCode().allowNamePicString
         photoAccessDeniedLabel.isHidden=true;
         isSelectable = true
         //Add navigation bar buttons
@@ -120,12 +112,12 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
         if isSelectable {
             isSelectable=false;
             leftButton?.isHidden=true
-            rightButton?.setTitle("Select", for: UIControlState.normal)
+            rightButton?.setTitle(ConstantCode().selectString, for: UIControlState.normal)
             cameraRollCollectionView.reloadData()
         }
         else {
             isSelectable=true;
-            rightButton?.setTitle("Cancel", for: UIControlState.normal)
+            rightButton?.setTitle(ConstantCode().cancelString, for: UIControlState.normal)
             cameraRollCollectionView.reloadData()
         }
     }
@@ -140,17 +132,15 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
         rightButton?.titleLabel!.font =  UIFont().montserratLightWithSize(size: 17)
         rightButton?.titleEdgeInsets = UIEdgeInsetsMake(0.0, 8.0, 0.0, -8.0)
         rightButton?.addTarget(self, action: #selector(rightBarButtonAction), for: UIControlEvents.touchUpInside)
-        
+        //Add rightBar button
         let rightBarButton:UIBarButtonItem=UIBarButtonItem.init(customView: rightButton!)
         self.navigationItem.rightBarButtonItem=rightBarButton
-        
         //Navigation left bar buttons
         framing=CGRect(x: 0, y: 0, width: 20, height: 20)
         leftButton=UIButton.init(frame: framing)
         leftButton?.setImage(UIImage.init(named: "share_White"), for: UIControlState.normal)
         leftButton?.imageEdgeInsets = UIEdgeInsetsMake(0.0, -5.0, 0.0, 5.0)
         leftButton?.addTarget(self, action: #selector(leftBarButtonAction), for: UIControlEvents.touchUpInside)
-        
         let leftBarButton:UIBarButtonItem=UIBarButtonItem.init(customView: leftButton!)
         self.navigationItem.leftBarButtonItem=leftBarButton
     }
@@ -165,7 +155,7 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
         return cameraRollAssets.count
     }
     
-    // make a cell for each cell index path
+    // Make a cell for each cell index path
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         //Get a reference to our storyboard cell
         let cell:PhotoGridCollectionViewCell? = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath as IndexPath) as? PhotoGridCollectionViewCell
@@ -244,7 +234,6 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
             else {
                 tempDictData=cameraRollAssets[indexPath.row] as? NSDictionary
             }
-            
             photoPreviewViewObj?.selectedPhotoAsset=tempDictData?.object(forKey: "Asset") as? ALAsset
             let imageName:String=tempDictData?.object(forKey: "FileName") as! String
             photoPreviewViewObj?.selectedPhotoName=imageName
@@ -281,7 +270,7 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
                     self.searchBarBackView.isHidden=true
                     self.rightButton?.isHidden=true;
                     self.photoAccessDeniedLabel.isHidden=false
-                    self.photoAccessDeniedLabel.text="No captured photos are found"
+                    self.photoAccessDeniedLabel.text=ConstantCode().noPicFoundString
                     self.cameraRollCollectionView.isHidden=true;
                 }
             } else {
@@ -296,12 +285,11 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
             switch code {
             case ALAssetsLibraryAccessUserDeniedError, ALAssetsLibraryAccessGloballyDeniedError:
                 self.rightButton?.isHidden=true;
-                self.photoAccessDeniedLabel.text="Allow Name-Pic to access Gallery in Settings"
+                self.photoAccessDeniedLabel.text=ConstantCode().allowNamePicString
                 self.photoAccessDeniedLabel.isHidden=false;
-
                 if !(UserDefaultManager().getValue(key: "NameItPhotoAccessAlreadyCheck") is NSNull) {
                     //Exist
-                    self.showPhotoAccessAlertMessage(title: "\"Name-Pic\" Would Like to Access Your Photos", message: "Allow Name-Pic to access Gallery in Settings", cancel: "Cancel", ok: "Allow")
+                    self.showPhotoAccessAlertMessage(title: ConstantCode().allowNamePicAlertTitleString, message: ConstantCode().allowNamePicString, cancel: ConstantCode().cancelString, ok: ConstantCode().allowString)
                 }
                 else {
                     //Not exist
@@ -347,14 +335,14 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
             }
             searchBarBackView.isHidden=false
             rightButton?.isHidden=false;
-            photoAccessDeniedLabel.text="Allow Name-Pic to access Gallery in Settings"
+            photoAccessDeniedLabel.text=ConstantCode().allowNamePicString
             cameraRollCollectionView.isHidden=false;
         }
         else {
             searchBarBackView.isHidden=true
             rightButton?.isHidden=true;
             self.photoAccessDeniedLabel.isHidden=false
-            photoAccessDeniedLabel.text="No captured photos are found"
+            photoAccessDeniedLabel.text=ConstantCode().noPicFoundString
             cameraRollCollectionView.isHidden=true;
         }
         self.cameraRollCollectionView.reloadData()
@@ -405,6 +393,16 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
         let activityViewController:UIActivityViewController = UIActivityViewController(activityItems: selectedImageArrayToShare as [Any], applicationActivities: nil)
         self.present(activityViewController, animated: true, completion: nil)
     }
+    
+    @IBAction func searchCancel(_ sender: UIButton) {
+        isSearch=false
+        searchBarObject.text=""
+        photoAccessDeniedLabel.isHidden=true
+        searchedCameraRollAssets.removeAllObjects()
+        searchBarObject.resignFirstResponder()
+        cameraRollCollectionView.reloadData()
+        unEditedSearchBarAnimation()
+    }
     // MARK: - end
     
     // MARK: - Save selected image in DocumentDirectory and return path of images
@@ -414,7 +412,6 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
         var name:String=imageName.capitalized
         print(name.components(separatedBy: ".").last as Any)
         if name.components(separatedBy: ".").last!.lowercased() != "png" {
-            
             name = name.replacingOccurrences(of: ".\(name.components(separatedBy: ".").last!)", with: ".jpg")
         }
         else {
@@ -456,7 +453,6 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {}
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        
         searchBarObject.resignFirstResponder()
         cameraRollCollectionView.reloadData()
     }
@@ -478,22 +474,14 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
             }
             else {
                 photoAccessDeniedLabel.isHidden=false
-                photoAccessDeniedLabel.text="No search image found"
+                photoAccessDeniedLabel.text=ConstantCode().noSearchPicFoundString
             }
             cameraRollCollectionView.reloadData()
         }
     }
+    // MARK: - end
     
-    @IBAction func searchCancel(_ sender: UIButton) {
-        isSearch=false
-        searchBarObject.text=""
-        photoAccessDeniedLabel.isHidden=true
-        searchedCameraRollAssets.removeAllObjects()
-        searchBarObject.resignFirstResponder()
-        cameraRollCollectionView.reloadData()
-        unEditedSearchBarAnimation()
-    }
-    
+    // MARK: - UISearchbar animations
     func unEditedSearchBarAnimation() {
         UIView.animate(withDuration: 0.2, animations: {
             self.searchBarObject.frame=CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: 44)
@@ -519,9 +507,9 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
             tempDictData=cameraRollAssets[seletedImageTag] as? NSDictionary
         }
         let fileName:NSString = tempDictData?.object(forKey: "FileName") as! NSString
-        let alert = UIAlertController(title: "", message: "Please enter new image name", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        let saveAction = UIAlertAction(title:"Save", style: .default, handler: { (action) -> Void in
+        let alert = UIAlertController(title: "", message: ConstantCode().renameAlertString, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: ConstantCode().cancelString, style: .cancel, handler: nil))
+        let saveAction = UIAlertAction(title:ConstantCode().saveString, style: .default, handler: { (action) -> Void in
             if let alertTextField = alert.textFields?.first, alertTextField.text != nil {
                 if alertTextField.text?.lowercased().trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) != fileName
                     .components(separatedBy: ".").first!.lowercased().trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) {
@@ -531,7 +519,7 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
                     let charset = CharacterSet(charactersIn: "./")
                     if alertTextField.text?.rangeOfCharacter(from: charset) != nil {
                         alert.dismiss(animated: false, completion: nil)
-                        self.showImageNameAlreadyExistAlert(title: "Alert", message: "Dot '.' and Slash '/' characters are not allowed", tempString: alertTextField.text!, seletedImageTag: seletedImageTag)
+                        self.showImageNameAlreadyExistAlert(title: ConstantCode().alertString, message: ConstantCode().notAllowedCharString, tempString: alertTextField.text!, seletedImageTag: seletedImageTag)
                     }
                     //Check entered name is already exist or not
                     else if !self.isImageNameAlreadyExist(searchText: tempString) {
@@ -540,7 +528,7 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
                     }
                     else {
                         alert.dismiss(animated: false, completion: nil)
-                        self.showImageNameAlreadyExistAlert(title: "Alert", message: "This image name already exists.", tempString: alertTextField.text!, seletedImageTag: seletedImageTag)
+                        self.showImageNameAlreadyExistAlert(title: ConstantCode().alertString, message: ConstantCode().imgAlreadyString, tempString: alertTextField.text!, seletedImageTag: seletedImageTag)
                     }
                 }
             }
@@ -603,6 +591,7 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
         }
         return false
     }
+    // MARK: - end
     
     //Textfield delegate
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
@@ -633,7 +622,7 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
     
     func showImageNameAlreadyExistAlert(title:String, message messageText:String, tempString:String, seletedImageTag:Int) {
         let alertViewController = UIAlertController(title: title, message: messageText, preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "OK", style: .default) { (action) -> Void in
+        let okAction = UIAlertAction(title: ConstantCode().okString, style: .default) { (action) -> Void in
             self.lastEnteredUpdatedImageName=tempString
             alertViewController.dismiss(animated: false, completion: nil)
             self.editImageNameRecursiveMethod(seletedImageTag: seletedImageTag)

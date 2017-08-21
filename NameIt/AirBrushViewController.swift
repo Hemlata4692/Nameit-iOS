@@ -17,30 +17,25 @@ class AirBrushViewController: GlobalBackViewController, UIScrollViewDelegate, UI
     @IBOutlet var shareButton: UIButton!
     @IBOutlet var renameButton: UIButton!
     @IBOutlet var eraserButton: UIButton!
-    
     @IBOutlet var photoPreviewImageView: UIImageView!
     @IBOutlet var colorSliderImageView: UIImageView!
     @IBOutlet var tempPhotoImageView: UIImageView!
-  
-    var photoPreviewObj:PtotoPreviewViewController?
-    var selectedPhoto:UIImage?
-    var screenTitle:NSString?
-    
-    var selectedImageSize:CGSize?
-    var isImageEdited:Bool = false
-    
     @IBOutlet var sliderBackView: UIView!
     @IBOutlet var brushView: UIImageView!
     @IBOutlet var colorPreviewView: UIView!
     @IBOutlet var resizeSlider: UISlider!
-    
+    //Local variable declaration
+    var photoPreviewObj:PtotoPreviewViewController?
+    var selectedPhoto:UIImage?
+    var screenTitle:NSString?
+    var selectedImageSize:CGSize?
+    var isImageEdited:Bool = false
     var lastPoint = CGPoint.zero
     var brushWidth: CGFloat = 5.0
     var opacity: CGFloat = 1.0
     var swiped = false
     var eraserSelected=false
     var selectedColor:UIColor?
-    
     var size:CGSize=CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height-128)
     
     // MARK: - UIView life cycle
@@ -276,7 +271,6 @@ class AirBrushViewController: GlobalBackViewController, UIScrollViewDelegate, UI
         let colorSpace = CGColorSpaceCreateDeviceRGB()
         let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedLast.rawValue)
         let context = CGContext(data: pixel, width: 1, height: 1, bitsPerComponent: 8, bytesPerRow: 4, space: colorSpace, bitmapInfo: bitmapInfo.rawValue)
-        
         context!.translateBy(x: -point.x, y: -point.y)
         colorSliderImageView.layer.render(in: context!)
         var color:UIColor = UIColor(red: CGFloat(pixel[0])/255.0,
